@@ -1,13 +1,16 @@
 package com.microservices.authentication.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.microservices.authentication.dao.UserRepository;
 import com.microservices.authentication.dto.LoginRequest;
+import com.microservices.authentication.dto.LoginResponse;
 import com.microservices.authentication.dto.RegisterRequest;
 import com.microservices.authentication.entity.MyUser;
 
@@ -20,20 +23,22 @@ public class AuthService {
 	private UserRepository userRepository;
 	private AuthenticationManager authenticationManager;
 	private PasswordEncoder passwordEncoder;
+	private JwtService jwtService;
 
-	public String login(LoginRequest request) {
+	public LoginResponse login(LoginRequest request) {
 		try {
-			authenticationManager.authenticate(
+			var authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-			return "Login successful for user: " + request.getUsername();
+			return new LoginResponse(jwtService.generateToken(authentication.getName()),
+					authentication.getAuthorities().iterator().next().getAuthority());
 		} catch (AuthenticationException e) {
-			throw new RuntimeException("Invalid username or password", e);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong credentials");
 		}
 	}
 
 	public String register(RegisterRequest request) {
 		if (userRepository.existsByUsername(request.getUsername())) {
-			throw new RuntimeException("User already exists");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email already in use!");
 		}
 
 		MyUser user = new MyUser();

@@ -20,9 +20,6 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.csrf(CsrfConfigurer::disable).authorizeHttpRequests(customeizer -> {
-			customeizer.requestMatchers("/retailers/*").hasRole("RETAILER");
-			customeizer.requestMatchers("/customers/*").hasRole("CUSTOMER");
-			customeizer.requestMatchers("/admin").hasRole("ADMIN");
 			customeizer.anyRequest().permitAll();
 		}).build();
 	}

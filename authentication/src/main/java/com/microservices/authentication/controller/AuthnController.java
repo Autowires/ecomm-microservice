@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservices.authentication.dto.LoginRequest;
+import com.microservices.authentication.dto.LoginResponse;
 import com.microservices.authentication.dto.RegisterRequest;
 import com.microservices.authentication.service.AuthService;
 
@@ -19,7 +20,7 @@ public class AuthnController {
 	private AuthService authService;
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
 		return ResponseEntity.ok(authService.login(request));
 	}
 

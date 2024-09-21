@@ -28,167 +28,169 @@ public class LoginServiceImpl implements LoginService {
 
 	private Map<String, String> otpStore = new ConcurrentHashMap<>();
 	private Map<String, Long> otpExpiry = new ConcurrentHashMap<>();
-
+	private Map<String, Boolean> otpVerified = new ConcurrentHashMap<>(); // To store OTP verification status
 	private static final long OTP_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes
+
+	/**
+	 * Step 1: Verify user credentials and send OTP to the registered email
+	 */
+	@Override
+	public String sendOtp(String email, String password) {
+		MyUser user = userDao.findByEmailAndPassword(email, password);
+
+		if (user == null) {
+			return "Invalid email or password.";
+		}
+
+		String otp = generateOtp();
+		otpStore.put(email, otp);
+		otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
+
+		sendOtpEmail(email, otp);
+
+		return "OTP sent successfully to your registered email.";
+	}
+
+	@Override
+	public String verifyOtpForLogin(String email, String otp) {
+		String storedOtp = otpStore.get(email);
+		Long expiryTime = otpExpiry.get(email);
+
+		if (storedOtp == null || expiryTime == null) {
+			return "OTP not found. Please request a new OTP.";
+		}
+
+		if (System.currentTimeMillis() > expiryTime) {
+			otpStore.remove(email);
+			otpExpiry.remove(email);
+			return "OTP has expired. Please request a new OTP.";
+		}
+
+		if (!storedOtp.equals(otp)) {
+			return "Invalid OTP. Please try again.";
+		}
+
+		// Mark OTP as verified for login
+		otpVerified.put(email, true);
+		return "Login successful. OTP verified.";
+	}
 
 	@Override
 	@Transactional
 	public String registerUser(UserDTO user) {
+		// Check if the email is verified
+		if (!otpVerified.getOrDefault(user.getEmail(), false)) {
+			return "OTP not verified. Please verify OTP before registration.";
+		}
+
+		// Check if the email or contact number already exists
 		if (userDao.existsByDetails(user.getEmail(), user.getContactNo())) {
 			return "Email or contact number already registered.";
 		}
-		System.out.println(user.getUserType());
+
 		MyUser newUser;
 		switch (user.getUserType()) {
 		case "admin":
 			if (!"9".equals(user.getAdminPassword())) {
 				return "Invalid admin password.";
 			}
-			MyUser admin = new MyUser();
-			admin.setUsername(user.getName());
-			admin.setEmail(user.getEmail());
-			admin.setContactNo(user.getContactNo());
-			admin.setUserType(user.getUserType());
-			admin.setPassword(user.getPassword());
-			admin.setStatus(MyUser.UserStatus.ACTIVE); // Set default status
-			newUser = admin;
+			newUser = new MyUser();
 			break;
 
 		case "customer":
-			Customer customer = new Customer();
-			customer.setUsername(user.getName());
-			customer.setEmail(user.getEmail());
-			customer.setPassword(user.getPassword());
-			customer.setAge(user.getAge());
-			customer.setContactNo(user.getContactNo());
-			customer.setCity(user.getCity());
-			customer.setUserType(user.getUserType());
-			customer.setStatus(MyUser.UserStatus.ACTIVE);
-			newUser = customer;
+			newUser = new Customer();
 			break;
 
 		case "retailer":
-			Retailer retailer = new Retailer();
-			retailer.setUsername(user.getName());
-			retailer.setEmail(user.getEmail());
-			retailer.setContactNo(user.getContactNo());
-			retailer.setCity(user.getCity());
-			retailer.setGSTIN(user.getGstNumber());
-			retailer.setPannumber(user.getPanNumber());
-			retailer.setPassword(user.getPassword());
-			retailer.setUserType(user.getUserType());
-			retailer.setStatus(MyUser.UserStatus.UNDER_REVIEW); // Set default status
-			newUser = retailer;
+			newUser = new Retailer();
 			break;
 
 		default:
 			return "Invalid user type.";
 		}
-		System.out.println("before flush");
+
+		newUser.setUsername(user.getName());
+		newUser.setEmail(user.getEmail());
+		newUser.setContactNo(user.getContactNo());
+		newUser.setPassword(user.getPassword());
+		newUser.setUserType(user.getUserType());
+		newUser.setStatus(MyUser.UserStatus.ACTIVE); // Set default status
 		userDao.saveAndFlush(newUser);
+
+		// Clear OTP data after successful registration
+		otpStore.remove(user.getEmail());
+		otpExpiry.remove(user.getEmail());
+		otpVerified.remove(user.getEmail());
 
 		return "User successfully registered.";
 	}
 
 	@Override
-	public String sendOtp(String email, String password) {
-		// Authenticate the user
-		try {
-			MyUser user = userDao.findByEmailAndPassword(email, password);
+	public String verifyEmail(String email) {
+		if (userDao.existsByDetails(email)) {
+			return "Email is registered. Try with another.";
+		} else {
 			String otp = generateOtp();
+			sendOtpEmail(email, otp);
 			otpStore.put(email, otp);
 			otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
-
-			// Send OTP via email
-			try {
-				sendOtpEmail(email, otp);
-				return "OTP.... sent successfully for ur Registered mail : " + otp;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "Your email is not registered in our dataBase";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-
+			return "OTP sent successfully to your email.";
 		}
-		return "something Gone Wrong";
+	}
+
+	@Override
+	public String verifyOtp(String email, String otp) {
+		String storedOtp = otpStore.get(email);
+		Long expiryTime = otpExpiry.get(email);
+
+		if (storedOtp == null || expiryTime == null) {
+			return "OTP not found. Please request a new OTP.";
+		}
+
+		if (System.currentTimeMillis() > expiryTime) {
+			otpStore.remove(email);
+			otpExpiry.remove(email);
+			return "OTP has expired. Please request a new OTP.";
+		}
+
+		if (!storedOtp.equals(otp)) {
+			return "Invalid OTP.";
+		}
+
+		otpVerified.put(email, true); // Mark OTP as verified
+		return "OTP verified successfully.";
+	}
+
+	@Override
+	public String updatePassword(String email, String password) {
+		if (userDao.updatePassword(password, email) > 0) {
+			return "Password updated successfully.";
+		}
+		return "Issue with password update.";
+	}
+
+	@Override
+	public String existsByEmail(String email) {
+		if (userDao.existsBymail(email)) {
+			String otp = generateOtp();
+			sendOtpEmail(email, otp);
+			otpStore.put(email, otp);
+			otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
+			return "OTP sent to your email.";
+		}
+		return "Email not found.";
 	}
 
 	private String generateOtp() {
 		Random random = new Random();
-		int otp = 100000 + random.nextInt(900000); // 6-digit OTP
-		System.out.println("otp genereted : " + otp);
-		return String.valueOf(otp);
+		return String.valueOf(100000 + random.nextInt(900000)); // 6-digit OTP
 	}
 
 	private void sendOtpEmail(String to, String otp) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(to);
-		message.setSubject("Your OTP Code  for Login");
-		message.setText("Your OTP code is : " + otp);
+		message.setSubject("Your OTP Code");
+		message.setText("Your OTP code is: " + otp);
 		mailSender.send(message);
 	}
-
-	private void sendOtpToEmail(String email, String otp) {
-		// Create a SimpleMailMessage object
-		SimpleMailMessage message = new SimpleMailMessage();
-
-		// Set the recipient's email address
-		message.setTo(email);
-
-		// Set the subject of the email
-		String subject = "Your OTP for Password Recovery";
-		message.setSubject(subject);
-
-		// Set the body of the email
-		String text = "Your OTP is: " + otp + ". This OTP is valid for 10 minutes.";
-		message.setText(text);
-
-		// Send the email
-		mailSender.send(message);
-	}
-
-	@Override
-	public String verifyEmail(String email) {
-		if (userDao.existsByDetails(email)) {
-			return "email is registered.. 'TRY WITH ANOTHER'";
-		} else {
-			String Otp = generateOtp();
-			sendOtpEmail(email, Otp);
-			// otpStore.put(email, Otp);
-			// otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
-
-			// Send OTP via email
-			try {
-				sendOtpEmail(email, Otp);
-				return "OTP.... sent successfully for ur  mail : " + Otp;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "Your email is not registered in our dataBase";
-			}
-		}
-
-	}
-
-	@Override
-	public String updatePassword(String email, String password) {
-
-		if (userDao.updatePassword(password, email) > 0) {
-			return "password updated successfully";
-		}
-		return "Issue with passwordUpdate";
-	}
-
-	@Override
-	public String existsByEmail(String email) {
-		boolean emailExists = userDao.existsBymail(email);
-
-		if (emailExists) {
-			String otp = generateOtp();
-			sendOtpToEmail(email, otp);
-			return "OTP sent : " + otp;
-		}
-		return "Email not found";
-	}
-
 }

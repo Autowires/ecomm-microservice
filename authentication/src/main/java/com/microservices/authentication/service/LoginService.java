@@ -14,4 +14,8 @@ public interface LoginService {
 
 	String existsByEmail(String email);
 
+	String verifyOtp(String email, String otp);
+
+	String verifyOtpForLogin(String email, String otp);
+
 }

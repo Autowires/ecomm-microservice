@@ -57,7 +57,7 @@
         <form id="loginForm" action="/login" method="post">
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required>
+                <input id="email" name="email" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>

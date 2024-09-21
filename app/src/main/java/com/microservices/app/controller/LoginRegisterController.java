@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
 
 import jakarta.servlet.http.HttpSession;
@@ -30,18 +29,18 @@ public class LoginRegisterController {
 
 	@PostMapping("/login")
 	public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
-		User user = service.authenticateUser(email, password);
-		if (user == null) {
+		var response = service.authenticateUser(email, password);
+		if (response == null) {
 			model.addAttribute("errorMessage", "Invalid email or password.");
 			return "login";
 		}
-		session.setAttribute("user", user);
-		switch (user.getRole()) {
-		case "RETAILER":
+		session.setAttribute("token", response.get("token"));
+		switch (response.get("role").toString()) {
+		case "ROLE_RETAILER":
 			return "redirect:/retailer";
-		case "CUSTOMER":
+		case "ROLE_CUSTOMER":
 			return "redirect:/products";
-		case "ADMIN":
+		case "ROLE_ADMIN":
 			return "redirect:/admin";
 		}
 		session.invalidate();

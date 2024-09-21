@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.microservices.authentication.dao.UserRepository;
+import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.LoginRequest;
 import com.microservices.authentication.dto.LoginResponse;
 import com.microservices.authentication.dto.RegisterRequest;
@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AuthService {
 
-	private UserRepository userRepository;
+	private UserRepo userRepository;
 	private AuthenticationManager authenticationManager;
 	private PasswordEncoder passwordEncoder;
 	private JwtService jwtService;

@@ -10,37 +10,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.microservices.authentication.dto.CustomerRequest;
+import com.microservices.authentication.dto.LoginRequest;
+import com.microservices.authentication.dto.LoginResponse;
+import com.microservices.authentication.dto.OTPVerifyRequest;
 import com.microservices.authentication.dto.UserDTO;
 import com.microservices.authentication.service.LoginService;
+import com.microservices.authentication.service.RegistrationService;
 
 @RestController
-@RequestMapping("/register")
+@RequestMapping("/auth")
 public class AuthenticationController {
 
 	@Autowired
 	private LoginService service;
 
-	@PostMapping("/registermail")
-	public ResponseEntity<String> verifyAndRegister(@RequestParam String email) {
-		String message = service.verifyEmail(email);
+	@Autowired
+	private RegistrationService registrationService;
+
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+		return ResponseEntity.ok(service.login(request.getEmail(), request.getPassword()));
+	}
+
+	@GetMapping("/register/verify-email")
+	public ResponseEntity<String> verifyEmail(@RequestParam String email) {
+		String message = registrationService.verifyEmail(email);
 		return ResponseEntity.ok(message);
+	}
+
+	@PostMapping("/register/verify-email")
+	public ResponseEntity<String> verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+		String message = registrationService.verifyEmail(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
+		return ResponseEntity.ok(message);
+	}
+
+	@PostMapping("/register/customer")
+	public String registerCustomer(@RequestBody CustomerRequest customerRequest) {
+		return registrationService.registerCustomer(customerRequest);
 	}
 
 	@PostMapping("/user")
 	public ResponseEntity<String> registerUser(@RequestBody UserDTO user) {
 		String msg = service.registerUser(user);
-		return ResponseEntity.ok(msg);
-	}
-
-	@GetMapping("/verifylogin")
-	public ResponseEntity<String> validateUserAndSendOtp(@RequestParam String email, @RequestParam String password) {
-		String msg = service.sendOtp(email, password);
-		return ResponseEntity.ok(msg);
-	}
-
-	@PostMapping("/verify-otp")
-	public ResponseEntity<String> verifyOtpForLogin(@RequestParam String email, @RequestParam String otp) {
-		String msg = service.verifyOtpForLogin(email, otp);
 		return ResponseEntity.ok(msg);
 	}
 

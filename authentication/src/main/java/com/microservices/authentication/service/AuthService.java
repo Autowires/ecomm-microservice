@@ -1,8 +1,8 @@
 package com.microservices.authentication.service;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,16 +25,16 @@ public class AuthService {
 	private PasswordEncoder passwordEncoder;
 	private JwtService jwtService;
 
-	public LoginResponse login(LoginRequest request) {
-		try {
-			var authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-			return new LoginResponse(jwtService.generateToken(authentication.getName()),
-					authentication.getAuthorities().iterator().next().getAuthority());
-		} catch (AuthenticationException e) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong credentials");
-		}
-	}
+
+
+//	public ResponseEntity<String> login(LoginRequest request) {
+//		try {
+//			var user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+//			return new LoginResponse(jwtService.generateToken(user.getUsername()), user.getUserType());
+//		} catch (AuthenticationException e) {
+//			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong credentials");
+//		}
+//	}
 
 	public String register(RegisterRequest request) {
 		if (userRepository.existsByUsername(request.getUsername())) {
@@ -43,7 +43,7 @@ public class AuthService {
 
 		MyUser user = new MyUser();
 		user.setUsername(request.getUsername());
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setPassword(request.getPassword());
 		user.setEmail(request.getEmail());
 		user.setUserType(request.getRole());
 		userRepository.save(user);

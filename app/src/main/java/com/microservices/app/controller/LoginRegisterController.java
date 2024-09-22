@@ -1,11 +1,13 @@
 package com.microservices.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
@@ -48,4 +50,17 @@ public class LoginRegisterController {
 		return "redirect:/";
 	}
 
+	@PostMapping("/sendOtp")
+	@ResponseBody
+	public ResponseEntity<String> sendOtp(@RequestParam String email, @RequestParam String password) {
+		return service.sendOtp(email, password);
+	}
+
+	@PostMapping("/verifyOtp")
+	@ResponseBody
+	public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
+		System.out.println(email);
+		System.out.println(otp);
+		return service.verifyOtp(email, otp);
+	}
 }

@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.microservices.authentication.Repo.UserRepo;
+import com.microservices.authentication.dto.LoginResponse;
 import com.microservices.authentication.dto.UserDTO;
 import com.microservices.authentication.entity.Customer;
 import com.microservices.authentication.entity.MyUser;
@@ -30,50 +31,6 @@ public class LoginServiceImpl implements LoginService {
 	private Map<String, Long> otpExpiry = new ConcurrentHashMap<>();
 	private Map<String, Boolean> otpVerified = new ConcurrentHashMap<>(); // To store OTP verification status
 	private static final long OTP_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes
-
-	/**
-	 * Step 1: Verify user credentials and send OTP to the registered email
-	 */
-	@Override
-	public String sendOtp(String email, String password) {
-		MyUser user = userDao.findByEmailAndPassword(email, password);
-
-		if (user == null) {
-			return "Invalid email or password.";
-		}
-
-		String otp = generateOtp();
-		otpStore.put(email, otp);
-		otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
-
-		sendOtpEmail(email, otp);
-
-		return "OTP sent successfully to your registered email.";
-	}
-
-	@Override
-	public String verifyOtpForLogin(String email, String otp) {
-		String storedOtp = otpStore.get(email);
-		Long expiryTime = otpExpiry.get(email);
-
-		if (storedOtp == null || expiryTime == null) {
-			return "OTP not found. Please request a new OTP.";
-		}
-
-		if (System.currentTimeMillis() > expiryTime) {
-			otpStore.remove(email);
-			otpExpiry.remove(email);
-			return "OTP has expired. Please request a new OTP.";
-		}
-
-		if (!storedOtp.equals(otp)) {
-			return "Invalid OTP. Please try again.";
-		}
-
-		// Mark OTP as verified for login
-		otpVerified.put(email, true);
-		return "Login successful. OTP verified.";
-	}
 
 	@Override
 	@Transactional
@@ -126,42 +83,6 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public String verifyEmail(String email) {
-		if (userDao.existsByDetails(email)) {
-			return "Email is registered. Try with another.";
-		} else {
-			String otp = generateOtp();
-			sendOtpEmail(email, otp);
-			otpStore.put(email, otp);
-			otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
-			return "OTP sent successfully to your email.";
-		}
-	}
-
-	@Override
-	public String verifyOtp(String email, String otp) {
-		String storedOtp = otpStore.get(email);
-		Long expiryTime = otpExpiry.get(email);
-
-		if (storedOtp == null || expiryTime == null) {
-			return "OTP not found. Please request a new OTP.";
-		}
-
-		if (System.currentTimeMillis() > expiryTime) {
-			otpStore.remove(email);
-			otpExpiry.remove(email);
-			return "OTP has expired. Please request a new OTP.";
-		}
-
-		if (!storedOtp.equals(otp)) {
-			return "Invalid OTP.";
-		}
-
-		otpVerified.put(email, true); // Mark OTP as verified
-		return "OTP verified successfully.";
-	}
-
-	@Override
 	public String updatePassword(String email, String password) {
 		if (userDao.updatePassword(password, email) > 0) {
 			return "Password updated successfully.";
@@ -192,5 +113,11 @@ public class LoginServiceImpl implements LoginService {
 		message.setSubject("Your OTP Code");
 		message.setText("Your OTP code is: " + otp);
 		mailSender.send(message);
+	}
+
+	@Override
+	public LoginResponse login(String email, String password) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

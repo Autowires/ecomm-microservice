@@ -33,4 +33,5 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
 
 	Optional<MyUser> findByUsername(String username);
 
+    Optional<MyUser> findByEmail(String email);
 }

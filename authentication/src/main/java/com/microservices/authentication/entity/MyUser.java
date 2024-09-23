@@ -58,6 +58,6 @@ public class MyUser {
 	private UserStatus status;
 
 	public enum UserStatus {
-		UNDER_REVIEW, SUSPENDED, ACTIVE
+		UNDER_REVIEW, SUSPENDED, ACTIVE,DEACTIVATED
 	}
 }

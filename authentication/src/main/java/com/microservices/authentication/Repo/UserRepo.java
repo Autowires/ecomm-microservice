@@ -1,5 +1,6 @@
 package com.microservices.authentication.Repo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.microservices.authentication.entity.MyUser;
+import com.microservices.authentication.entity.MyUser.UserStatus;
 
 public interface UserRepo extends JpaRepository<MyUser, Long> {
 
@@ -34,4 +36,16 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
 	Optional<MyUser> findByUsername(String username);
 
     Optional<MyUser> findByEmail(String email);
+    
+    // Get all users
+    @Query("SELECT u FROM MyUser u")
+    List<MyUser> getAllUsers();
+
+    // Update user status by userId
+    @Modifying
+    @Transactional
+    @Query("UPDATE MyUser u SET u.status = :status WHERE u.id = :userId")
+    void updateUserStatus(@Param("userId") long userId, @Param("status") UserStatus status);
+
+    
 }

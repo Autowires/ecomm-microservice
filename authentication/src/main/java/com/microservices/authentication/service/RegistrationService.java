@@ -98,6 +98,7 @@ public class RegistrationService {
 			String otp = generateOtp();
 			sendOtpEmail(email, otp);
 			otpStore.put(email, otp);
+			System.out.println(otp);
 			otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);
 			return "OTP sent successfully to your email.";
 		}

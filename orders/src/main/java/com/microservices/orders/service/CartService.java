@@ -13,6 +13,10 @@ public interface CartService {
 	Cart addItemToCart(Long cartId, Long productId, Integer quantity);
 
 	Cart getBuyerCartById(Long buyerId);
+    
+	 Cart getCart(Long cartId);
+  
+	void clearBuyerCart(Long cartId);
 
 	
 

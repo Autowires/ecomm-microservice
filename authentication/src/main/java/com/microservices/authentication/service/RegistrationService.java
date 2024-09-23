@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.microservices.authentication.Repo.CustomerRepository;
+import com.microservices.authentication.Repo.RetailerRepository;
 import com.microservices.authentication.Repo.UserRepo;
-import com.microservices.authentication.dto.CustomerRequest;
+import com.microservices.authentication.dto.RegistrationRequest;
 import com.microservices.authentication.entity.Customer;
 import com.microservices.authentication.entity.MyUser;
+import com.microservices.authentication.entity.Retailer;
 
 import jakarta.transaction.Transactional;
 
@@ -25,6 +27,9 @@ public class RegistrationService {
 
 	@Autowired
 	private CustomerRepository customerRepository;
+
+	@Autowired
+	private RetailerRepository retailerRepository;
 
 	@Autowired
 	private EmailService emailService;
@@ -38,27 +43,44 @@ public class RegistrationService {
 	private static final long OTP_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes
 
 	@Transactional
-	public String registerCustomer(CustomerRequest customerRequest) {
-		if (!otpVerified.getOrDefault(customerRequest.getEmail(), false)) {
+	public String register(RegistrationRequest request) {
+		if (!otpVerified.getOrDefault(request.getEmail(), false)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "OTP not verified.");
 		}
 
-		if (userDao.existsByDetails(customerRequest.getEmail(), customerRequest.getContactNo())) {
+		if (userDao.existsByDetails(request.getEmail(), request.getContactNo())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or contact number already registered.");
 		}
 
-		Customer customer = new Customer();
-		customer.setUsername(customerRequest.getName());
-		customer.setEmail(customerRequest.getEmail());
-		customer.setContactNo(customerRequest.getContactNo());
-		customer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
-		customer.setCity(customerRequest.getCity());
-		customer.setStatus(MyUser.UserStatus.ACTIVE);
-		customer.setUserType("CUSTOMER");
-		customer.setAge(customerRequest.getAge());
-		customerRepository.save(customer);
+		switch (request.getRole()) {
+		case "CUSTOMER":
+			Customer customer = new Customer();
+			customer.setUsername(request.getName());
+			customer.setEmail(request.getEmail());
+			customer.setContactNo(request.getContactNo());
+			customer.setPassword(passwordEncoder.encode(request.getPassword()));
+			customer.setCity(request.getCity());
+			customer.setStatus(MyUser.UserStatus.ACTIVE);
+			customer.setUserType("CUSTOMER");
+			customer.setAge(request.getAge());
+			customerRepository.save(customer);
+			break;
+		case "RETAILER":
+			Retailer retailer = new Retailer();
+			retailer.setUsername(request.getName());
+			retailer.setEmail(request.getEmail());
+			retailer.setContactNo(request.getContactNo());
+			retailer.setPassword(passwordEncoder.encode(request.getPassword()));
+			retailer.setCity(request.getCity());
+			retailer.setStatus(MyUser.UserStatus.UNDER_REVIEW);
+			retailer.setUserType("RETAILER");
+			retailer.setAge(request.getAge());
+			retailerRepository.save(retailer);
+		default:
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid role " + request.getRole());
+		}
 
-		clearOTPs(customerRequest.getEmail());
+		clearOTPs(request.getEmail());
 
 		return "Customer registered successfully!";
 	}
@@ -111,4 +133,5 @@ public class RegistrationService {
 	private void sendOtpEmail(String to, String otp) {
 		emailService.sendEmail(to, "Your OTP Code", "Your OTP Code " + otp);
 	}
+
 }

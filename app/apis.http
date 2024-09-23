@@ -10,3 +10,23 @@ Content-Type: application/x-www-form-urlencoded
 
 email=srimanikanta1001@gmai.com&password=1234
 
+### 
+GET {{baseurl}}/register
+
+###
+POST {{baseurl}}/register
+Content-Type: application/x-www-form-urlencoded
+
+username=hello&email=srimani9905@gmail.com&password=1234&role=CUSTOMER
+
+###
+POST {{baseurl}}/register/verify-email?email=srimani9905@gmail.com
+
+###
+PUT {{baseurl}}/register/verify-email
+Content-Type: application/json
+
+{
+    "email": "srimani9905@gmail.com",
+    "otp": "541607"
+}

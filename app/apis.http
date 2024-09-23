@@ -1,0 +1,12 @@
+
+@baseurl = http://localhost:8080
+
+### Login page
+GET {{baseurl}}/login
+
+### FOrm submit for login
+POST {{baseurl}}/login
+Content-Type: application/x-www-form-urlencoded
+
+email=srimanikanta1001@gmai.com&password=1234
+

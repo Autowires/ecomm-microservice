@@ -10,14 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.microservices.authentication.entity.MyUser;
 import com.microservices.authentication.entity.MyUser.UserStatus;
 import com.microservices.authentication.service.MyUserService;
-import com.microservices.authentication.service.UserService;
-
-
 
 @RestController
 @RequestMapping("/admin/users")
@@ -33,7 +29,8 @@ public class UsersController {
 		if (role == null || role.isBlank()) {
 			return ResponseEntity.ok(userService.getAllUsers());
 		} else {
-			return ResponseEntity.ok(userService.getAllUsers().stream().filter(u -> u.getUserType().equals(role)).toList());
+			return ResponseEntity
+					.ok(userService.getAllUsers().stream().filter(u -> u.getUserType().equals(role)).toList());
 		}
 	}
 

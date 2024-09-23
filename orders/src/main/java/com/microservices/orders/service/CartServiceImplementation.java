@@ -11,7 +11,10 @@ import com.microservices.orders.entity.Cart;
 import com.microservices.orders.entity.CartItem;
 import com.microservices.orders.entity.Product;
 import com.microservices.orders.exception.ResourceNotFoundException;
+import com.microservices.orders.repository.CartItemRepository;
 import com.microservices.orders.repository.CartRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CartServiceImplementation implements CartService {
@@ -62,7 +65,7 @@ public class CartServiceImplementation implements CartService {
 	                .stream()
 	                .filter(item -> item.getProductId().equals(productId))
 	                .findFirst().orElse(new CartItem());
-		if(cartItem.getProductId()==null) {
+		if(cartItem.getCartItemId()==null) {
 			System.out.println("inside cartItem==null");
 			cartItem.setCart(cart);
 			cartItem.setProductId(productId);
@@ -77,17 +80,33 @@ public class CartServiceImplementation implements CartService {
 		Cart additem= cartRepository.save(cart);
 		return additem;
 	}   
-		 
 	
-	private Cart getCart(Long cartId) {
-		 Cart cart = cartRepository.findById(cartId)
-	                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-		return cart;
-	}
+		
 	@Override
 	public Cart getBuyerCartById(Long buyerId) {
 		Cart cart=cartRepository.findBybuyerId(buyerId);
 		return  cart;
+	}
+	@Transactional
+	@Override
+	public void clearBuyerCart(Long cartId) {
+		//finds the cart of the buyer by using the buyerid
+		  Cart cart = getCart(cartId);
+		  //deletes all the cartitems  associated  with the  cartId of the buyer
+		  cartItemRepository.deleteAllByCart(cart);
+		 
+	       // The clearCart() method on the Cart object is invoked (assuming it resets or clears the state of the cart).
+	        cart.clearCart();
+	      //after deleting the cartItems we are deleting the cart
+	        cartRepository.deleteById(cartId);
+		
+	}
+	@Override
+	public Cart getCart(Long cartId) {
+		 Cart cart = cartRepository.findById(cartId)
+	                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+		return cart;
+	
 	}
 	
 	

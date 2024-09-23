@@ -28,6 +28,12 @@ public class ProductServiceImplementation implements ProductService {
 		
 	    
 	}
+	if(productId==3) {
+		product=new Product();
+		product.setProductId(3L);
+		product.setPrice(new BigDecimal(450.0));
+		product.setStock(0);
+	}
 	return product;
 		
 	}

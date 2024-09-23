@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservices.authentication.dto.CustomerRequest;
 import com.microservices.authentication.dto.LoginRequest;
 import com.microservices.authentication.dto.LoginResponse;
 import com.microservices.authentication.dto.OTPVerifyRequest;
+import com.microservices.authentication.dto.RegistrationRequest;
 import com.microservices.authentication.dto.UserDTO;
 import com.microservices.authentication.service.LoginService;
 import com.microservices.authentication.service.RegistrationService;
@@ -45,9 +45,9 @@ public class AuthenticationController {
 		return ResponseEntity.ok(message);
 	}
 
-	@PostMapping("/register/customer")
-	public String registerCustomer(@RequestBody CustomerRequest customerRequest) {
-		return registrationService.registerCustomer(customerRequest);
+	@PostMapping("/register")
+	public String registerCustomer(@RequestBody RegistrationRequest request) {
+		return registrationService.register(request);
 	}
 
 	@PostMapping("/user")

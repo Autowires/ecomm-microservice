@@ -107,8 +107,8 @@ public class RegistrationService {
 		String storedOtp = otpStore.get(email);
 		Long expiryTime = otpExpiry.get(email);
 
-		if (storedOtp == null || expiryTime == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		if (storedOtp == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "incorrect email");
 		}
 
 		if (System.currentTimeMillis() > expiryTime) {
@@ -118,7 +118,7 @@ public class RegistrationService {
 		}
 
 		if (!storedOtp.equals(otp)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not matched");
 		}
 
 		otpVerified.put(email, true);

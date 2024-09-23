@@ -1,0 +1,45 @@
+
+@baseurl = http://localhost:8081/auth
+
+### Login
+# 200 - { token, role }
+# 400 - No value present (not registered)
+# 400 - Bad credentials (wrong password)
+POST {{baseurl}}/login
+Content-Type: application/json
+
+{
+    "email": "srimanikanta1001@gmail.com",
+    "password": "1234"
+}
+
+### Verify Email (GET)
+# 404 - Email is registered. Try with another.
+# 200 - OTP sent successfully to your email.
+GET {{baseurl}}/register/verify-email?email=srimani9904@gmail.com
+
+### Verify Email (POST)
+# 404 - incorrect email
+# 404 - Not matched
+# 200 - OTP verified.
+POST {{baseurl}}/register/verify-email
+Content-Type: application/json
+
+{
+    "email": "srimani9904@gmail.com",
+    "otp": "173428"
+}
+
+### Register User
+# 200 - Customer registered successfully!
+# 403 - OTP not verified.
+# 400 - Email or contact number already registered.
+POST {{baseurl}}/register
+Content-Type: application/json
+
+{
+    "username": "newuser",
+    "email": "srimani9904@gmail.com",
+    "password": "newpassword",
+    "role": "CUSTOMER"
+}

@@ -15,4 +15,6 @@ public interface ProductService {
 
 	String deleteProduct(long retailerId, long productId);
 
+	Product findProductById(Long productId);
+
 }

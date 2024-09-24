@@ -25,4 +25,6 @@ public class Product {
 	private double price;
 	@Column(nullable = false)
 	private String category;
+	private Integer stock;
+	
 }

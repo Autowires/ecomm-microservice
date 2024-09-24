@@ -38,4 +38,13 @@ public class ProductServiceImpl implements ProductService {
 		return dao.deleteProduct(retailerId, productId);
 	}
 
+	@Override
+	public Product findProductById(Long productId) {
+		// TODO Auto-generated method stub
+		Product product=dao.findProductById(productId);
+		
+		
+		return product;
+	}
+
 }

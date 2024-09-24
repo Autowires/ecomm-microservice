@@ -2,8 +2,9 @@ package com.microservices.product.service.dao.Impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -53,6 +54,7 @@ public class ProductDaoImpl implements ProductDao {
 		product.setDescription(form.getDescription());
 		product.setPrice(form.getPrice());
 		product.setCategory(form.getCategory());
+		product.setStock(form.getStock());
 
 		sessionFactory.inTransaction(session -> {
 			product.setRetailerId(retailerId);
@@ -88,6 +90,17 @@ public class ProductDaoImpl implements ProductDao {
 				return "Product not found";
 			}
 		});
+	}
+
+	@Override
+	public Product findProductById(Long productId) {
+		Product product=null;
+	     Session session=sessionFactory.openSession();
+		Query<Product> query=session.createQuery("from Product p where p.id=productId",Product.class);
+	  	query.setParameter("productId", productId);
+		product=query.uniqueResult();
+		
+		return product;
 	}
 
 }

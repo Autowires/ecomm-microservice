@@ -30,7 +30,7 @@ public class ProductController {
 		return productService.getProducts(category, search);
 	}
 
-	@PostMapping("/{retailerId}")
+	@PostMapping("addproduct/{retailerId}")
 	public String addProduct(@PathVariable long retailerId, @RequestBody ProductForm form) {
 		return productService.addProduct(retailerId, form);
 	}

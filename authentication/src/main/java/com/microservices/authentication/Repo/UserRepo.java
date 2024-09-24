@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.microservices.authentication.dto.UserResponseProjection;
 import com.microservices.authentication.entity.MyUser;
 import com.microservices.authentication.entity.MyUser.UserStatus;
 
@@ -37,9 +38,11 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
 
     Optional<MyUser> findByEmail(String email);
     
-    // Get all users
-    @Query("SELECT u FROM MyUser u")
-    List<MyUser> getAllUsers();
+    @Query("SELECT u.id as id, u.username as username, u.status as status, u.email as email, " +
+    	       "u.userType as userType, u.age as age, u.contactNo as contactNo, " +
+    	       "u.createdAt as createdAt, u.lastSeen as lastSeen " +
+    	       "FROM MyUser u")
+    	List<UserResponseProjection> getAllUsers();
 
     // Update user status by userId
     @Modifying

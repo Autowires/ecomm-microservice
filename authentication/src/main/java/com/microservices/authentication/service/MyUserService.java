@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.microservices.authentication.Repo.UserRepo;
+import com.microservices.authentication.dto.UserResponse;
+import com.microservices.authentication.dto.UserResponseProjection;
 import com.microservices.authentication.entity.MyUser;
 import com.microservices.authentication.entity.MyUser.UserStatus;
 
@@ -14,7 +16,7 @@ public class MyUserService {
 	@Autowired
 	private UserRepo dao;
 
-	public List<MyUser> getAllUsers() {
+	public List<UserResponseProjection> getAllUsers() {
 		// TODO Auto-generated method stub
 		return dao.getAllUsers();
 	}

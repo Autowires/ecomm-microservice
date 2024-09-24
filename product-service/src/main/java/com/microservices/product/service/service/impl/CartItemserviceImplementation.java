@@ -50,7 +50,7 @@ public class CartItemserviceImplementation  implements CartItemService{
 		Cart cart=cartService.getCart(cartId);
 		//checking product is present inside the cart Item
 		return cart.getItems().stream().
-				filter(item->item.getProductId().equals(productId))
+				filter(item->item.getProduct().getId().equals(productId))
 				.findFirst()
 				.orElseThrow(()-> new ResourceNotFoundException("product Id is Not found"));			
 	}
@@ -60,7 +60,7 @@ public class CartItemserviceImplementation  implements CartItemService{
 		Cart cart=cartService.getCart(cartId);
 		// Find the CartItem by product ID and update the quantity
 	    Optional<CartItem> updatedItem = cart.getItems().stream()
-	        .filter(item -> item.getProductId().equals(productId))
+	        .filter(item -> item.getProduct().getId().equals(productId))
 	        .findFirst();
 	    updatedItem .ifPresent(item->{
 			Integer updateQuantity=item.getQuantity()+quantity;

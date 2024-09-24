@@ -27,13 +27,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public String updateProduct(long retailerId, long productId, ProductForm form) {
+	public String updateProduct(long retailerId, Long productId, ProductForm form) {
 
 		return dao.updateProduct(retailerId, productId, form);
 	}
 
 	@Override
-	public String deleteProduct(long retailerId, long productId) {
+	public String deleteProduct(long retailerId, Long productId) {
 
 		return dao.deleteProduct(retailerId, productId);
 	}

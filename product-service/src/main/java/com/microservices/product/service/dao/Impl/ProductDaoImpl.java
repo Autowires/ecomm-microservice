@@ -64,23 +64,24 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public String updateProduct(long retailerId, long productId, ProductForm form) {
+	public String updateProduct(long retailerId, Long productId, ProductForm form) {
 		Product product = new Product();
 		product.setTitle(form.getTitle());
 		product.setDescription(form.getDescription());
 		product.setPrice(form.getPrice());
 		product.setCategory(form.getCategory());
+		product.setStock(form.getStock());
 		product.setId(productId);
 
 		return sessionFactory.fromTransaction(session -> {
 			product.setRetailerId(retailerId);
-			session.persist(product);
-			return session.merge(product) == null ? "updated" : "notUpdated";
+			session.merge(product);
+			return session.merge(product) != null ? "updated" : "notUpdated";
 		});
 	}
 
 	@Override
-	public String deleteProduct(long retailerId, long productId) {
+	public String deleteProduct(long retailerId, Long productId) {
 		return sessionFactory.fromTransaction(session -> {
 			Product product = session.get(Product.class, productId);
 			if (product != null && product.getRetailerId() == retailerId) {
@@ -96,11 +97,14 @@ public class ProductDaoImpl implements ProductDao {
 	public Product findProductById(Long productId) {
 		Product product=null;
 	     Session session=sessionFactory.openSession();
-		Query<Product> query=session.createQuery("from Product p where p.id=productId",Product.class);
+	    System.out.println("inside the findProductById");
+		Query<Product> query=session.createQuery("from Product p where p.id=:productId",Product.class);
 	  	query.setParameter("productId", productId);
 		product=query.uniqueResult();
-		
+		System.out.println(product);
 		return product;
 	}
+
+	
 
 }

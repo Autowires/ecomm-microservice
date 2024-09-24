@@ -30,10 +30,11 @@ public class CartController {
 	private CartService cartService;
 	
 	@PostMapping("/addtocart/{buyerId}")
-	public ResponseEntity<Cart> addProductToCart(@PathVariable Long buyerId,@RequestParam Long productId,@RequestParam(required = false,defaultValue = "1" ) Integer quantity ){
+	public ResponseEntity<Cart> addProductToCart(@PathVariable Long buyerId,@RequestParam("productId") Long  productId,@RequestParam(required = false,defaultValue = "1" ) Integer quantity ){
 		System.out.println("hello");
 		//fetching buyer details by buyerId;
 		System.out.println(buyerId);
+		System.out.println(productId);
 		Buyer buyer=buyerService.getBuyerById(buyerId);
 		Cart cart = cartService.initializeNewCart(buyer);
 		 System.out.println("back to controller and cartId "+cart.getCartId());

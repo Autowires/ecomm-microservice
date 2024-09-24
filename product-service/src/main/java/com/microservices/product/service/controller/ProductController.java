@@ -3,6 +3,7 @@ package com.microservices.product.service.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,14 +36,19 @@ public class ProductController {
 		return productService.addProduct(retailerId, form);
 	}
 
-	@PutMapping("/{retailerId}/{productId}")
-	public String updateProduct(@PathVariable long retailerId, @PathVariable long productId,
+	@PutMapping("/updateProduct/{retailerId}/{productId}")
+	public String updateProduct(@PathVariable long retailerId, @PathVariable Long productId,
 			@RequestBody ProductForm form) {
 		return productService.updateProduct(retailerId, productId, form);
 	}
 
-	@DeleteMapping("/{retailerId}/{productId}")
-	public String deleteProduct(@PathVariable long retailerId, @PathVariable long productId) {
+	@DeleteMapping("/deleteProduct/{retailerId}/{productId}")
+	public String deleteProduct(@PathVariable long retailerId, @PathVariable Long productId) {
 		return productService.deleteProduct(retailerId, productId);
+	}
+	@GetMapping("/getproductbyid/{productId}")
+	public ResponseEntity<Product> findProductById(@PathVariable Long productId) {
+		Product product=productService.findProductById(productId);
+		return ResponseEntity.ok(product);
 	}
 }

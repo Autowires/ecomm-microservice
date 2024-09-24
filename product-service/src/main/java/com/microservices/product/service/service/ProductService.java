@@ -11,9 +11,9 @@ public interface ProductService {
 
 	String addProduct(long retailerId, ProductForm form);
 
-	String updateProduct(long retailerId, long productId, ProductForm form);
+	String updateProduct(long retailerId, Long productId, ProductForm form);
 
-	String deleteProduct(long retailerId, long productId);
+	String deleteProduct(long retailerId, Long productId);
 
 	Product findProductById(Long productId);
 

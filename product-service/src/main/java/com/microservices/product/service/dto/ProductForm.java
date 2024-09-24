@@ -8,4 +8,5 @@ public class ProductForm {
 	private String description, category;
 	private double price;
 	private Integer stock;
+
 }

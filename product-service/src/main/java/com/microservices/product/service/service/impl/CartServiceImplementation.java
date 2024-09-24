@@ -60,17 +60,20 @@ public class CartServiceImplementation implements CartService {
 	@Override
 	public Cart addItemToCart(Long cartId, Long productId, Integer quantity) {
 		Cart cart=getCart(cartId);
+		System.out.println(productId);
 		Product product=productService.findProductById(productId);
+		System.out.println("the product details are");
+		System.out.println(product);
 		System.out.println("product details+++++++++++++++++++");
 		System.out.println("ProductId"+product.getId());
 			CartItem cartItem = cart.getItems()
 	                .stream()
-	                .filter(item -> item.getProductId().equals(productId))
+	                .filter(item ->item.getProduct().getId().equals(productId))
 	                .findFirst().orElse(new CartItem());
 		if(cartItem.getCartItemId()==null) {
 			System.out.println("inside cartItem==null");
 			cartItem.setCart(cart);
-			cartItem.setProductId(productId);
+			cartItem.setProduct(product);
 			cartItem.setQuantity(quantity);
 		}else {
 			cartItem.setQuantity(cartItem.getQuantity()+quantity);

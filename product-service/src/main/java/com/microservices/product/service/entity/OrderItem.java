@@ -8,29 +8,57 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderItem {
+//	  @Id
+//	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//	    private Long OrderItemId;
+//	    private Integer quantity;
+//	    private double price;
+//
+//
+//	    @ManyToOne
+//	    @JoinColumn(name = "order_id")
+//	    private Orders order;
+//
+//	    @ManyToOne
+//	    @JoinColumn(name = "product_id")
+//	    private Product product;
+//
+//	    public OrderItem(Orders order,Product product, Integer quantity, double price) {
+//	        this.order = order;
+//	        this.product= product;
+//	        this.quantity = quantity;
+//	        this.price = price;
+//
+//	    }
 	  @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long OrderItemId;
 	    private Integer quantity;
-	    private BigDecimal price;
+	    private double price;
 
 
 	    @ManyToOne
 	    @JoinColumn(name = "order_id")
 	    private Orders order;
 
-	  private Long productId;
+	    @ManyToOne
+	    @JoinColumn(name = "product_id")
+	    private Product product;
 
-	    public OrderItem(Orders order, Long productId, Integer quantity, BigDecimal price) {
+	    public OrderItem(Orders order, Product product, Integer quantity, double price) {
 	        this.order = order;
-	        this.productId = productId;
+	        this.product = product;
 	        this.quantity = quantity;
 	        this.price = price;
 

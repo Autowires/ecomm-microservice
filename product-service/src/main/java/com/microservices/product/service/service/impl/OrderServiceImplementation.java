@@ -41,17 +41,17 @@ public class OrderServiceImplementation implements OrderService {
 	@Override
 	public Orders placeOrder(Orders order, Long buyerId) {
 		// TODO Auto-generated method stub
-		Orders saveOrder=null;
+	
 		
 	
 			Cart cart=cartService.getBuyerCartById(buyerId);
 			Orders orders=createOrders(order,cart);
-			Orders savedOrder = orderRepository.save(order); // Save Order first, making it persistent
+//			Orders savedOrder = orderRepository.save(order); // Save Order first, making it persistent
 			
-			   List<OrderItem> orderItemList = createOrderItems(order, cart);
-			   savedOrder.setOrderItems(new HashSet<>(orderItemList));
-	          saveOrder=orderRepository.save(orders);
-		if(saveOrder != null) {
+			   List<OrderItem> orderItemList = createOrderItems(orders, cart);
+			   orders.setOrderItems(new HashSet<>(orderItemList));
+			    orders=orderRepository.save(orders);
+		if(orders!= null) {
 			cartService.clearBuyerCart(buyerId);
 		}
 //		}
@@ -59,11 +59,11 @@ public class OrderServiceImplementation implements OrderService {
 //		catch(Exception e) {
 //			throw new OrderProcessingException("failed to place the order try agian after some time");
 //		}
-		return  saveOrder;
+		return  orders;
 		
 	}
 	
-	private List<OrderItem> createOrderItems(Orders order, Cart cart) {
+	private List<OrderItem> createOrderItems(Orders orders, Cart cart) {
 	List <OrderItem> orderedItems=new ArrayList();
 		for(CartItem cartItem:cart.getItems()) {
 		Product product=cartItem.getProduct();
@@ -73,7 +73,7 @@ public class OrderServiceImplementation implements OrderService {
 		orderItem.setPrice(product.getPrice());
 		orderItem.setProduct(product);
 		orderItem.setQuantity(quantity);
-		orderItem.setOrder(order);
+		orderItem.setOrder(orders);
 		orderedItems.add(orderItem);
 		productRepository.save(product);
 	}

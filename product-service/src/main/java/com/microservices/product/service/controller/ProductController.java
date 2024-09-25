@@ -30,6 +30,11 @@ public class ProductController {
 			@RequestParam(required = false) String search) {
 		return productService.getProducts(category, search);
 	}
+	@GetMapping("/category")
+	public List<String> displayCategories(){
+		return productService.getCategories();
+		
+	}
 
 	@PostMapping("addproduct/{retailerId}")
 	public String addProduct(@PathVariable long retailerId, @RequestBody ProductForm form) {

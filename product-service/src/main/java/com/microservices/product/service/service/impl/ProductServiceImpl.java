@@ -46,5 +46,10 @@ public class ProductServiceImpl implements ProductService {
 		
 		return product;
 	}
+	
+	@Override
+	public List<String> getCategories() {
+		return dao.getCategories();
+	}
 
 }

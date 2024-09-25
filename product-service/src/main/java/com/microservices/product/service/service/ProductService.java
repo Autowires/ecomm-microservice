@@ -17,4 +17,6 @@ public interface ProductService {
 
 	Product findProductById(Long productId);
 
+	List<String> getCategories();
+
 }

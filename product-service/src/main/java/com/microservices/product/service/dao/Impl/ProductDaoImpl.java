@@ -105,6 +105,21 @@ public class ProductDaoImpl implements ProductDao {
 		return product;
 	}
 
+	@Override
+	public List<String> getCategories() {
+	    Session session = null;
+	    List<String> categories = null;
+	    try {
+	        session = sessionFactory.openSession();
+	        Query<String> query = session.createQuery("select distinct p.category from Product p", String.class);
+	        categories = query.getResultList();
+	    } finally {
+	        if (session != null) {
+	            session.close();
+	        }
+	    }
+	    return categories;
+	}
 	
 
 }

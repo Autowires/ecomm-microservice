@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public List<String> recentProducts(){
+	public List<Object> recentProducts(){
 		var uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/products/recentAdds")
 				                      .build()
 				                      .toUriString();

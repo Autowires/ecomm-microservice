@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +33,42 @@
     </div>
   </div>
   <!-- Jumbotron End -->
+  
+<!-- New Products Carousel -->
+<section class="new-products my-5">
+    <div class="container">
+        <h3>New Products</h3>
+   <div class="container">
+    <div class="row">
+        <c:forEach var="product" items="${newProducts}">
+            <div class="col-md-2">
+                <div class="card text-center">
+                    <img src="img/${product.id}.jpg" class="img-fluid" style="width: 150px; height: 150px;" alt="${product.title}" />
+                    <div class="card-body">
+                        <h6 class="card-title">${product.title}</h6>
+                        <p class="card-text">Price: $${product.price}</p>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
+    </div>
+</div>
+
+
+            </div>
+           <!--
+            <button class="carousel-control-prev" type="button" data-bs-target="#newProductsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#newProductsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button> -->
+        </div>
+    </div>
+</section>
+<!-- New Products Carousel End -->
 
 <!-- Products Section -->
 <section>

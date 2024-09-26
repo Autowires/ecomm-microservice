@@ -10,7 +10,7 @@ public interface ProductService {
 
 	List<String> getAllCategories();
 
-	List<String> recentProducts();
+	List<Object> recentProducts();
 
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.microservices.app.dto.Product;
 import com.microservices.app.service.LoginService;
 import com.microservices.app.service.ProductService;
 
@@ -27,7 +28,7 @@ public class LoginRegisterController {
 
 	@GetMapping("/")
 	public String home(Model model) {
-		List<String> products=productService.recentProducts();
+		List<Object> products=productService.recentProducts();
 		model.addAttribute("newProducts", products);
 		System.out.println(products);
 		return "index";

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.UserResponseProjection;
+import com.microservices.authentication.dto.retailerDto;
 import com.microservices.authentication.entity.MyUser;
 import com.microservices.authentication.entity.MyUser.UserStatus;
+import com.microservices.authentication.entity.Retailer;
 
 @Service
 public class MyUserService {
@@ -24,6 +26,11 @@ public class MyUserService {
 		// TODO Auto-generated method stub
 		dao.updateUserStatus(userId, status);
 
+	}
+
+	public List<Retailer> retailersUnderReview() {
+		
+		return dao.retailersUnderReview();
 	}
 
 }

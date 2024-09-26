@@ -13,7 +13,7 @@
 </head>
 <body>
 <!--Main Navigation-->
-<jsp:include page="header.jsp"></jsp:include>
+<%@include file="header.jsp"%>
 <header>
   <!-- Heading -->
   <div class="bg-primary mb-4">
@@ -89,7 +89,7 @@
   </div>
 </section>
 
-<jsp:include page="footer.jsp"></jsp:include>
+<%@include file="footer.jsp" %>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

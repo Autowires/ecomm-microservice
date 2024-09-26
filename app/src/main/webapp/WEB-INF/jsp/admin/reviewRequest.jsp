@@ -52,14 +52,14 @@
 		                      <input type="hidden" name="_method" value="PUT" />
 		                     <input type="hidden" name="userId" value="${user.id}" />
 		                     <input type="hidden" name="status" value="ACTIVE" />
-		                     <button type="submit" class="btn btn-success btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>Accept</button>
+		                     <button type="submit" class="btn btn-success btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>&#10004; <!-- Checkmark --></button>
 	                             </form>
 
 	                            <form action="/admin/status" method="post" style="display:inline;">
 		                        <input type="hidden" name="_method" value="PUT" />
 		                        <input type="hidden" name="userId" value="${user.id}" />
 		                        <input type="hidden" name="status" value="DEACTIVATED" />
-		                         <button type="submit" class="btn btn-danger btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>Reject</button>
+		                         <button type="submit" class="btn btn-danger btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>&#10006; <!-- Cross --></button>
 	                                 </form>
                                       </td>
 						</tr>

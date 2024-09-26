@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.app.dto.UserStatus;
 import com.microservices.app.dto.Userdto;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @Controller
 public class UsersController {
@@ -75,8 +77,8 @@ public class UsersController {
 	}
 
 	@PutMapping("/admin/status")
-	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status ) {
-		List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
+	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status, HttpServletRequest request) {
+	    List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
 
 	    if (instances.isEmpty()) {
 	        ModelAndView mv = new ModelAndView("error");
@@ -112,14 +114,19 @@ public class UsersController {
 	        // Handle the error gracefully
 	        ModelAndView mv = new ModelAndView("error");
 	        mv.addObject("message", "Failed to update user status: " + e.getMessage());
-	        
 	        return mv;
 	    }
 
-	    // Redirect back to the users page after the update
+	    String referer = request.getHeader("Referer");
+	    System.out.println("Referer: " + referer);
+	    
+	   if (referer != null && referer.contains("/admin/reviewRequest")) {
+	        return new ModelAndView("redirect:/admin/reviewRequest"); // Redirect to review requests page
+	    }
+
+	    // Default redirection if no specific referer matched
 	    return new ModelAndView("redirect:/admin");
 	}
-
 
 
 

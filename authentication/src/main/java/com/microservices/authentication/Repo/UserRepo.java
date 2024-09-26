@@ -41,7 +41,7 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
     @Query("SELECT u.id as id, u.username as username, u.status as status, u.email as email, " +
     	       "u.userType as userType, u.age as age, u.contactNo as contactNo, " +
     	       "u.createdAt as createdAt, u.lastSeen as lastSeen " +
-    	       "FROM MyUser u")
+    	       "FROM MyUser u where u.status in ('DEACTIVATED','ACTIVE')")
     	List<UserResponseProjection> getAllUsers();
 
     // Update user status by userId

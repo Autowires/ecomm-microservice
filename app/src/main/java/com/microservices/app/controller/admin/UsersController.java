@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.app.dto.UserStatus;
 import com.microservices.app.dto.Userdto;
+
+import ch.qos.logback.core.model.Model;
 
 
 @Controller
@@ -62,7 +65,11 @@ public class UsersController {
 	    }
 	}
 
-	
+	@GetMapping("/admin/reviewRequest")
+	public String reviewRequests(Model model) {
+		return "admin/reviewRequest";
+		
+	}
 
 	@PutMapping("/admin/status")
 	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status ) {

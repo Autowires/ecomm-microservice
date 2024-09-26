@@ -1,6 +1,8 @@
 package com.microservices.app.controller.admin;
 
 import java.util.Arrays;
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,28 +12,21 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.app.dto.UserStatus;
 import com.microservices.app.dto.Userdto;
-
-import ch.qos.logback.core.model.Model;
 
 
 @Controller
@@ -64,10 +59,18 @@ public class UsersController {
 	        return new ModelAndView("error").addObject("message", "Failed to contact admin service: " + e.getMessage());
 	    }
 	}
-
+	
 	@GetMapping("/admin/reviewRequest")
 	public String reviewRequests(Model model) {
-		return "admin/reviewRequest";
+		String baseUrl = discoveryClient.getInstances("authentication").stream()
+                .findFirst()
+                .map(si -> si.getUri().toString() + "/admin/users/reviewRequest")
+                .orElseThrow(() -> new RuntimeException("Authentication service is not available"));
+		System.out.println(baseUrl);
+	      List<Object> retailersUnderReview = new RestTemplate().exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()),List.class).getBody();
+	      System.out.println(retailersUnderReview);
+	      model.addAttribute("underReview",retailersUnderReview);
+	      return "admin/reviewRequest";
 		
 	}
 
@@ -78,9 +81,6 @@ public class UsersController {
 //		String status = "DEACTIVATED";
 		
 		
-//		
-//		
-//		
 //		// where is authentication service to update the users status how i get it?
 //		var instances = discoveryClient.getInstances("authentication");
 //		var service = instances.get(0);
@@ -93,35 +93,8 @@ public class UsersController {
 //		RestTemplate rt = new RestTemplate();
 //		rt.put(path, null);
 //		
-//		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	    List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
+//
+		List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
 
 	    if (instances.isEmpty()) {
 	        ModelAndView mv = new ModelAndView("error");

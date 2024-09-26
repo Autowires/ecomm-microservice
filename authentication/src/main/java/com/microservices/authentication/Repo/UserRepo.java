@@ -53,8 +53,10 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
     @Query("UPDATE MyUser u SET u.status = :status WHERE u.id = :userId")
     void updateUserStatus(@Param("userId") long userId, @Param("status") UserStatus status);
     
-    @Query("SELECT  r.shopName, r.GSTIN, r.pannumber, r.address from Retailer r where r.status='UNDER_REVIEW'")
-    	List<Retailer> retailersUnderReview();
+    @Query("SELECT new com.microservices.authentication.dto.retailerDto(r.id, r.username, r.email, r.shopName, r.GSTIN, r.pannumber, r.address, r.status) " +
+    	       "FROM Retailer r WHERE r.status = 'UNDER_REVIEW'")
+    	List<retailerDto> retailersUnderReview();
+
 
 
 

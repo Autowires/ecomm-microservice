@@ -28,7 +28,7 @@ public class MyUserService {
 
 	}
 
-	public List<Retailer> retailersUnderReview() {
+	public List<retailerDto> retailersUnderReview() {
 		
 		return dao.retailersUnderReview();
 	}

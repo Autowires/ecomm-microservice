@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.microservices.authentication.dto.UserResponseProjection;
+import com.microservices.authentication.dto.retailerDto;
 import com.microservices.authentication.entity.MyUser.UserStatus;
-import com.microservices.authentication.entity.Retailer;
 import com.microservices.authentication.service.MyUserService;
 
 @RestController
@@ -52,7 +52,7 @@ public class UsersController {
 
 	@GetMapping("/underReview")
 	public ResponseEntity<?> retailersUnderReview() {
-		List<Retailer> retailers = userService.retailersUnderReview();
+		List<retailerDto> retailers = userService.retailersUnderReview();
 		if (retailers == null || retailers.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No retailers under review");
 		}

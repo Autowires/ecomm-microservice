@@ -6,229 +6,185 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InstaCart</title>
-    <style>
-       body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://via.placeholder.com/1920x1080') no-repeat center center fixed;
-    background-size: cover;
-    color: #333;
-}
-
-header {
-    background-color: rgba(0, 0, 0, 0.7); /* Slightly lighter dark overlay */
-    color: #f0f0f0;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2rem;
-    color: #ff6f61; /* Vibrant Coral color */
-}
-
-nav {
-    display: flex;
-    gap: 1rem;
-}
-
-nav a {
-    color: #f0f0f0;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    transition: background 0.3s, color 0.3s;
-    background: rgba(255, 255, 255, 0.3);
-}
-
-nav a:hover {
-    background: rgba(255, 255, 255, 0.6);
-    color: #ff6f61;
-}
-
-.container {
-    padding: 20px;
-}
-
-.welcome {
-    background: url('https://via.placeholder.com/1920x800') no-repeat center center;
-    background-size: cover;
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
-    margin-bottom: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-}
-
-.welcome h2 {
-    font-size: 3rem;
-    margin: 0;
-    color: #ffeb3b; /* Bright Yellow color */
-}
-
-.category {
-    margin-bottom: 30px;
-}
-
-.category h2 {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 2.5rem;
-    color: #ff6f61; /* Vibrant Coral color */
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three items per row */
-    gap: 20px;
-}
-
-.product {
-    background: #ffffff;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    border-radius: 10px;
-    text-align: center;
-    padding: 20px;
-    transition: transform 0.3s;
-}
-
-.product img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.product:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-}
-
-footer {
-    background-color: #333; /* Dark Gray background */
-    color: #f0f0f0;
-    text-align: center;
-    padding: 20px;
-    box-shadow: 0 -2px 4px rgba(0,0,0,0.4);
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-footer p {
-    margin: 10px 0;
-}
-
-footer .footer-links {
-    margin: 10px 0;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-footer .footer-links a {
-    color: #ffeb3b; /* Bright Yellow color */
-    text-decoration: none;
-}
-
-footer .footer-links a:hover {
-    text-decoration: underline;
-}
-
-    </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
+<%@include file="header.jsp" %>
 
-<header>
-    <h1>InstaCart</h1>
-    <nav>
-        <a href="/login">Login</a>
-        <a href="/register">Sign Up</a>
-        <a href="#">Contact Us</a>
-    </nav>
-</header>
-
-<div class="container">
-
-    <!-- Welcome Page -->
-    <div class="welcome">
-        <h2>Welcome to InstaCart!</h2>
-        <p>Your one-stop shop for all your needs.</p>
+  <!-- Jumbotron -->
+  <div class="bg-primary text-white py-5">
+    <div class="container py-5">
+      <h1>Best products & <br />brands in our store</h1>
+      <p>Trendy Products, Factory Prices, Excellent Service</p>
+      <button type="button" class="btn btn-outline-light">Learn more</button>
+      <button type="button" class="btn btn-light text-primary border border-white">
+        <span>Purchase now</span>
+      </button>
     </div>
+  </div>
+  <!-- Jumbotron End -->
 
-    <!-- Electronics Section -->
-    <section class="category" id="electronics">
-        <h2>Electronics</h2>
-        <div class="product-grid">
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Smartphone"><p>Smartphone</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Laptop"><p>Laptop</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Camera"><p>Camera</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Headphones"><p>Headphones</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Tablet"><p>Tablet</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Smartwatch"><p>Smartwatch</p></div>
+<!-- Products Section -->
+<section>
+  <div class="container my-5">
+    <header class="mb-4">
+      <h3>Categories</h3>
+    </header>
+    <div class="row">
+      <!-- Card Template Start -->
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/cameras.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Cameras"   onClick="onCategoryClick('cameras')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Cameras</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
         </div>
-    </section>
-
-    <!-- Clothes Section -->
-    <section class="category" id="clothes">
-        <h2>Clothes</h2>
-        <div class="product-grid">
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Men's Wear"><p>Men's Wear</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Women's Wear"><p>Women's Wear</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Fashion Accessories"><p>Fashion Accessories</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Children's Wear"><p>Children's Wear</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Footwear"><p>Footwear</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Sportswear"><p>Sportswear</p></div>
+      </div>
+      <!-- Repeat for other products -->
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/headphones.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Headphones"  onClick="onCategoryClick('headphones')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Headphones</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
         </div>
-    </section>
-
-    <!-- Accessories Section -->
-    <section class="category" id="accessories">
-        <h2>Accessories</h2>
-        <div class="product-grid">
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Bags"><p>Bags</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Jewelry"><p>Jewelry</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Watches"><p>Watches</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Belts"><p>Belts</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Sunglasses"><p>Sunglasses</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Scarves"><p>Scarves</p></div>
+      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/smartwatches.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Smart Watches" onClick="onCategoryClick('smartwatches')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Smart Watches</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
         </div>
-    </section>
-
-    <!-- Other Products Section -->
-    <section class="category" id="other-products">
-        <h2>Other Products</h2>
-        <div class="product-grid">
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Home Appliances"><p>Home Appliances</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Books"><p>Books</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Toys"><p>Toys</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Furniture"><p>Furniture</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Sports Equipment"><p>Sports Equipment</p></div>
-            <div class="product"><img src="https://via.placeholder.com/200x180" alt="Gardening Tools"><p>Gardening Tools</p></div>
+      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/huawei-p50.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Mobile Phones"  onClick="onCategoryClick('mobilephone')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Mobile Phones</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
         </div>
-    </section>
+      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/menswear.webp" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Mens Fashion"  onClick="onCategoryClick('mensfashion')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Mens Fashion</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
+        </div>
+      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/womenswear.webp" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Women Fashion"  onClick="onCategoryClick('womenfashion')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Womens Fashion</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
+        </div>
+      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/kids1.webp" class="card-img-top" style="aspect-ratio: 1 / 1" alt="kids fashion"  onClick="onCategoryClick('kidsfashion')"/>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Kids Fashion</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
+        </div>
+      </div>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card w-100 my-2 shadow">
+          <img src="img/fashionacces.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="fashion accessories" onClick="onCategoryClick('fashionaccessories')" />
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Fashion Accessories</h5>
+            <div class="card-footer mt-auto"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Continue for other categories -->
+      <script type="text/javascript">
+  function onCategoryClick(category) {
+    // Check if user is logged in
+    if (!isUserLoggedIn()) {
+      window.location.href = "/login?redirect=" + encodeURIComponent(category);
+    } else {
+      window.location.href = "/products?category=" + encodeURIComponent(category);
+    }
+  }
 
-</div>
-
-<footer>
-    <p>&copy; 2024 InstaCart. All rights reserved.</p>
-    <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Support</a>
-        <a href="#">Contact Us</a>
+  // Example check for user login status
+  function isUserLoggedIn() {
+    // You can check for session storage, local storage, or any session cookie
+    return sessionStorage.getItem("token") !== null; // or your specific logic
+  }
+</script>
     </div>
-    <p>Support: support@instacart.com | Contact: contact@instacart.com</p>
-</footer>
+  </div>
+</section>
+<!-- Products Section End -->
+
+<!-- Feature Section -->
+<section class="mt-5 bg-light">
+  <div class="container text-dark pt-3">
+    <header class="pt-4 pb-3">
+      <h3>Why choose us</h3>
+    </header>
+    <div class="row mb-4">
+      <div class="col-lg-4 col-md-6">
+        <figure class="d-flex align-items-center mb-4">
+          <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
+            <i class="fas fa-camera-retro fa-2x text-primary"></i>
+          </span>
+          <figcaption class="info">
+            <h6 class="title">Reasonable prices</h6>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor.</p>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <figure class="d-flex align-items-center mb-4">
+          <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
+            <i class="fas fa-star fa-2x text-primary"></i>
+          </span>
+          <figcaption class="info">
+            <h6 class="title">Best quality</h6>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor.</p>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <figure class="d-flex align-items-center mb-4">
+          <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
+            <i class="fas fa-plane fa-2x text-primary"></i>
+          </span>
+          <figcaption class="info">
+            <h6 class="title">Worldwide shipping</h6>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Feature Section End -->
+
+<%@include file="footer.jsp" %>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
 
 </body>
 </html>

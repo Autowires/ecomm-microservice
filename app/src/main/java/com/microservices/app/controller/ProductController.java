@@ -37,11 +37,5 @@ public class ProductController {
     	model.addAttribute("categories",categories);
         return "products";
     }
-    @GetMapping("/recentAdds")
-    public String recentAddedProducts(Model model) {
-    	List<String> products=productService.recentProducts();
-    	System.out.println(products);
-    	return "index";
-    }
     
 }

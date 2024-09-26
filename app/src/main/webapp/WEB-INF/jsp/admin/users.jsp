@@ -60,12 +60,12 @@
 								<button type="submit" class="btn btn-success btn-sm" <c:if test="${user.status == 'ACTIVE'}">disabled</c:if>>Activate</button>
 							</form>
 
-							<form action="/admin/status" method="post" style="display:inline;">
+							<%-- <form action="/admin/status" method="post" style="display:inline;">
 								<input type="hidden" name="_method" value="PUT" />
 								<input type="hidden" name="userId" value="${user.id}" />
 								<input type="hidden" name="status" value="UNDER REVIEW" />
 								<button type="submit" class="btn btn-warning btn-sm" <c:if test="${user.status == 'UNDER_REVIEW'}">disabled</c:if>>UNDER REVIEW</button>
-							</form>
+							</form> --%>
 
 							<form action="/admin/status" method="post" style="display:inline;">
 								<input type="hidden" name="_method" value="PUT" />

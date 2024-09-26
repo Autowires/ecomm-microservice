@@ -30,7 +30,9 @@ public class MyUserService {
 
 	public List<retailerDto> retailersUnderReview() {
 		
-		return dao.retailersUnderReview();
+		List<retailerDto> retailers= dao.retailersUnderReview();
+		System.out.println(retailers);
+		return retailers;
 	}
 
 }

@@ -25,6 +25,10 @@
 					<th scope="col">ID</th>
 					<th scope="col">Username</th>
 					<th scope="col">Email</th>
+					<th scope="col">Shop Name</th>
+					<th scope="col">GSTIN</th>
+					<th scope="col">Pan Number</th>
+					<th scope="col">Address</th>
 					<th scope="col">Status</th>
 					<th scope="col">Manage Status</th>
 				</tr>
@@ -32,32 +36,34 @@
 			<tbody>
 				<!-- Loop through only retailers -->
 				<c:forEach var="user" items="${users}">
-					<!-- Check if the user is a retailer -->
-					<c:if test="${user.userType == 'RETAILER'}">
+				
 						<tr>
 							<td>${user.id}</td>
 							<td>${user.username}</td>
 							<td>${user.email}</td>
+							<td>${user.shopName}</td>
+							<td>${user.gstin}</td>
+							<td>${user.pannumber}</td>
+							<td>${user.address}</td>
 							<td>${user.status}</td>
 							<td>
-								<!-- Allow Form for each retailer -->
-								<form action="/admin/status" method="post" style="display:inline;">
-									<input type="hidden" name="_method" value="PUT" />
-									<input type="hidden" name="userId" value="${user.id}" />
-									<input type="hidden" name="status" value="ACTIVE" />
-									<button type="submit" class="btn btn-success btn-sm" <c:if test="${user.status == 'ACTIVE'}">disabled</c:if>>Allow</button>
-								</form>
+	
+	                          <form action="/admin/status" method="post" style="display:inline;">
+		                      <input type="hidden" name="_method" value="PUT" />
+		                     <input type="hidden" name="userId" value="${user.id}" />
+		                     <input type="hidden" name="status" value="ACTIVE" />
+		                     <button type="submit" class="btn btn-success btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>Accept</button>
+	                             </form>
 
-								<!-- Reject Form for each retailer -->
-								<form action="/admin/status" method="post" style="display:inline;">
-									<input type="hidden" name="_method" value="PUT" />
-									<input type="hidden" name="userId" value="${user.id}" />
-									<input type="hidden" name="status" value="DEACTIVATED" />
-									<button type="submit" class="btn btn-danger btn-sm" <c:if test="${user.status == 'DEACTIVATED'}">disabled</c:if>>Reject</button>
-								</form>
-							</td>
+	                            <form action="/admin/status" method="post" style="display:inline;">
+		                        <input type="hidden" name="_method" value="PUT" />
+		                        <input type="hidden" name="userId" value="${user.id}" />
+		                        <input type="hidden" name="status" value="DEACTIVATED" />
+		                         <button type="submit" class="btn btn-danger btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>Reject</button>
+	                                 </form>
+                                      </td>
 						</tr>
-					</c:if>
+					
 				</c:forEach>
 			</tbody>
 		</table>

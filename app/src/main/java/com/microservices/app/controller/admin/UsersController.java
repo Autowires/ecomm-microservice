@@ -69,31 +69,13 @@ public class UsersController {
 		System.out.println(baseUrl);
 	      List<Object> retailersUnderReview = new RestTemplate().exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()),List.class).getBody();
 	      System.out.println(retailersUnderReview);
-	      model.addAttribute("underReview",retailersUnderReview);
+	      model.addAttribute("users",retailersUnderReview);
 	      return "admin/reviewRequest";
 		
 	}
 
 	@PutMapping("/admin/status")
 	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status ) {
-	    // Discover the "admin" service instances
-//		long userId=1;
-//		String status = "DEACTIVATED";
-		
-		
-//		// where is authentication service to update the users status how i get it?
-//		var instances = discoveryClient.getInstances("authentication");
-//		var service = instances.get(0);
-//		// how do i get her address
-//		
-//		var address = service.getUri();
-//		
-//		var path = address+"?userId="+userId+"&status="+status;
-//		
-//		RestTemplate rt = new RestTemplate();
-//		rt.put(path, null);
-//		
-//
 		List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
 
 	    if (instances.isEmpty()) {
@@ -103,7 +85,7 @@ public class UsersController {
 	    }
 
 	    ServiceInstance serviceInstance = instances.get(0);
-	    String baseUrl = serviceInstance.getUri().toString() + "/admin/users/status?userId";
+	    String baseUrl = serviceInstance.getUri().toString() + "/admin/users/status";
 
 	    // Create the URL for PUT request with userId and status as parameters
 	    UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
@@ -135,7 +117,7 @@ public class UsersController {
 	    }
 
 	    // Redirect back to the users page after the update
-	    return new ModelAndView("redirect:/admin/users");
+	    return new ModelAndView("redirect:/admin");
 	}
 
 

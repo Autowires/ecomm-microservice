@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.microservices.product.service.dao.ProductDao;
 import com.microservices.product.service.dto.ProductForm;
+import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
 import com.microservices.product.service.service.ProductService;
 
@@ -41,12 +42,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product findProductById(Long productId) {
 		// TODO Auto-generated method stub
-		Product product=dao.findProductById(productId);
-		
-		
+		Product product = dao.findProductById(productId);
+
 		return product;
 	}
-	
+
 	@Override
 	public List<String> getCategories() {
 		return dao.getCategories();
@@ -55,6 +55,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> recentAdds() {
 		return dao.recentAdds();
+	}
+
+	@Override
+	public ProductInfoResponse getProducInfo(long productId) {
+		return dao.getProductInfo(productId);
 	}
 
 }

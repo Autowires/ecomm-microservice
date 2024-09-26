@@ -3,6 +3,7 @@ package com.microservices.product.service.dao;
 import java.util.List;
 
 import com.microservices.product.service.dto.ProductForm;
+import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
 
 public interface ProductDao {
@@ -20,5 +21,7 @@ public interface ProductDao {
 	List<String> getCategories();
 
 	List<Product> recentAdds();
+
+	ProductInfoResponse getProductInfo(long productId);
 
 }

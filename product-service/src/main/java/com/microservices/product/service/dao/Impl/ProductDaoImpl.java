@@ -120,6 +120,24 @@ public class ProductDaoImpl implements ProductDao {
 	    }
 	    return categories;
 	}
+
+	@Override
+	public List<Product> recentAdds() {
+	    Session session = null;
+	    List<Product> products = null;
+	    try {
+	        session = sessionFactory.openSession();
+	        Query<Product> query = session.createQuery("from Product p order by p.registeredAt DESC", Product.class);
+	        query.setMaxResults(10); 
+	        
+	        products = query.getResultList();
+	    } finally {
+	        if (session != null) {
+	            session.close();
+	        }
+	    }
+	    return products;
+	}
 	
 
 }

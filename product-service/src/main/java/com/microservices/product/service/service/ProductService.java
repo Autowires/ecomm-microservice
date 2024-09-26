@@ -19,4 +19,6 @@ public interface ProductService {
 
 	List<String> getCategories();
 
+	List<Product> recentAdds();
+
 }

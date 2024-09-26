@@ -52,4 +52,9 @@ public class ProductServiceImpl implements ProductService {
 		return dao.getCategories();
 	}
 
+	@Override
+	public List<Product> recentAdds() {
+		return dao.recentAdds();
+	}
+
 }

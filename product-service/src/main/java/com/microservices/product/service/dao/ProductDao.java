@@ -19,4 +19,6 @@ public interface ProductDao {
 
 	List<String> getCategories();
 
+	List<Product> recentAdds();
+
 }

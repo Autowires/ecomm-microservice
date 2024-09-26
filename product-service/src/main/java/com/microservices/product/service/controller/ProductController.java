@@ -30,10 +30,14 @@ public class ProductController {
 			@RequestParam(required = false) String search) {
 		return productService.getProducts(category, search);
 	}
-	@GetMapping("/category")
+	@GetMapping("/categories")
 	public List<String> displayCategories(){
 		return productService.getCategories();
 		
+	}
+	@GetMapping("/recentAdds")
+	public List<Product> recentAddedProducts(){
+		return productService.recentAdds();
 	}
 
 	@PostMapping("addproduct/{retailerId}")

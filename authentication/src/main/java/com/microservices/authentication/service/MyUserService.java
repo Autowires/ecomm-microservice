@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.microservices.authentication.Repo.UserRepo;
-import com.microservices.authentication.dto.UserResponse;
 import com.microservices.authentication.dto.UserResponseProjection;
 import com.microservices.authentication.entity.MyUser;
 import com.microservices.authentication.entity.MyUser.UserStatus;

@@ -36,102 +36,85 @@ public class UsersController {
 
 	@Autowired
 	private DiscoveryClient discoveryClient;
-
 	@RequestMapping("/admin")
 	public ModelAndView getUserAndView(@RequestParam(required = false) String role) {
-	    // Discover instances of the "authentication" service
-	    List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
+	    String baseUrl = discoveryClient.getInstances("authentication").stream()
+	                                    .findFirst()
+	                                    .map(si -> si.getUri().toString() + "/admin/users")
+	                                    .orElseThrow(() -> new RuntimeException("Authentication service is not available"));
 
-	    // Handle the case where no instances are found
-	    if (instances == null || instances.isEmpty()) {
-	        ModelAndView mv = new ModelAndView("error");
-	        mv.addObject("message", "Authentication service is not available");
-	        return mv;
-	    }
-
-	    // Get the first available instance
-	    ServiceInstance serviceInstance = instances.get(0);
-	    String baseUrl = serviceInstance.getUri().toString() + "/admin/users";
-
-	    // Append the le' parameter if provided
-
-	    // Debugging: Log the URL being called
-	    System.out.println("Calling URL: " + baseUrl);
-
-	    // Create RestTemplate to call the external service
-	    RestTemplate restTemplate = new RestTemplate();
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
-	    String response;
 	    try {
-	        // Make the GET request to the admin service
-	        ResponseEntity<String> responseEntity = restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class);
-
-	        // Check if the response is null or contains no data
-	        if (responseEntity == null || responseEntity.getBody() == null) {
-	            throw new Exception("Received null response from admin service");
+	        String response = new RestTemplate().exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class).getBody();
+	        List<Userdto> users = new ObjectMapper().readValue(response, new TypeReference<List<Userdto>>() {});
+	        
+	        if (role != null) {
+	            users = users.stream().filter(u -> u.getUserType().equals(role)).toList();
 	        }
 
-	        response = responseEntity.getBody();
-
-	        // Debugging: Log the response
-	        System.out.println("Response from admin service: " + response);
-
+	        return new ModelAndView("admin/users").addObject("users", users);
+	        
 	    } catch (HttpClientErrorException e) {
-	        // Handle HTTP client errors (4xx)
-	        ModelAndView mv = new ModelAndView("error");
-	        mv.addObject("message", "Client error: " + e.getStatusCode());
-	        return mv;
+	        return new ModelAndView("error").addObject("message", "Client error: " + e.getStatusCode());
 	    } catch (ResourceAccessException e) {
-	        // Handle connectivity issues (service not reachable)
-	        ModelAndView mv = new ModelAndView("error");
-	        mv.addObject("message", "Service not reachable: " + e.getMessage());
-	        return mv;
+	        return new ModelAndView("error").addObject("message", "Service not reachable: " + e.getMessage());
 	    } catch (Exception e) {
-	        // Handle all other errors
-	        ModelAndView mv = new ModelAndView("error");
-	        mv.addObject("message", "Failed to contact admin service: " + e.getMessage());
-	        return mv;
+	        return new ModelAndView("error").addObject("message", "Failed to contact admin service: " + e.getMessage());
 	    }
-
-	    // Deserialize the JSON response into a list of Userdto objects
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    List<Userdto> users;
-	    try {
-	        users = objectMapper.readValue(response, new TypeReference<List<Userdto>>() {});
-	    } catch (JsonProcessingException e) {
-	        // Handle JSON parsing errors
-	        ModelAndView mv = new ModelAndView("error");
-	        mv.addObject("message", "Failed to parse user data: " + e.getMessage());
-	        return mv;
-	    }
-
-	    // Ensure the list of users is not null
-	    if (users == null || users.isEmpty()) {
-	        ModelAndView mv = new ModelAndView("error");
-	        mv.addObject("message", "No users found");
-	        return mv;
-	    }
-
-	    // Set up ModelAndView and pass the user list to the view
-	    ModelAndView mv = new ModelAndView("admin/users"); // Ensure this view exists
-	    System.out.println(users);
-	    if(role != null) {
-	    	users = users.stream().filter(u -> u.getUserType().equals(role)).toList();
-	    }
-	    mv.addObject("users", users);
-
-	    return mv;
 	}
 
 	
 
-	@PutMapping("/admin/users/status")
-	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status) {
+	@PutMapping("/admin/status")
+	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status ) {
 	    // Discover the "admin" service instances
-	    List<ServiceInstance> instances = discoveryClient.getInstances("admin");
+//		long userId=1;
+//		String status = "DEACTIVATED";
+		
+		
+//		
+//		
+//		
+//		// where is authentication service to update the users status how i get it?
+//		var instances = discoveryClient.getInstances("authentication");
+//		var service = instances.get(0);
+//		// how do i get her address
+//		
+//		var address = service.getUri();
+//		
+//		var path = address+"?userId="+userId+"&status="+status;
+//		
+//		RestTemplate rt = new RestTemplate();
+//		rt.put(path, null);
+//		
+//		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	    List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
 
 	    if (instances.isEmpty()) {
 	        ModelAndView mv = new ModelAndView("error");
@@ -140,7 +123,7 @@ public class UsersController {
 	    }
 
 	    ServiceInstance serviceInstance = instances.get(0);
-	    String baseUrl = serviceInstance.getUri().toString() + "/admin/users/status";
+	    String baseUrl = serviceInstance.getUri().toString() + "/admin/users/status?userId";
 
 	    // Create the URL for PUT request with userId and status as parameters
 	    UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
@@ -167,6 +150,7 @@ public class UsersController {
 	        // Handle the error gracefully
 	        ModelAndView mv = new ModelAndView("error");
 	        mv.addObject("message", "Failed to update user status: " + e.getMessage());
+	        
 	        return mv;
 	    }
 

@@ -21,13 +21,11 @@
 		<!-- Filter Form using HTML select -->
 		<form method="get" action="/admin" class="form-inline mb-4">
 			<div class="form-group mr-2">
-				<label for="role" class="mr-2">Filter by Role:</label> <select
-					name="role" id="role" class="form-control">
+				<label for="role" class="mr-2">Filter by Role:</label> 
+				<select name="role" id="role" class="form-control">
 					<option value="">All Roles</option>
-					<option value="CUSTOMER"
-						<c:if test="${param.userType == 'CUSTOMER'}">selected</c:if>>Customer</option>
-					<option value="RETAILER"
-						<c:if test="${param.userType == 'RETAILER'}">selected</c:if>>Retailer</option>
+					<option value="CUSTOMER" <c:if test="${param.userType == 'CUSTOMER'}">selected</c:if>>Customer</option>
+					<option value="RETAILER" <c:if test="${param.userType == 'RETAILER'}">selected</c:if>>Retailer</option>
 				</select>
 			</div>
 			<button type="submit" class="btn btn-primary">Filter</button>
@@ -43,7 +41,6 @@
 					<th scope="col">Role</th>
 					<th scope="col">Status</th>
 					<th scope="col">Update Status</th>
-					<!-- New column for status update -->
 				</tr>
 			</thead>
 			<tbody>
@@ -55,23 +52,28 @@
 						<td>${user.userType}</td>
 						<td>${user.status}</td>
 						<td>
-						<form:form method="put" style="display:inline;">
+							<!-- Update Status Form for each user -->
+							<form action="/admin/status" method="post" style="display:inline;">
+								<input type="hidden" name="_method" value="PUT" /> <!-- Spring workaround for PUT in forms -->
 								<input type="hidden" name="userId" value="${user.id}" />
-								<but	ton type="submit" name="status" value="ACTIVE"
-									class="btn btn-success btn-sm"
-									<c:if test="${user.status == 'ACTIVE'}">disabled</c:if>>Activate</button>
-							</form:form> 
-							<form:form method="put" style="display:inline;">
+								<input type="hidden" name="status" value="ACTIVE" />
+								<button type="submit" class="btn btn-success btn-sm" <c:if test="${user.status == 'ACTIVE'}">disabled</c:if>>Activate</button>
+							</form>
+
+							<form action="/admin/status" method="post" style="display:inline;">
+								<input type="hidden" name="_method" value="PUT" />
 								<input type="hidden" name="userId" value="${user.id}" />
-								<button type="submit" name="status" value="SUSPENDED"
-									class="btn btn-warning btn-sm"
-									<c:if test="${user.status == 'SUSPENDED'}">disabled</c:if>>Suspend</button>
-							</form:form> <form:form method="put" style="display:inline;">
+								<input type="hidden" name="status" value="UNDER REVIEW" />
+								<button type="submit" class="btn btn-warning btn-sm" <c:if test="${user.status == 'UNDER_REVIEW'}">disabled</c:if>>UNDER REVIEW</button>
+							</form>
+
+							<form action="/admin/status" method="post" style="display:inline;">
+								<input type="hidden" name="_method" value="PUT" />
 								<input type="hidden" name="userId" value="${user.id}" />
-								<button type="submit" name="status" value="DEACTIVATED"
-									class="btn btn-secondary btn-sm"
-									<c:if test="${user.status == 'DEACTIVATED'}">disabled</c:if>>Deactivate</button>
-							</form:form></td>
+								<input type="hidden" name="status" value="DEACTIVATED" />
+								<button type="submit" class="btn btn-secondary btn-sm" <c:if test="${user.status == 'DEACTIVATED'}">disabled</c:if>>Deactivate</button>
+							</form>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -79,16 +81,13 @@
 
 		<!-- Display when no users are found -->
 		<c:if test="${empty users}">
-			<div class="alert alert-warning" role="alert">No users found
-				for the selected filter.</div>
+			<div class="alert alert-warning" role="alert">No users found for the selected filter.</div>
 		</c:if>
 	</div>
 
 	<!-- Bootstrap JS and dependencies -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

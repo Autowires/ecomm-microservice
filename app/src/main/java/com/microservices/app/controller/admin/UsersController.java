@@ -70,7 +70,10 @@ public class UsersController {
                 .orElseThrow(() -> new RuntimeException("Authentication service is not available"));
 		System.out.println(baseUrl);
 	      List<Object> retailersUnderReview = new RestTemplate().exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()),List.class).getBody();
-	      System.out.println(retailersUnderReview);
+	      
+	      if(retailersUnderReview==null || retailersUnderReview.isEmpty()) {
+	    	  return "admin/reviewRequest";
+	      }
 	      model.addAttribute("users",retailersUnderReview);
 	      return "admin/reviewRequest";
 		
@@ -79,7 +82,7 @@ public class UsersController {
 	@PutMapping("/admin/status")
 	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status, HttpServletRequest request) {
 	    List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
-
+     System.out.println("DNALJSKGDFDSJ,GFHA"+status);
 	    if (instances.isEmpty()) {
 	        ModelAndView mv = new ModelAndView("error");
 	        mv.addObject("message", "Service not available");
@@ -124,7 +127,6 @@ public class UsersController {
 	        return new ModelAndView("redirect:/admin/reviewRequest"); // Redirect to review requests page
 	    }
 
-	    // Default redirection if no specific referer matched
 	    return new ModelAndView("redirect:/admin");
 	}
 

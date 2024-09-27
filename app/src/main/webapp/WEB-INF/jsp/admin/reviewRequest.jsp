@@ -58,7 +58,7 @@
 	                            <form action="/admin/status" method="post" style="display:inline;">
 		                        <input type="hidden" name="_method" value="PUT" />
 		                        <input type="hidden" name="userId" value="${user.id}" />
-		                        <input type="hidden" name="status" value="DEACTIVATED" />
+		                        <input type="hidden" name="status" value="REJECTED" />
 		                         <button type="submit" class="btn btn-danger btn-sm" <c:if test="${user.status != 'UNDER_REVIEW'}">disabled</c:if>>&#10006; <!-- Cross --></button>
 	                                 </form>
                                       </td>

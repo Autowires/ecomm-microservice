@@ -56,7 +56,10 @@
                         <p class="wishlist-price">$${item.price}</p>
                         <p class="wishlist-description">${item.description}</p>
                         <a href="#" class="btn btn-primary">View Details</a>
-                        <a href="/wishlist/removeItem" class="btn btn-danger">Remove from Wishlist</a>
+                        <form action="/wishlist/delete" method="post">
+                        	<input type="hidden" value="${item.id}" name="productId">
+                        	<button class="btn btn-danger">Remove from Wishlist</button>
+                        </form>
                     </div>
                 </div>
             </div>

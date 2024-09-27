@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
 
@@ -51,6 +52,11 @@ public class LoginServiceImpl implements LoginService {
 				.queryParam("otp", otp).encode().toUriString();
 
 		return template.postForEntity(uri, null, String.class);
+	}
+
+	@Override
+	public String registerRetailer(RetailerRegister request) {
+		return template.postForObject(getUri() + "/auth/register-retailer", request, String.class);
 	}
 
 }

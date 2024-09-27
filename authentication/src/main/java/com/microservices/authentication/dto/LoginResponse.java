@@ -1,5 +1,12 @@
 package com.microservices.authentication.dto;
 
-public class LoginResponse {
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
+public class LoginResponse {
+	private long userId;
+	private String username;
+	private String role;
 }

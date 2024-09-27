@@ -41,7 +41,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Register</h2>
+        <h2>Retailer registration</h2>
         <c:if test="${not empty errorMessage}">
             <div class="alert alert-danger">${errorMessage}</div>
         </c:if>
@@ -49,7 +49,7 @@
             <div class="alert alert-success">${successMessage}</div>
         </c:if>
 
-        <form action="/register" method="post" class="mb-4">
+        <form action="/register-retailer" method="post" class="mb-4">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" name="username" required>
@@ -59,12 +59,28 @@
                 <input type="email" class="form-control" name="email" id="email" required>
             </div>
             <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+              <div class="form-group">
                 <label for="contactNo">Contact number</label>
                 <input type="number" class="form-control" name="contactNo" required>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" required>
+                <label for="shopName">Shop name</label>
+                <input type="text" class="form-control" name="shopName" required>
+            </div>
+            <div class="form-group">
+                <label for="GSTIN">GST Number</label>
+                <input type="text" class="form-control" name="GSTIN" required>
+            </div>
+            <div class="form-group">
+                <label for="pannumber">Pan number</label>
+                <input type="text" class="form-control" name="pannumber" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" name="address" required>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </form>

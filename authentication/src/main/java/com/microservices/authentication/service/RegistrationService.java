@@ -14,8 +14,10 @@ import com.microservices.authentication.Repo.CustomerRepository;
 import com.microservices.authentication.Repo.RetailerRepository;
 import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.RegistrationRequest;
+import com.microservices.authentication.dto.RetailerRegister;
 import com.microservices.authentication.entity.Customer;
 import com.microservices.authentication.entity.MyUser;
+import com.microservices.authentication.entity.Retailer;
 
 import jakarta.transaction.Transactional;
 
@@ -43,9 +45,8 @@ public class RegistrationService {
 
 	@Transactional
 	public String register(RegistrationRequest request) {
-		if (!otpVerified.getOrDefault(request.getEmail(), false)) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "OTP not verified.");
-		}
+
+		checkOTPVerfifed(request.getEmail());
 
 		if (userDao.existsByDetails(request.getEmail(), request.getContactNo())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or contact number already registered.");
@@ -65,6 +66,36 @@ public class RegistrationService {
 		clearOTPs(request.getEmail());
 
 		return "Customer registered successfully!";
+	}
+
+	@Transactional
+	public String registerRetailer(RetailerRegister request) {
+
+		checkOTPVerfifed(request.getEmail());
+		if (userDao.existsByDetails(request.getEmail(), request.getContactNo())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or contact number already registered.");
+		}
+
+		Retailer retailer = new Retailer();
+		retailer.setUsername(request.getName());
+		retailer.setEmail(request.getEmail());
+		retailer.setContactNo(request.getContactNo());
+		retailer.setPassword(passwordEncoder.encode(request.getPassword()));
+		retailer.setCity(request.getCity());
+		retailer.setStatus(MyUser.UserStatus.UNDER_REVIEW);
+		retailer.setUserType("RETAILER");
+		retailer.setAge(request.getAge());
+		retailer.setAddress(request.getAddress());
+		retailer.setGSTIN(request.getGSTIN());
+		retailer.setPannumber(request.getPannumber());
+		retailer.setShopName(request.getShopName());
+
+		retailerRepository.save(retailer);
+
+		clearOTPs(request.getEmail());
+
+		return "Customer registered successfully!";
+
 	}
 
 	private void clearOTPs(String email) {
@@ -115,6 +146,12 @@ public class RegistrationService {
 
 	private void sendOtpEmail(String to, String otp) {
 		emailService.sendEmail(to, "Your OTP Code", "Your OTP Code " + otp);
+	}
+
+	private void checkOTPVerfifed(String email) {
+		if (!otpVerified.getOrDefault(email, false)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "OTP not verified.");
+		}
 	}
 
 }

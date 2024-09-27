@@ -14,7 +14,7 @@ import com.microservices.authentication.dto.LoginRequest;
 import com.microservices.authentication.dto.LoginResponse;
 import com.microservices.authentication.dto.OTPVerifyRequest;
 import com.microservices.authentication.dto.RegistrationRequest;
-import com.microservices.authentication.dto.UserDTO;
+import com.microservices.authentication.dto.RetailerRegister;
 import com.microservices.authentication.service.LoginService;
 import com.microservices.authentication.service.RegistrationService;
 
@@ -50,9 +50,9 @@ public class AuthenticationController {
 		return registrationService.register(request);
 	}
 
-	@PostMapping("/user")
-	public ResponseEntity<String> registerUser(@RequestBody UserDTO user) {
-		String msg = service.registerUser(user);
+	@PostMapping("/register-retailer")
+	public ResponseEntity<String> registerUser(@RequestBody RetailerRegister request) {
+		String msg = registrationService.registerRetailer(request);
 		return ResponseEntity.ok(msg);
 	}
 

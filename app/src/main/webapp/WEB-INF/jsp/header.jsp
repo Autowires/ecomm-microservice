@@ -20,7 +20,7 @@
     <div class="container">
       <div class="row gy-3">
         <!-- Left elements -->
-        <div class="col-lg-2 col-sm-4 col-4">
+        <div class="col-lg-2 col-sm-4 col-4" style="margin-top:-5px">
           <a href="#" target="_blank" class="float-start">
             <img src="/img/zip.png" height="65" alt="Logo" />
           </a>
@@ -85,12 +85,14 @@
 
         <!-- Right elements -->
         <div class="col-lg-5 col-md-12 col-12">
+        <form action = "/products" method="get">
           <div class="input-group">
-            <input type="search" id="form1" class="form-control" placeholder="Search" />
-            <button type="button" class="btn btn-primary">
+            <input type="search" id="form1" class="form-control" placeholder="Search" name="search" />
+            <button type="submit" class="btn btn-primary">
               <i class="fas fa-search"></i>
             </button>
           </div>
+          </form>
         </div>
         <!-- Right elements -->
       </div>

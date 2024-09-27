@@ -131,7 +131,7 @@ public class ProductDaoImpl implements ProductDao {
 		try {
 			session = sessionFactory.openSession();
 			Query<Product> query = session.createQuery("from Product p order by p.registeredAt DESC", Product.class);
-			query.setMaxResults(10);
+			query.setMaxResults(6);
 
 			products = query.getResultList();
 		} finally {

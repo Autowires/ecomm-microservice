@@ -27,9 +27,9 @@
       <h1>Best products & <br />brands in our store</h1>
       <p>Trendy Products, Factory Prices, Excellent Service</p>
       <button type="button" class="btn btn-outline-light">Learn more</button>
-      <button type="button" class="btn btn-light text-primary border border-white">
+     <a href="/products"> <button type="button" class="btn btn-light text-primary border border-white">
         <span>Purchase now</span>
-      </button>
+      </button> </a>
     </div>
   </div>
   <!-- Jumbotron End -->

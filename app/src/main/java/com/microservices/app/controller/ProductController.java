@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -33,6 +34,15 @@ public class ProductController {
         return "products";
     }
     
+    @GetMapping("/{productId}")
+    public String productinfo(@PathVariable int productId, Model model) {
+    	
+    	Object productinfo = productService.getproduct(productId);
+    	model.addAttribute("product",productinfo);
+		return "productinfo";
+    	
+    }
+   
  /*   @GetMapping("/categories")
     public String getAllCategories(Model model) {
     	List<String> categories=productService.getAllCategories();

@@ -13,10 +13,10 @@
       <div class="row mt-3">
         <!-- Logo and Copyright -->
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
-          <a href="https://mdbootstrap.com/" target="_blank">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" alt="MDB Logo" />
+          <a href="" target="_blank">
+            <img src="/img/zip.png" height="65" alt="Zip Logo" />
           </a>
-          <p class="mt-2 text-dark">© 2023 Copyright: MDBootstrap.com</p>
+          <p class="mt-2 text-dark">© 2024 Copyright: Zipstores.com</p>
         </div>
         <!-- Store Links -->
         <div class="col-6 col-sm-4 col-lg-2">

@@ -11,6 +11,8 @@ public interface ProductService {
 	List<String> getAllCategories();
 
 	List<Object> recentProducts();
+	
+	Object getproduct(int pid);
 
 
 }

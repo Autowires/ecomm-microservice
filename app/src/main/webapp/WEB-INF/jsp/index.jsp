@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InstaCart</title>
+    <title>Zip</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons -->
@@ -19,7 +19,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-<%@include file="header.jsp" %>
+<jsp:include page="header.jsp" />
 
   <!-- Jumbotron -->
   <div class="bg-primary text-white py-5">
@@ -46,7 +46,7 @@
                     <img src="img/${product.id}.jpg" class="img-fluid" style="width: 150px; height: 150px;" alt="${product.title}" />
                     <div class="card-body">
                         <h6 class="card-title">${product.title}</h6>
-                        <p class="card-text">Price: $${product.price}</p>
+                        <p class="card-text">Price: ₹ ${product.price}</p>
                     </div>
                 </div>
             </div>
@@ -219,7 +219,7 @@
 </section>
 <!-- Feature Section End -->
 
-<%@include file="footer.jsp" %>
+<jsp:include page="footer.jsp" />
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

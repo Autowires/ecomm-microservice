@@ -65,4 +65,12 @@ public class ProductServiceImpl implements ProductService {
 				                      .toUriString();
 		return template.getForObject(uri,List.class);
 	}
+
+	@Override
+	public Object getproduct(int pid) {
+		var uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/products/"+pid)
+                .build()
+                .toUriString();
+		return template.getForObject(uri,Object.class);
+	}
 }

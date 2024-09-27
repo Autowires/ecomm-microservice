@@ -53,7 +53,7 @@ public class RegistrationService {
 		}
 
 		Customer customer = new Customer();
-		customer.setUsername(request.getName());
+		customer.setUsername(request.getUsername());
 		customer.setEmail(request.getEmail());
 		customer.setContactNo(request.getContactNo());
 		customer.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -77,7 +77,7 @@ public class RegistrationService {
 		}
 
 		Retailer retailer = new Retailer();
-		retailer.setUsername(request.getName());
+		retailer.setUsername(request.getUsername());
 		retailer.setEmail(request.getEmail());
 		retailer.setContactNo(request.getContactNo());
 		retailer.setPassword(passwordEncoder.encode(request.getPassword()));

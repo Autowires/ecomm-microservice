@@ -9,14 +9,14 @@ POST {{baseurl}}/login
 Content-Type: application/json
 
 {
-    "email": "srimanikanta1001@gmail.com",
-    "password": "1234"
+    "email": "srimani990@gmail.com",
+    "password": "newpassword"
 }
 
 ### Verify Email (GET)
 # 404 - Email is registered. Try with another.
 # 200 - OTP sent successfully to your email.
-GET {{baseurl}}/register/verify-email?email=srimani9904@gmail.com
+GET {{baseurl}}/register/verify-email?email=srimani990@gmail.com
 
 ### Verify Email (POST)
 # 404 - incorrect email
@@ -26,8 +26,8 @@ POST {{baseurl}}/register/verify-email
 Content-Type: application/json
 
 {
-    "email": "srimani9904@gmail.com",
-    "otp": "173428"
+    "email": "srimani990@gmail.com",
+    "otp": "695811"
 }
 
 ### Register User
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 {
     "username": "newuser",
-    "email": "srimani9904@gmail.com",
-    "password": "newpassword",
-    "role": "CUSTOMER"
+    "email": "srimani990@gmail.com",
+    "password": "newpassword"
+    
 }

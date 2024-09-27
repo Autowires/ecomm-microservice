@@ -10,10 +10,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Entity(name = "users")
 public class Buyer {
-  
-	private Long buyerId;
-   private String buyerName;
+     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long buyerId;
+    private String buyerName;
 	
 	
 }

@@ -45,14 +45,22 @@ public class OrderServiceImplementation implements OrderService {
 		
 	
 			Cart cart=cartService.getBuyerCartById(buyerId);
+             System.out.println("cartid is "+cart.getCartId());
+			System.out.println(cart);
+			if(cart!=null) {
+				System.out.println("cart is not null");
+			}
 			Orders orders=createOrders(order,cart);
+			System.out.println("create order"+orders);
 //			Orders savedOrder = orderRepository.save(order); // Save Order first, making it persistent
 			
 			   List<OrderItem> orderItemList = createOrderItems(orders, cart);
+			   System.out.println("orderItemList"+orderItemList );
 			   orders.setOrderItems(new HashSet<>(orderItemList));
 			    orders=orderRepository.save(orders);
 		if(orders!= null) {
-			cartService.clearBuyerCart(buyerId);
+			System.out.println(cart.getCartId());
+			cartService.clearBuyerCart(cart.getCartId());
 		}
 //		}
 		
@@ -64,6 +72,7 @@ public class OrderServiceImplementation implements OrderService {
 	}
 	
 	private List<OrderItem> createOrderItems(Orders orders, Cart cart) {
+		System.out.println("inside the List<OrderItem>  ");
 	List <OrderItem> orderedItems=new ArrayList();
 		for(CartItem cartItem:cart.getItems()) {
 		Product product=cartItem.getProduct();
@@ -92,6 +101,14 @@ public class OrderServiceImplementation implements OrderService {
 		orders.setTotalAmount(order.getTotalAmount());
 		return orders;
 	}
+
+	@Override
+	public List<Orders> getBuyerOrderById(Long buyerId) {
+	List<Orders> orders=orderRepository.findByBuyerId(buyerId);
+		return orders;
+	}
+
+	
 
 //	@Override
 //	public OrderDTO convertToDto(Orders order) {

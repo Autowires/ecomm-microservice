@@ -2,6 +2,8 @@ package com.microservices.product.service.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,7 +49,7 @@ public class OrderItem {
 	    private Integer quantity;
 	    private double price;
 
-
+	    @JsonBackReference 
 	    @ManyToOne
 	    @JoinColumn(name = "order_id")
 	    private Orders order;

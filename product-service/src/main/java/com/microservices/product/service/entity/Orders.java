@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,19 +24,7 @@ import lombok.Setter;
 @Getter
 @Entity
 public class Orders {
-//    @Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private Long orderId;
-//	private LocalDate orderDate;
-//	private double totalAmount;
-//	@Enumerated(EnumType.STRING)
-//	private OrderStatus orderStatus;
-//	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-//	private Set<OrderItem> orderItems = new HashSet<>();
-//    private    Local
-//	private Long buyerId;
-//	
-//	private String address;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId;
@@ -42,6 +33,7 @@ public class Orders {
 	private double totalAmount;
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
+	@JsonManagedReference
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<OrderItem> orderItems = new HashSet<>();
 	private Long buyerId;

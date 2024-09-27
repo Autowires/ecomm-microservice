@@ -69,12 +69,12 @@ public class CartController {
 	  }catch(ResourceNotFoundException e) {
 		  return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
 		  
-	  }
+	  } 
   }
 	private CartDTO convertToCartDTO(Cart addItem) {
 		CartDTO cartDto=new CartDTO();
 		cartDto.setCartId(addItem.getCartId());
-		cartDto.setBuyerId(addItem.getBuyerId());
+//		cartDto.setBuyerId(addItem.getBuyerId());
 		cartDto.setBuyerId(addItem.getBuyerId());
 		Set<CartItemDTO> cartItem=addItem.getItems().stream().map(item->{
 			 CartItemDTO cartItemDTO = new CartItemDTO();

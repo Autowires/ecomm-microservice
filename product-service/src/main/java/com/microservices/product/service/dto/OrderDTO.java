@@ -11,16 +11,15 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class OrderDTO {
-	
 	private Long orderId;
     private LocalDate orderDate;
     private LocalDate deliveryDate;
     private double totalAmount;
-    private Long buyerId;
+//    private Long buyerId;
 	private String address;
 	private String paymentType;
 	private String Buyername;
-    private String orderStatus; // Add orderStatus field
+    private OrderStatus orderStatus; // Add orderStatus field
     private List<OrderItemDTO> orderItems;
 
 }

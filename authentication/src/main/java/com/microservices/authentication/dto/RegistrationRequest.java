@@ -10,5 +10,4 @@ public class RegistrationRequest {
 	private Integer age;
 	private String password;
 	private String city;
-	private String role;
 }

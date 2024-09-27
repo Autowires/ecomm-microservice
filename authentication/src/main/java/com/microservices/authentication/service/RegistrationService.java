@@ -16,7 +16,6 @@ import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.RegistrationRequest;
 import com.microservices.authentication.entity.Customer;
 import com.microservices.authentication.entity.MyUser;
-import com.microservices.authentication.entity.Retailer;
 
 import jakarta.transaction.Transactional;
 
@@ -52,33 +51,16 @@ public class RegistrationService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or contact number already registered.");
 		}
 
-		switch (request.getRole()) {
-		case "CUSTOMER":
-			Customer customer = new Customer();
-			customer.setUsername(request.getName());
-			customer.setEmail(request.getEmail());
-			customer.setContactNo(request.getContactNo());
-			customer.setPassword(passwordEncoder.encode(request.getPassword()));
-			customer.setCity(request.getCity());
-			customer.setStatus(MyUser.UserStatus.ACTIVE);
-			customer.setUserType("CUSTOMER");
-			customer.setAge(request.getAge());
-			customerRepository.save(customer);
-			break;
-		case "RETAILER":
-			Retailer retailer = new Retailer();
-			retailer.setUsername(request.getName());
-			retailer.setEmail(request.getEmail());
-			retailer.setContactNo(request.getContactNo());
-			retailer.setPassword(passwordEncoder.encode(request.getPassword()));
-			retailer.setCity(request.getCity());
-			retailer.setStatus(MyUser.UserStatus.UNDER_REVIEW);
-			retailer.setUserType("RETAILER");
-			retailer.setAge(request.getAge());
-			retailerRepository.save(retailer);
-		default:
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid role " + request.getRole());
-		}
+		Customer customer = new Customer();
+		customer.setUsername(request.getName());
+		customer.setEmail(request.getEmail());
+		customer.setContactNo(request.getContactNo());
+		customer.setPassword(passwordEncoder.encode(request.getPassword()));
+		customer.setCity(request.getCity());
+		customer.setStatus(MyUser.UserStatus.ACTIVE);
+		customer.setUserType("CUSTOMER");
+		customer.setAge(request.getAge());
+		customerRepository.save(customer);
 
 		clearOTPs(request.getEmail());
 

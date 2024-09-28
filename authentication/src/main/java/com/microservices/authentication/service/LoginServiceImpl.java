@@ -5,24 +5,18 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.LoginResponse;
-import com.microservices.authentication.dto.UserDTO;
-import com.microservices.authentication.entity.Customer;
-import com.microservices.authentication.entity.MyUser;
-import com.microservices.authentication.entity.Retailer;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
 	@Autowired
-	private JavaMailSender mailSender;
+	private EmailService emailService;
 
 	@Autowired
 	private UserRepo userDao;
@@ -33,53 +27,17 @@ public class LoginServiceImpl implements LoginService {
 	private static final long OTP_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes
 
 	@Override
-	@Transactional
-	public String registerUser(UserDTO user) {
-		// Check if the email is verified
-		if (!otpVerified.getOrDefault(user.getEmail(), false)) {
-			return "OTP not verified. Please verify OTP before registration.";
+	public LoginResponse login(String email, String password) {
+		try {
+			var user = userDao.findByEmail(email).orElseThrow();
+			if (user.getPassword().equals(password)) {
+				return new LoginResponse(user.getId(), user.getUsername(), user.getUserType());
+			} else
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect password");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-
-		// Check if the email or contact number already exists
-		if (userDao.existsByDetails(user.getEmail(), user.getContactNo())) {
-			return "Email or contact number already registered.";
-		}
-
-		MyUser newUser;
-		switch (user.getUserType()) {
-		case "admin":
-			if (!"9".equals(user.getAdminPassword())) {
-				return "Invalid admin password.";
-			}
-			newUser = new MyUser();
-			break;
-
-		case "customer":
-			newUser = new Customer();
-			break;
-
-		case "retailer":
-			newUser = new Retailer();
-			break;
-
-		default:
-			return "Invalid user type.";
-		}
-
-		newUser.setUsername(user.getName());
-		newUser.setEmail(user.getEmail());
-		newUser.setContactNo(user.getContactNo());
-		newUser.setPassword(user.getPassword());
-		newUser.setUserType(user.getUserType());
-		newUser.setStatus(MyUser.UserStatus.ACTIVE); // Set default status
-		userDao.saveAndFlush(newUser);
-
-		// Clear OTP data after successful registration
-		otpStore.remove(user.getEmail());
-		otpExpiry.remove(user.getEmail());
-		otpVerified.remove(user.getEmail());
-
-		return "User successfully registered.";
 	}
 
 	@Override
@@ -108,16 +66,6 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	private void sendOtpEmail(String to, String otp) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(to);
-		message.setSubject("Your OTP Code");
-		message.setText("Your OTP code is: " + otp);
-		mailSender.send(message);
-	}
-
-	@Override
-	public LoginResponse login(String email, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		emailService.sendEmail(to, "Your OTP Code", "Your OTP code is: " + otp);
 	}
 }

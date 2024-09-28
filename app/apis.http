@@ -1,0 +1,41 @@
+
+@baseurl = http://localhost:8080
+
+### Login page
+GET {{baseurl}}/login
+
+### FOrm submit for login
+POST {{baseurl}}/login
+Content-Type: application/x-www-form-urlencoded
+
+email=srimani9906@gmail.com&password=1234
+
+### 
+GET {{baseurl}}/register
+
+###
+POST {{baseurl}}/register
+Content-Type: application/x-www-form-urlencoded
+
+username=hello&email=srimani9905@gmail.com&password=1234
+
+###
+POST {{baseurl}}/register/verify-email?email=srimani9906@gmail.com
+
+###
+PUT {{baseurl}}/register/verify-email
+Content-Type: application/json
+
+{
+    "email": "srimani9906@gmail.com",
+    "otp": "548500"
+}
+
+### 
+GET {{baseurl}}/register-retailer
+
+###
+POST {{baseurl}}/register-retailer
+Content-Type: application/x-www-form-urlencoded
+
+username=hello&email=srimani9906@gmail.com&password=1234&GSTIN=jijijijij&address=jijkjji&shopName=ioio&pannumber=9098989889

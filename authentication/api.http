@@ -1,0 +1,70 @@
+
+@baseurl = http://localhost:8081/auth
+@adminurl = http://localhost:8081/admin
+
+### Login
+# 200 - { token, role }
+# 400 - No value present (not registered)
+# 400 - Bad credentials (wrong password)
+POST {{baseurl}}/login
+Content-Type: application/json
+
+{
+   "email": "srimani9900@gmail.com",
+    "password": "password"
+}
+
+### Verify Email (GET)
+# 404 - Email is registered. Try with another.
+# 200 - OTP sent successfully to your email.
+GET {{baseurl}}/register/verify-email?email=srimani9900@gmail.com
+
+### Verify Email (POST)
+# 404 - incorrect email
+# 404 - Not matched
+# 200 - OTP verified.
+POST {{baseurl}}/register/verify-email
+Content-Type: application/json
+
+{
+    "email": "srimani9900@gmail.com",
+    "otp": "810668"
+}
+
+### Register User
+# 200 - Customer registered successfully!
+# 403 - OTP not verified.
+# 400 - Email or contact number already registered.
+POST {{baseurl}}/register
+Content-Type: application/json
+
+{
+    "username": "newuser",
+    "email": "srimani9909@gmail.com",
+    "password": "newpassword"
+}
+
+### Retailer registration
+POST {{baseurl}}/register-retailer
+Content-Type: application/json
+
+{
+    "username": "reta",
+    "email": "srimani9900@gmail.com",
+    "password": "password",
+    "gstin": "ioiojioj",
+    "address": "Chennai",
+    "shopName": "Reta shops",
+    "pannumber": "ji89123456"
+
+    
+}
+
+### Users
+GET {{adminurl}}/users
+
+### Update user status
+PUT {{adminurl}}/users/status?userId=54&status=REJECTED
+
+### Retailer under reviews
+GET {{adminurl}}/users/reviewRequest

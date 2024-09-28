@@ -11,7 +11,8 @@
 	<div class="collapse navbar-collapse" id="navbarNav">
 		<ul class="navbar-nav mr-auto">
 
-			<li class="nav-item"><a class="nav-link" href="/admin/users">Users</a>
+			<li class="nav-item"><a class="nav-link" href="/admin">Users</a>
+			<li  class="nav-item"><a class="nav-link" href="/admin/reviewRequest">ReviewRequests</a>
 			</li>
 
 		</ul>

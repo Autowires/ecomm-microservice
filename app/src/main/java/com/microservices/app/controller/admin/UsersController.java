@@ -1,6 +1,8 @@
 package com.microservices.app.controller.admin;
 
 import java.util.Arrays;
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,143 +13,122 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservices.app.dto.UserStatus;
 import com.microservices.app.dto.Userdto;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @Controller
 public class UsersController {
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
+	@Autowired
+	private DiscoveryClient discoveryClient;
+	@RequestMapping("/admin")
+	public ModelAndView getUserAndView(@RequestParam(required = false) String role) {
+	    String baseUrl = discoveryClient.getInstances("authentication").stream()
+	                                    .findFirst()
+	                                    .map(si -> si.getUri().toString() + "/admin/users")
+	                                    .orElseThrow(() -> new RuntimeException("Authentication service is not available"));
 
-    @RequestMapping("/admin")
-    public ModelAndView getUserAndView(@RequestParam(required = false) String role) {
-        // Discover the "admin" service instances
-        List<ServiceInstance> instances = discoveryClient.getInstances("admin");
+	    try {
+	        String response = new RestTemplate().exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), String.class).getBody();
+	        List<Userdto> users = new ObjectMapper().readValue(response, new TypeReference<List<Userdto>>() {});
+	        
+	        if (role != null) {
+	            users = users.stream().filter(u -> u.getUserType().equals(role)).toList();
+	        }
 
-        if (instances.isEmpty()) {
-            // Handle case where service is not found
-            ModelAndView mv = new ModelAndView("error");
-            mv.addObject("message", "Service not available");
-            return mv;
-        }
+	        return new ModelAndView("admin/users").addObject("users", users);
+	        
+	    } catch (HttpClientErrorException e) {
+	        return new ModelAndView("error").addObject("message", "Client error: " + e.getStatusCode());
+	    } catch (ResourceAccessException e) {
+	        return new ModelAndView("error").addObject("message", "Service not reachable: " + e.getMessage());
+	    } catch (Exception e) {
+	        return new ModelAndView("error").addObject("message", "Failed to contact admin service: " + e.getMessage());
+	    }
+	}
+	
+	@GetMapping("/admin/reviewRequest")
+	public String reviewRequests(Model model) {
+		String baseUrl = discoveryClient.getInstances("authentication").stream()
+                .findFirst()
+                .map(si -> si.getUri().toString() + "/admin/users/reviewRequest")
+                .orElseThrow(() -> new RuntimeException("Authentication service is not available"));
+		System.out.println(baseUrl);
+	      List<Object> retailersUnderReview = new RestTemplate().exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()),List.class).getBody();
+	      
+	      if(retailersUnderReview==null || retailersUnderReview.isEmpty()) {
+	    	  return "admin/reviewRequest";
+	      }
+	      model.addAttribute("users",retailersUnderReview);
+	      return "admin/reviewRequest";
+		
+	}
 
-        ServiceInstance serviceInstance = instances.get(0);
-        String baseUrl = serviceInstance.getUri().toString() + "/admin/users";
+	@PutMapping("/admin/status")
+	public ModelAndView putUserStatus(@RequestParam long userId, @RequestParam UserStatus status, HttpServletRequest request) {
+	    List<ServiceInstance> instances = discoveryClient.getInstances("authentication");
+     System.out.println("DNALJSKGDFDSJ,GFHA"+status);
+	    if (instances.isEmpty()) {
+	        ModelAndView mv = new ModelAndView("error");
+	        mv.addObject("message", "Service not available");
+	        return mv;
+	    }
 
-        // Append the role parameter if present
-        if (role != null && !role.isEmpty()) {
-            baseUrl += "?role=" + role;
-        }
+	    ServiceInstance serviceInstance = instances.get(0);
+	    String baseUrl = serviceInstance.getUri().toString() + "/admin/users/status";
 
-        // Debugging: Log the URL being called
-        System.out.println("Calling URL: " + baseUrl);
+	    // Create the URL for PUT request with userId and status as parameters
+	    UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
+	            .queryParam("userId", userId)
+	            .queryParam("status", status);
 
-        // Create a RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
+	    // Debugging: Log the URL being called
+	    System.out.println("Calling URL: " + uriBuilder.toUriString());
 
-        // Set up headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	    // Create a RestTemplate instance
+	    RestTemplate restTemplate = new RestTemplate();
 
-        // Create HTTP entity
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+	    // Set up headers
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-        String response;
-        try {
-            // Call the external service
-            response = restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class).getBody();
-            // Debugging: Log the response
-            System.out.println("Response from admin service: " + response);
-        } catch (Exception e) {
-            // Handle the error gracefully
-            ModelAndView mv = new ModelAndView("error");
-            mv.addObject("message", "Failed to contact admin service: " + e.getMessage());
-            return mv;
-        }
+	    // Create HTTP entity with the headers
+	    HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // Deserialize the response into a list of users
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Userdto> users;
-        try {
-            users = objectMapper.readValue(response, new TypeReference<List<Userdto>>() {});
-        } catch (JsonProcessingException e) {
-            ModelAndView mv = new ModelAndView("error");
-            mv.addObject("message", "Failed to parse user data: " + e.getMessage());
-            return mv;
-        }
+	    try {
+	        // Send PUT request to update the user status
+	        restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.PUT, entity, String.class);
+	    } catch (Exception e) {
+	        // Handle the error gracefully
+	        ModelAndView mv = new ModelAndView("error");
+	        mv.addObject("message", "Failed to update user status: " + e.getMessage());
+	        return mv;
+	    }
 
-        // Set up ModelAndView
-        ModelAndView mv = new ModelAndView("admin/users"); // Ensure "users" view exists
-        mv.addObject("users", users); // Pass the parsed user list to the view
+	    String referer = request.getHeader("Referer");
+	    System.out.println("Referer: " + referer);
+	    
+	   if (referer != null && referer.contains("/admin/reviewRequest")) {
+	        return new ModelAndView("redirect:/admin/reviewRequest"); // Redirect to review requests page
+	    }
 
-        return mv;
-    }
-    
-    @RequestMapping(value = "/admin/users/status", method = RequestMethod.PUT)
-    public ModelAndView putUserStatus( 
-                                      @RequestParam long userId, 
-                                      @RequestParam UserStatus status) {
-        
-        // Discover the "admin" service instances
-        List<ServiceInstance> instances = discoveryClient.getInstances("admin");
-
-        if (instances.isEmpty()) {
-            // Handle case where service is not found
-            ModelAndView mv = new ModelAndView("error");
-            mv.addObject("message", "Service not available");
-            return mv;
-        }
-
-        ServiceInstance serviceInstance = instances.get(0);
-        String baseUrl = serviceInstance.getUri().toString() + "/admin/users/status";
-
-        // Create the URL for PUT request with userId and status as parameters
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam("userId", userId)
-                .queryParam("status", status);
-
-        // Debugging: Log the URL being called
-        System.out.println("Calling URL: " + uriBuilder.toUriString());
-
-        // Create a RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Set up headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-        // Create HTTP entity with the headers
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        try {
-            // Send PUT request to update the user status
-            restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.PUT, entity, String.class);
-        } catch (Exception e) {
-            // Handle the error gracefully
-            ModelAndView mv = new ModelAndView("error");
-            mv.addObject("message", "Failed to update user status: " + e.getMessage());
-            return mv;
-        }
-
-        // Redirect back to the users page after the update
-        ModelAndView mv = new ModelAndView("redirect:/admin/users");
-        return mv;
-    }
+	    return new ModelAndView("redirect:/admin");
+	}
 
 
 

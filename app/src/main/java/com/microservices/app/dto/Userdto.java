@@ -1,16 +1,23 @@
 package com.microservices.app.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Userdto {
 	private long id;
 	private String username;
-	private String password;
 	private UserStatus status;
 	private String email;
-	private String role;
-
+	private String userType;
+	private Integer age;
+	 private String contactNo; 
+		/*
+		 * private LocalDateTime createdAt; private LocalDateTime lastSeen;
+		 */
 }

@@ -1,7 +1,7 @@
 package com.microservices.product.service.entity;
 
 public enum OrderStatus {
-	    PENDING,
+	    PLACED,
 	    PROCESSING,
 	    SHIPPED,
 	    DELIVERED,

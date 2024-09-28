@@ -90,20 +90,27 @@ public class CartServiceImplementation implements CartService {
 	@Override
 	public Cart getBuyerCartById(Long buyerId) {
 		Cart cart=cartRepository.findBybuyerId(buyerId);
+		System.out.println("inside the getBuyerCart "+cart);
 		return  cart;
 	}
 	@Transactional
 	@Override
 	public void clearBuyerCart(Long cartId) {
+		System.out.println("control from orderController");
 		//finds the cart of the buyer by using the buyerid
+		System.out.println("cartId is"+cartId);
 		  Cart cart = getCart(cartId);
 		  //deletes all the cartitems  associated  with the  cartId of the buyer
-		  cartItemRepository.deleteAllByCart(cart);
+		  if(cart!=null) {
+			  System.out.println("Cart is not null"); 
+		  }
+		  cart.getItems().clear();
+//		  cartItemRepository.deleteAllByCart(cart);
 		 
 	       // The clearCart() method on the Cart object is invoked (assuming it resets or clears the state of the cart).
-	        cart.clearCart();
+//	        cart.clearCart();
 	      //after deleting the cartItems we are deleting the cart
-	        cartRepository.deleteById(cartId);
+//	        cartRepository.deleteById(cartId);
 		
 	}
 	@Override

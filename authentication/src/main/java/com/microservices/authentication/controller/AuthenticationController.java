@@ -18,6 +18,8 @@ import com.microservices.authentication.dto.RetailerRegister;
 import com.microservices.authentication.service.LoginService;
 import com.microservices.authentication.service.RegistrationService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -46,12 +48,12 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/register")
-	public String registerCustomer(@RequestBody RegistrationRequest request) {
+	public String registerCustomer(@RequestBody @Valid RegistrationRequest request) {
 		return registrationService.register(request);
 	}
 
 	@PostMapping("/register-retailer")
-	public ResponseEntity<String> registerUser(@RequestBody RetailerRegister request) {
+	public ResponseEntity<String> registerUser(@RequestBody @Valid RetailerRegister request) {
 		String msg = registrationService.registerRetailer(request);
 		return ResponseEntity.ok(msg);
 	}

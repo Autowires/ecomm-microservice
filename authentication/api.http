@@ -9,14 +9,14 @@ POST {{baseurl}}/login
 Content-Type: application/json
 
 {
-    "email": "srimani990@gmail.com",
-    "password": "newpassword"
+   "email": "srimani9900@gmail.com",
+    "password": "password"
 }
 
 ### Verify Email (GET)
 # 404 - Email is registered. Try with another.
 # 200 - OTP sent successfully to your email.
-GET {{baseurl}}/register/verify-email?email=srimani990@gmail.com
+GET {{baseurl}}/register/verify-email?email=srimani9900@gmail.com
 
 ### Verify Email (POST)
 # 404 - incorrect email
@@ -26,8 +26,8 @@ POST {{baseurl}}/register/verify-email
 Content-Type: application/json
 
 {
-    "email": "srimani990@gmail.com",
-    "otp": "695811"
+    "email": "srimani9900@gmail.com",
+    "otp": "810668"
 }
 
 ### Register User
@@ -39,7 +39,22 @@ Content-Type: application/json
 
 {
     "username": "newuser",
-    "email": "srimani990@gmail.com",
+    "email": "srimani9909@gmail.com",
     "password": "newpassword"
+}
+
+### Retailer registration
+POST {{baseurl}}/register-retailer
+Content-Type: application/json
+
+{
+    "username": "reta",
+    "email": "srimani9900@gmail.com",
+    "password": "password",
+    "gstin": "ioiojioj",
+    "address": "Chennai",
+    "shopName": "Reta shops",
+    "pannumber": "ji89123456"
+
     
 }

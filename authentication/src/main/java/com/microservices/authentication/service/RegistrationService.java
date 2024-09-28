@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,9 +34,6 @@ public class RegistrationService {
 	@Autowired
 	private EmailService emailService;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
 	private Map<String, String> otpStore = new ConcurrentHashMap<>();
 	private Map<String, Long> otpExpiry = new ConcurrentHashMap<>();
 	private Map<String, Boolean> otpVerified = new ConcurrentHashMap<>(); // To store OTP verification status
@@ -56,7 +52,7 @@ public class RegistrationService {
 		customer.setUsername(request.getUsername());
 		customer.setEmail(request.getEmail());
 		customer.setContactNo(request.getContactNo());
-		customer.setPassword(passwordEncoder.encode(request.getPassword()));
+		customer.setPassword(request.getPassword());
 		customer.setCity(request.getCity());
 		customer.setStatus(MyUser.UserStatus.ACTIVE);
 		customer.setUserType("CUSTOMER");
@@ -80,7 +76,7 @@ public class RegistrationService {
 		retailer.setUsername(request.getUsername());
 		retailer.setEmail(request.getEmail());
 		retailer.setContactNo(request.getContactNo());
-		retailer.setPassword(passwordEncoder.encode(request.getPassword()));
+		retailer.setPassword(request.getPassword());
 		retailer.setCity(request.getCity());
 		retailer.setStatus(MyUser.UserStatus.UNDER_REVIEW);
 		retailer.setUserType("RETAILER");
@@ -94,7 +90,7 @@ public class RegistrationService {
 
 		clearOTPs(request.getEmail());
 
-		return "Customer registered successfully!";
+		return "Retailer registered successfully!";
 
 	}
 

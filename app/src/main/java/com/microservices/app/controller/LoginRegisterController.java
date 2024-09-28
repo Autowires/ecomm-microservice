@@ -7,9 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.microservices.app.dto.OTPVerifyRequest;
+import com.microservices.app.dto.RegisterRequest;
 import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
@@ -34,20 +38,29 @@ public class LoginRegisterController {
 
 	@PostMapping("/login")
 	public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
-		User user = service.authenticateUser(email, password);
-		if (user == null) {
-			model.addAttribute("errorMessage", "Invalid email or password.");
+		try {
+			User user = service.authenticateUser(email, password);
+			if (user == null) {
+				model.addAttribute("errorMessage", "Invalid email or password.");
+				return "login";
+			}
+			session.setAttribute("role", user.getRole());
+			session.setAttribute("userId", user.getId());
+			session.setAttribute("username", user.getUsername());
+			switch (user.getRole()) {
+			case "RETAILER":
+				return "redirect:/retailer";
+			case "CUSTOMER":
+				return "redirect:/products";
+			case "ADMIN":
+				return "redirect:/admin";
+			}
+
+		} catch (Exception e) {
+			model.addAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
 			return "login";
 		}
-		session.setAttribute("user", user);
-		switch (user.getRole()) {
-		case "RETAILER":
-			return "redirect:/retailer";
-		case "CUSTOMER":
-			return "redirect:/products";
-		case "ADMIN":
-			return "redirect:/admin";
-		}
+
 		session.invalidate();
 		return "redirect:/";
 	}
@@ -57,6 +70,11 @@ public class LoginRegisterController {
 		return "register-retailer"; // return the registration JSP page
 	}
 
+	@GetMapping("/register")
+	public String showRegistrationForm() {
+		return "register"; // return the registration JSP page
+	}
+
 	@PostMapping("/register-retailer")
 	public String registerRetailer(@ModelAttribute RetailerRegister request, Model model) {
 		try {
@@ -64,22 +82,35 @@ public class LoginRegisterController {
 			model.addAttribute("successMessage", message);
 			return "redirect:/login"; // redirect to login page on success
 		} catch (Exception e) {
+			e.printStackTrace();
 			model.addAttribute("errorMessage", e.getMessage());
 			return "register-retailer"; // return to registration page on error
 		}
 	}
 
-	@PostMapping("/sendOtp")
-	@ResponseBody
-	public ResponseEntity<String> sendOtp(@RequestParam String email, @RequestParam String password) {
-		return service.sendOtp(email, password);
+	@PostMapping("/register")
+	public String registerCustomer(@ModelAttribute RegisterRequest request, Model model) {
+		try {
+			String message = service.register(request);
+			model.addAttribute("successMessage", message);
+			return "redirect:/login"; // redirect to login page on success
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", e.getMessage());
+			return "register"; // return to registration page on error
+		}
 	}
 
-	@PostMapping("/verifyOtp")
+	@PostMapping(value = "/register/verify-email")
 	@ResponseBody
-	public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
-		System.out.println(email);
-		System.out.println(otp);
-		return service.verifyOtp(email, otp);
+	public ResponseEntity<String> verifyEmail(@RequestParam String email) {
+		System.out.println("in request for " + email);
+		return service.verifyEmail(email);
+	}
+
+	@PutMapping("/register/verify-email")
+	@ResponseBody
+	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+		return service.verifyEmail(otpVerifyRequest);
 	}
 }

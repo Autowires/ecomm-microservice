@@ -8,7 +8,7 @@ GET {{baseurl}}/login
 POST {{baseurl}}/login
 Content-Type: application/x-www-form-urlencoded
 
-email=srimanikanta1001@gmai.com&password=1234
+email=srimani9906@gmail.com&password=1234
 
 ### 
 GET {{baseurl}}/register
@@ -17,16 +17,25 @@ GET {{baseurl}}/register
 POST {{baseurl}}/register
 Content-Type: application/x-www-form-urlencoded
 
-username=hello&email=srimani9905@gmail.com&password=1234&role=CUSTOMER
+username=hello&email=srimani9905@gmail.com&password=1234
 
 ###
-POST {{baseurl}}/register/verify-email?email=srimani9905@gmail.com
+POST {{baseurl}}/register/verify-email?email=srimani9906@gmail.com
 
 ###
 PUT {{baseurl}}/register/verify-email
 Content-Type: application/json
 
 {
-    "email": "srimani9905@gmail.com",
-    "otp": "541607"
+    "email": "srimani9906@gmail.com",
+    "otp": "548500"
 }
+
+### 
+GET {{baseurl}}/register-retailer
+
+###
+POST {{baseurl}}/register-retailer
+Content-Type: application/x-www-form-urlencoded
+
+username=hello&email=srimani9906@gmail.com&password=1234&GSTIN=jijijijij&address=jijkjji&shopName=ioio&pannumber=9098989889

@@ -1,5 +1,7 @@
 package com.microservices.app.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.microservices.app.dto.Product;
 import com.microservices.app.service.LoginService;
+import com.microservices.app.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -18,9 +22,15 @@ public class LoginRegisterController {
 
 	@Autowired
 	private LoginService service;
+	
+    @Autowired
+    private ProductService productService;
 
 	@GetMapping("/")
-	public String home() {
+	public String home(Model model) {
+		List<Object> products=productService.recentProducts();
+		model.addAttribute("newProducts", products);
+		System.out.println(products);
 		return "index";
 	}
 

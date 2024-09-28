@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservices.product.service.dto.ProductForm;
+import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
 import com.microservices.product.service.service.ProductService;
 
@@ -29,6 +30,22 @@ public class ProductController {
 	public List<Product> productsView(@RequestParam(required = false) String category,
 			@RequestParam(required = false) String search) {
 		return productService.getProducts(category, search);
+	}
+
+	@GetMapping("/{productId}")
+	public ProductInfoResponse product(@PathVariable long productId) {
+		return productService.getProducInfo(productId);
+	}
+
+	@GetMapping("/categories")
+	public List<String> displayCategories() {
+		return productService.getCategories();
+
+	}
+
+	@GetMapping("/recentAdds")
+	public List<Product> recentAddedProducts() {
+		return productService.recentAdds();
 	}
 
 	@PostMapping("addproduct/{retailerId}")
@@ -46,9 +63,10 @@ public class ProductController {
 	public String deleteProduct(@PathVariable long retailerId, @PathVariable Long productId) {
 		return productService.deleteProduct(retailerId, productId);
 	}
+
 	@GetMapping("/getproductbyid/{productId}")
 	public ResponseEntity<Product> findProductById(@PathVariable Long productId) {
-		Product product=productService.findProductById(productId);
+		Product product = productService.findProductById(productId);
 		return ResponseEntity.ok(product);
 	}
 }

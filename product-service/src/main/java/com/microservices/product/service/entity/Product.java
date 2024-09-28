@@ -2,8 +2,14 @@ package com.microservices.product.service.entity;
 
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,7 +40,13 @@ public class Product {
 	private String category;
 	private Integer stock;
 	
+	@CreationTimestamp
+	private LocalDateTime registeredAt;
+	@UpdateTimestamp
+	private LocalDateTime modifiedAt;
+	
 	  @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	    private List<CartItem> cartItems = new ArrayList<>();
+	  @JsonIgnore
+	  private List<CartItem> cartItems = new ArrayList<>();
 	
 }

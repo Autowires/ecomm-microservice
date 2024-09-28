@@ -1,22 +1,20 @@
 package com.microservices.product.service.service.impl;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.microservices.product.service.dao.CartItemRepository;
 import com.microservices.product.service.dao.CartRepository;
-import com.microservices.product.service.entity.Buyer;
 import com.microservices.product.service.entity.Cart;
 import com.microservices.product.service.entity.CartItem;
+import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.Product;
 import com.microservices.product.service.exception.ResourceNotFoundException;
 import com.microservices.product.service.service.BuyerServvice;
 import com.microservices.product.service.service.CartService;
 import com.microservices.product.service.service.ProductService;
-
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CartServiceImplementation implements CartService {
@@ -33,16 +31,16 @@ public class CartServiceImplementation implements CartService {
 	private BuyerServvice buyerServvice;
 	
 	@Override
-	public Buyer getBuyerById(Long buyerId) {
-	Buyer buyer=buyerServvice.getBuyerById(buyerId);
-		return buyer;
+	public Customer getBuyerById(Long buyerId) {
+	Customer customer =buyerServvice.getBuyerById(buyerId);
+		return customer;
 	}
 	@Override
-	public Cart initializeNewCart(Buyer buyer) {
-		return Optional.ofNullable(getBuyerCartById(buyer.getBuyerId()))
+	public Cart initializeNewCart(Customer customer) {
+		return Optional.ofNullable(getBuyerCartById(customer.getId()))
                 .orElseGet(() -> {
                     Cart cart = new Cart();
-                    cart.setBuyerId(buyer.getBuyerId());
+                    cart.setBuyerId(customer.getId());
                     return cartRepository.save(cart);
                 });
 //		Cart cart=getBuyerCartById(buyer.getBuyerId());

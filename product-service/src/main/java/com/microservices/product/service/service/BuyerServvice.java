@@ -1,9 +1,9 @@
 package com.microservices.product.service.service;
 
-import com.microservices.product.service.entity.Buyer;
+import com.microservices.product.service.entity.Customer;
 
 public interface BuyerServvice {
 
-	Buyer getBuyerById(Long buyerId);
+	Customer getBuyerById(Long buyerId);
 
 }

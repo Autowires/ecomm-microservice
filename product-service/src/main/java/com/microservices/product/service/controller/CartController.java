@@ -1,29 +1,22 @@
 package com.microservices.product.service.controller;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.microservices.product.service.dto.ApiResponse;
 import com.microservices.product.service.dto.CartDTO;
 import com.microservices.product.service.dto.CartItemDTO;
 import com.microservices.product.service.dto.ProductDTO;
-import com.microservices.product.service.entity.Buyer;
 import com.microservices.product.service.entity.Cart;
+import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.Product;
 import com.microservices.product.service.exception.ResourceNotFoundException;
 import com.microservices.product.service.service.BuyerServvice;
 import com.microservices.product.service.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -43,13 +36,13 @@ public class CartController {
 		//fetching buyer details by buyerId;
 		System.out.println(buyerId);
 		System.out.println(productId);
-		Buyer buyer=buyerService.getBuyerById(buyerId);
-		Cart cart = cartService.initializeNewCart(buyer);
+		Customer customer =buyerService.getBuyerById(buyerId);
+		Cart cart = cartService.initializeNewCart(customer);
 		
 		 System.out.println("back to controller and cartId "+cart.getCartId());
 	    Cart addItem=cartService.addItemToCart(cart.getCartId(),productId,quantity);
 	    CartDTO cartDto=convertToCartDTO(addItem);
-		System.out.println(buyer.getBuyerName());
+		System.out.println(customer.getUsername());
 		return ResponseEntity.ok(cartDto);
 				
 	}

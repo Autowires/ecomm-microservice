@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservices.product.service.entity.Buyer;
+import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.service.BuyerServvice;
 @RestController
 @RequestMapping("/buyerController")
@@ -15,9 +15,9 @@ public class BuyerController {
 	@Autowired
 	private BuyerServvice buyerServvice;
 	@GetMapping("/buyer/{buyerId}")
-	public ResponseEntity<Buyer> findBuyerById(@PathVariable Long buyerId){
-	Buyer buyer=buyerServvice.getBuyerById(buyerId);
-	return ResponseEntity.ok(buyer);
+	public ResponseEntity<Customer> findBuyerById(@PathVariable Long buyerId){
+	Customer customer =buyerServvice.getBuyerById(buyerId);
+	return ResponseEntity.ok(customer);
 	}
 
 }

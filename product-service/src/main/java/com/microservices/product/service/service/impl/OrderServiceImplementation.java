@@ -1,31 +1,19 @@
 package com.microservices.product.service.service.impl;
 
+import com.microservices.product.service.dao.OrdersRepository;
+import com.microservices.product.service.dao.ProductRepository;
+import com.microservices.product.service.entity.*;
+import com.microservices.product.service.service.BuyerServvice;
+import com.microservices.product.service.service.CartService;
+import com.microservices.product.service.service.OrderService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.microservices.product.service.dao.OrdersRepository;
-
-import com.microservices.product.service.dao.ProductRepository;
-import com.microservices.product.service.dto.OrderDTO;
-import com.microservices.product.service.entity.Buyer;
-import com.microservices.product.service.entity.Cart;
-import com.microservices.product.service.entity.CartItem;
-import com.microservices.product.service.entity.OrderItem;
-import com.microservices.product.service.entity.OrderStatus;
-import com.microservices.product.service.entity.Orders;
-import com.microservices.product.service.entity.Product;
-import com.microservices.product.service.exception.OrderProcessingException;
-import com.microservices.product.service.service.BuyerServvice;
-import com.microservices.product.service.service.CartService;
-import com.microservices.product.service.service.OrderService;
-import com.microservices.product.service.service.ProductService;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class OrderServiceImplementation implements OrderService {
@@ -89,10 +77,10 @@ public class OrderServiceImplementation implements OrderService {
 		return orderedItems;
 	}
 	private Orders createOrders(Orders order, Cart cart) {
-		Buyer buyer=buyeService.getBuyerById(cart.getBuyerId());
+		Customer customer =buyeService.getBuyerById(cart.getBuyerId());
 		Orders orders=new Orders();
-		orders.setBuyername(buyer.getBuyerName());
-		orders.setBuyerId(buyer.getBuyerId());
+		orders.setBuyername(customer.getUsername());
+		orders.setBuyerId(customer.getId());
 		orders.setOrderDate(LocalDate.now().plusDays(7));
 		orders.setDeliveryDate(LocalDate.now());
 		orders.setOrderStatus(OrderStatus.PLACED);

@@ -1,13 +1,13 @@
 package com.microservices.product.service.service;
 
-import com.microservices.product.service.entity.Buyer;
+import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.Cart;
 
 public interface CartService {
 
-	Buyer getBuyerById(Long buyerId);
+	Customer getBuyerById(Long buyerId);
 
-	Cart initializeNewCart(Buyer buyer);
+	Cart initializeNewCart(Customer customer);
 
 	Cart addItemToCart(Long cartId, Long productId, Integer quantity);
 

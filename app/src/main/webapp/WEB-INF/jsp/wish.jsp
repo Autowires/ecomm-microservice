@@ -173,7 +173,6 @@ body {
 		</div>
 	</section>
 
-	<%@include file="footer.jsp"%>
 
 	<!-- Bootstrap JS -->
 	<script

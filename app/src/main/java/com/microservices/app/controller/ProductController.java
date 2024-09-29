@@ -17,38 +17,28 @@ import com.microservices.app.service.ProductService;
 @RequestMapping("/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+	@Autowired
+	private ProductService productService;
 
-    @GetMapping
-    public String productsView(
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String search,
-            Model model) {
-        List<Product> products = productService.getProducts(category, search);
-        List<String> categories=productService.getAllCategories();
-        System.out.println(products);
-    	System.out.println(categories);
-    	model.addAttribute("categories",categories);
-        model.addAttribute("products", products);
-        return "products";
-    }
-    
-    @GetMapping("/{productId}")
-    public String productinfo(@PathVariable int productId, Model model) {
-    	
-    	Object productinfo = productService.getproduct(productId);
-    	model.addAttribute("product",productinfo);
+	@GetMapping
+	public String productsView(@RequestParam(required = false) String category,
+			@RequestParam(required = false) String search, Model model) {
+		List<Product> products = productService.getProducts(category, search);
+		List<String> categories = productService.getAllCategories();
+		System.out.println(products);
+		System.out.println(categories);
+		model.addAttribute("categories", categories);
+		model.addAttribute("products", products);
+		return "products";
+	}
+
+	@GetMapping("/{productId}")
+	public String productinfo(@PathVariable int productId, Model model) {
+
+		Object productinfo = productService.getproduct(productId);
+		model.addAttribute("product", productinfo);
 		return "productinfo";
-    	
-    }
-   
- /*   @GetMapping("/categories")
-    public String getAllCategories(Model model) {
-    	List<String> categories=productService.getAllCategories();
-    	System.out.println(categories);
-    	model.addAttribute("categories",categories);
-        return "products";
-    }*/
-    
+
+	}
+
 }

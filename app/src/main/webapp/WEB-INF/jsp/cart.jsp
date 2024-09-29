@@ -1,98 +1,175 @@
-<%@page import="com.microservices.app.dto.CartDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.util.Set"%>
-<%@ page import="com.microservices.app.dto.CartDto"%>
-<%@ page import="com.microservices.app.dto.CartItemDto"%>
-<%@ page import="com.microservices.app.dto.ProductDto" %>>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<Style>
-.cart-container {
-    width: 80%;
-    margin: auto;
-}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Wishlist</title>
+<!-- Bootstrap CSS -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- FontAwesome for icons -->
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet">
 
-.cart-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 20px;
-}
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+	crossorigin="anonymous"></script>
 
-.cart-item-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    width: 30%;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
+<!-- Custom CSS for Styling -->
+<style>
+body {
+	background-color: #f8f9fa;
 }
-
-.cart-total {
-    margin-top: 20px;
-    padding: 15px;
-    border-top: 2px solid #ccc;
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background-color: #fff;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.order-btn {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-.order-btn:hover {
-    background-color: #218838;
-}
-</Style>
+</style>
 </head>
 <body>
-<div class="cart-container">
-    <h2>Your Cart</h2>
-    <div class="cart-items">
-    <%
-    CartDto cartDto=(CartDto) request.getAttribute("cartItems");
-    Set<CartItemDto> items=cartDto.getItems();
-    cartDto.getBuyerId();
-    
-    double totalPrice=0;
-    for(CartItemDto item:items){
-    
-    	ProductDto product=item.getProduct();
-    	double subtotal=product.getPrice()*item.getQuantity();
-    	totalPrice=totalPrice+subtotal;
-    
-    %>
-   <div class="cart-item-card">
-   <h3><%= product.getProductName() %></h3>
-   <p>Description:<%=product.getDescription() %> </p>
-  <p>Price:<%= product.getPrice() %></p>
-   <p>Quantity:<%=item.getQuantity() %></p>
-   <p>Subtotal:<%=subtotal %></p>
-   </div>
-    <%
-    }
-    %>
-    </div>
-    <!-- Total Price calculation -->
-   <div class="cart-total">
-   <h3>Total Price:<%= totalPrice %></h3>
-  
-   </div>
-   <form action="orders.jsp" method="POST">
-            <input type="hidden" name="buyerId" value="<%= cartDto.getBuyerId() %>" />
-            <input type="text" name="totalAmount" value=<%= totalPrice %>" readonly />
-            <button class="order-btn" type="submit">Place Order</button>
-        </form>
-   </div>
+	<!--Main Navigation-->
+	<%@include file="header.jsp"%>
+
+	<header>
+		<!-- Heading -->
+		<div class="bg-primary">
+			<div class="container py-4">
+				<!-- Breadcrumb -->
+				<nav class="d-flex">
+					<h6 class="mb-0">
+						<a href="" class="text-white-50">Home</a> <span
+							class="text-white-50 mx-2"> > </span> <a href=""
+							class="text-white"><u>Shopping cart</u></a>
+					</h6>
+				</nav>
+				<!-- Breadcrumb -->
+			</div>
+		</div>
+		<!-- Heading -->
+	</header>
+
+	<!-- cart + summary -->
+	<section class="bg-light my-5">
+		<div class="container">
+			<div class="row">
+				<!-- cart -->
+				<div class="col-lg-9">
+					<div class="card border shadow-0">
+						<div class="m-4">
+							<h4 class="card-title mb-4">Your shopping cart</h4>
+							<c:set var="totalPrice"></c:set>
+							<c:forEach var="item" items="${cartItems}">
+							<c:set var="totalPrice" value="${item.price * item.quantity + totalPrice}"></c:set>
+								<div class="row gy-3 mb-4">
+									<div class="col-lg-5">
+										<div class="me-lg-5">
+											<div class="d-flex">
+												<img
+													src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/11.webp"
+													class="border rounded me-3"
+													style="width: 96px; height: 96px;" alt="Winter jacket" />
+												<div class="">
+													<a href="#" class="nav-link">${item.productName}</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div
+										class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+										<div class="">
+											<form method="POST">
+												<input name="_method" value="PUT" type="hidden"> <input
+													name="id" value="${item.id}" type="hidden"> <input
+													name="quantity" value="${item.quantity}"
+													class="form-input me-4" style="width: 100px;">
+												<button>Update</button>
+											</form>
+										</div>
+										<div class="">
+											<p class="h6">${item.price * item.quantity}</p>
+											<small class="text-muted text-nowrap"> $${item.price}
+												/ per item </small>
+										</div>
+									</div>
+									<div
+										class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+										<div class="float-md-end">
+
+											</a> <a href="#"
+												class="btn btn-light border text-danger icon-hover-danger">
+												Remove</a>
+										</div>
+									</div>
+								</div>
+
+							</c:forEach>
+
+							<div class="border-top pt-4 mx-4 mb-4">
+								<p>
+									<i class="fas fa-truck text-muted fa-lg"></i> Free Delivery
+									within 1-2 weeks
+								</p>
+								<p class="text-muted">Lorem ipsum dolor sit amet,
+									consectetur adipisicing elit, sed do eiusmod tempor incididunt
+									ut labore et dolore magna aliqua. Quis ipsum suspendisse
+									ultrices gravida. Risus commodo viverra maecenas accumsan.</p>
+							</div>
+						</div>
+					</div>
+					<!-- cart -->
+
+					<!-- summary -->
+					<div class="col-lg-3">
+						<div class="card shadow-0 border">
+							<div class="card-body">
+								<div class="d-flex justify-content-between">
+									<p class="mb-2">Total price:</p>
+									<p class="mb-2">$${totalPrice}</p>
+								</div>
+
+								<div class="d-flex justify-content-between">
+									<p class="mb-2">Discount:</p>
+									<p class="mb-2 text-success">0</p>
+								</div>
+
+								<div class="d-flex justify-content-between">
+									<p class="mb-2">TAX:</p>
+									<p class="mb-2">0</p>
+								</div>
+
+								<hr />
+
+								<div class="d-flex justify-content-between">
+									<p class="mb-2">Total price:</p>
+									<p class="mb-2 fw-bold">$${totalPrice}</p>
+								</div>
+
+								<div class="mt-3">
+									<a href="/checkout" class="btn btn-success w-100 shadow-0 mb-2">
+										Make Purchase </a> <a href="/products"
+										class="btn btn-outline-primary w-100 border mt-2"> Back to
+										shop </a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- summary -->
+				</div>
+			</div>
+	</section>
+
+
+
+	<!-- Bootstrap JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

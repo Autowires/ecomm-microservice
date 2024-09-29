@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Wishlist</title>
+<title>Your Cart</title>
 <!-- Bootstrap CSS -->
 <link
 	href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css"
@@ -67,7 +67,8 @@ body {
 							<h4 class="card-title mb-4">Your shopping cart</h4>
 							<c:set var="totalPrice"></c:set>
 							<c:forEach var="item" items="${cartItems}">
-							<c:set var="totalPrice" value="${item.price * item.quantity + totalPrice}"></c:set>
+								<c:set var="totalPrice"
+									value="${item.price * item.quantity + totalPrice}"></c:set>
 								<div class="row gy-3 mb-4">
 									<div class="col-lg-5">
 										<div class="me-lg-5">
@@ -87,9 +88,11 @@ body {
 										<div class="">
 											<form method="POST">
 												<input name="_method" value="PUT" type="hidden"> <input
-													name="id" value="${item.id}" type="hidden"> <input
-													name="quantity" value="${item.quantity}"
-													class="form-input me-4" style="width: 100px;">
+													name="cartItemId" value="${item.id}" type="hidden">
+												<input name="productId" value="${item.productId}"
+													type="hidden"> <input name="quantity" type="number"
+													value="${item.quantity}" class="form-input me-4"
+													style="width: 100px;">
 												<button>Update</button>
 											</form>
 										</div>
@@ -102,10 +105,12 @@ body {
 									<div
 										class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
 										<div class="float-md-end">
-
-											</a> <a href="#"
-												class="btn btn-light border text-danger icon-hover-danger">
-												Remove</a>
+											<form method="POST">
+												<input name="_method" value="DELETE" type="hidden">
+												<input name="cartItemId" value="${item.id}" type="hidden">
+												<button
+													class="btn btn-light border text-danger icon-hover-danger">Remove</button>
+											</form>
 										</div>
 									</div>
 								</div>

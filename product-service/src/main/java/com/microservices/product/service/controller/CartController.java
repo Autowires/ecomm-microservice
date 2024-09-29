@@ -28,7 +28,7 @@ public class CartController {
 
 	@PostMapping
 	public ResponseEntity<String> addProductToCart(@PathVariable Long buyerId, @RequestParam Long productId,
-			@RequestParam(required = false, defaultValue = "1") Integer quantity) {
+			@RequestParam(defaultValue = "1") Integer quantity) {
 		cartItemService.addItemToCart(buyerId, productId, quantity);
 		return ResponseEntity.ok("Added to cart");
 
@@ -41,9 +41,9 @@ public class CartController {
 
 	@PutMapping("/{cartId}")
 	public ResponseEntity<String> updateItemQunatity(@PathVariable Long cartId, @RequestParam Long productId,
-			@RequestParam Integer qunatity) {
+			@RequestParam Integer quantity) {
 		try {
-			cartItemService.updateItemQuntity(cartId, productId, qunatity);
+			cartItemService.updateItemQuntity(cartId, productId, quantity);
 			return ResponseEntity.ok("Cart updated successfully");
 		} catch (Exception e) {
 			return ResponseEntity.ok(e.getMessage());

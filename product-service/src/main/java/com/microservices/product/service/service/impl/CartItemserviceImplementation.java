@@ -50,6 +50,7 @@ public class CartItemserviceImplementation implements CartItemService {
 		CartItem ci = new CartItem();
 		ci.setProduct(p);
 		ci.setCustomer(c);
+		ci.setQuantity(quantity);
 		cartItemRepository.save(ci);
 	}
 }

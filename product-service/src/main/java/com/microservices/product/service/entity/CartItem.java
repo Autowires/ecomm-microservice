@@ -1,11 +1,11 @@
 package com.microservices.product.service.entity;
 
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,14 +21,11 @@ public class CartItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cartItemId;
 	private int quantity;
-	@JsonBackReference //// Prevents recursion from CartItem back to Cart
 	@ManyToOne
 	@JoinColumn(name = "cart_id")
-	private Cart cart;
-//    private Long productId;
-	
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+	private Customer customer;
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
 
 }

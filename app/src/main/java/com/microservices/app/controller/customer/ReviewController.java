@@ -56,8 +56,7 @@ public class ReviewController {
 		request.put("productId", productId);
 		request.put("reviewContent", reviewContent);
 		request.put("rating", rating);
-		rt.postForObject(uri + "/customers/{userId}/wishlist?productId={productId}", request, String.class, 2,
-				productId);
+		rt.postForObject(uri + "/customers/{userId}/reviews", request, String.class, 2);
 		mv.setViewName("redirect:/reviews");
 		return mv;
 	}

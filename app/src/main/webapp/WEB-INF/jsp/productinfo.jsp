@@ -11,8 +11,10 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <style>
         .product-image {
             width: 400px;
@@ -35,7 +37,7 @@
     <div class="row">
         <!-- Product Image (Left Side) -->
         <div class="col-lg-6">
-            <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT_e9HL4LSfgsToceVTm_dvON6d_lPVgkNUPxOUdi0kVtxWGKD_RKXG7pLdK89BHEd_PVpikq8GwEBRVe68mXa8QGZgratCFsHMzFPZqns&usqp=CAE" 
+            <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT_e9HL4LSfgsToceVTm_dvON6d_lPVgkNUPxOUdi0kVtxWGKD_RKXG7pLdK89BHEd_PVpikq8GwEBRVe68mXa8QGZgratCFsHMzFPZqns&usqp=CAE"
                  alt="${product.title}" class="img-fluid product-image">
             <!-- Buttons below the image -->
             <div class="mt-3" style="display:flex">
@@ -54,21 +56,22 @@
             <h4 class="text-success">Price: ₹${product.price}</h4>
 
             <!-- Display average rating -->
-            
             <c:set var="totalRating" value="0"/>
-			<c:set var="count" value="0"/>
+            <c:set var="count" value="0"/>
 
-			<c:forEach var="review" items="${product.reviews}">
-    				<c:set var="totalRating" value="${totalRating + review.rating}"/>
-    				<c:set var="count" value="${count + 1}"/>
-			</c:forEach>
+            <c:forEach var="review" items="${product.reviews}">
+                <c:set var="totalRating" value="${totalRating + review.rating}"/>
+                <c:set var="count" value="${count + 1}"/>
+            </c:forEach>
 
-			<c:set var="averageRating" value="${totalRating / count}"/>
+            <c:set var="averageRating" value="${totalRating / count}"/>
 
-			<h4 class="text-warning" margin-top:9%>
- 		  		 Average Rating: 
-  		 		 <h4>${averageRating} / 5</h4>
-			</h4>
+            <h4 class="text-warning" margin-top:9%>
+                Average Rating:
+                <h4>${averageRating} / 5</h4>
+            </h4>
+
+            <!-- Customer Reviews Section -->
             <h4 style="margin-top:9%">Customer Reviews</h4>
             <c:choose>
                 <c:when test="${not empty product.reviews}">
@@ -87,10 +90,36 @@
         </div>
     </div>
 
-    <!-- Reviews Section -->
+    <!-- Review Submission Form -->
     <div class="row mt-5">
-        <div class="col-12">
-            
+        <div class="col-lg-6 offset-lg-3">
+            <h4>Submit Your Review</h4>
+            <form action="/reviews/add" method="post">
+                <!-- Hidden field for product ID -->
+                <input type="hidden" name="productId" value="${product.id}">
+
+                <!-- Review Content -->
+                <div class="mb-3">
+                    <label for="reviewContent" class="form-label">Review Content</label>
+                    <textarea class="form-control" id="reviewContent" name="reviewContent" rows="4" placeholder="Write your review here..." required></textarea>
+                </div>
+
+                <!-- Rating Selection -->
+                <div class="mb-3">
+                    <label for="rating" class="form-label">Rating</label>
+                    <select class="form-select" id="rating" name="rating" required>
+                        <option value="" disabled selected>Select a rating</option>
+                        <option value="1">1 - Very Poor</option>
+                        <option value="2">2 - Poor</option>
+                        <option value="3">3 - Average</option>
+                        <option value="4">4 - Good</option>
+                        <option value="5">5 - Excellent</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success">Submit Review</button>
+            </form>
         </div>
     </div>
 </div>

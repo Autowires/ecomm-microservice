@@ -41,7 +41,7 @@
                  alt="${product.title}" class="img-fluid product-image">
             <!-- Buttons below the image -->
             <div class="mt-3" style="display:flex">
-                <form action="/cart/addtocart/${session.userId}" method="post">
+                <form action="/cart" method="post">
                     <input type="hidden" name="productId" value="${product.id}">
                     <button type="submit" class="btn btn-primary me-2">Add to Cart</button>
                 </form>

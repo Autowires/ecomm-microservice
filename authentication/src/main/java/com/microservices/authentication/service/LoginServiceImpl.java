@@ -6,33 +6,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.LoginResponse;
-import com.microservices.authentication.dto.UserDTO;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
 	@Autowired
-	private UserRepo userDao;
-
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private JwtService jwtService;
-
-	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private UserRepo userDao;
 
 	private Map<String, String> otpStore = new ConcurrentHashMap<>();
 	private Map<String, Long> otpExpiry = new ConcurrentHashMap<>();
@@ -40,18 +27,13 @@ public class LoginServiceImpl implements LoginService {
 	private static final long OTP_EXPIRY_TIME = 5 * 60 * 1000; // 5 minutes
 
 	@Override
-	public String registerUser(UserDTO user) {
-		return "";
-	}
-
-	@Override
 	public LoginResponse login(String email, String password) {
 		try {
 			var user = userDao.findByEmail(email).orElseThrow();
-			var auth = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), password));
-			var role = auth.getAuthorities().iterator().next().getAuthority();
-			return new LoginResponse(jwtService.generateToken(auth.getName()), role);
+			if (user.getPassword().equals(password)) {
+				return new LoginResponse(user.getId(), user.getUsername(), user.getUserType());
+			} else
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect password");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

@@ -1,19 +1,22 @@
 package com.microservices.app.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.microservices.app.dto.Product;
+import com.microservices.app.dto.OTPVerifyRequest;
+import com.microservices.app.dto.RegisterRequest;
+import com.microservices.app.dto.RetailerRegister;
+import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
-import com.microservices.app.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -22,15 +25,9 @@ public class LoginRegisterController {
 
 	@Autowired
 	private LoginService service;
-	
-    @Autowired
-    private ProductService productService;
 
 	@GetMapping("/")
-	public String home(Model model) {
-		List<Object> products=productService.recentProducts();
-		model.addAttribute("newProducts", products);
-		System.out.println(products);
+	public String home() {
 		return "index";
 	}
 
@@ -41,35 +38,79 @@ public class LoginRegisterController {
 
 	@PostMapping("/login")
 	public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
-		var response = service.authenticateUser(email, password);
-		if (response == null) {
-			model.addAttribute("errorMessage", "Invalid email or password.");
+		try {
+			User user = service.authenticateUser(email, password);
+			if (user == null) {
+				model.addAttribute("errorMessage", "Invalid email or password.");
+				return "login";
+			}
+			session.setAttribute("role", user.getRole());
+			session.setAttribute("userId", user.getId());
+			session.setAttribute("username", user.getUsername());
+			switch (user.getRole()) {
+			case "RETAILER":
+				return "redirect:/retailer";
+			case "CUSTOMER":
+				return "redirect:/products";
+			case "ADMIN":
+				return "redirect:/admin";
+			}
+
+		} catch (Exception e) {
+			model.addAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
 			return "login";
 		}
-		session.setAttribute("token", response.get("token"));
-		switch (response.get("role").toString()) {
-		case "ROLE_RETAILER":
-			return "redirect:/retailer";
-		case "ROLE_CUSTOMER":
-			return "redirect:/products";
-		case "ROLE_ADMIN":
-			return "redirect:/admin";
-		}
+
 		session.invalidate();
 		return "redirect:/";
 	}
 
-	@PostMapping("/sendOtp")
-	@ResponseBody
-	public ResponseEntity<String> sendOtp(@RequestParam String email, @RequestParam String password) {
-		return service.sendOtp(email, password);
+	@GetMapping("/register-retailer")
+	public String showRetailerRegistrationForm() {
+		return "register-retailer"; // return the registration JSP page
 	}
 
-	@PostMapping("/verifyOtp")
+	@GetMapping("/register")
+	public String showRegistrationForm() {
+		return "register"; // return the registration JSP page
+	}
+
+	@PostMapping("/register-retailer")
+	public String registerRetailer(@ModelAttribute RetailerRegister request, Model model) {
+		try {
+			String message = service.registerRetailer(request);
+			model.addAttribute("successMessage", message);
+			return "redirect:/login"; // redirect to login page on success
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", e.getMessage());
+			return "register-retailer"; // return to registration page on error
+		}
+	}
+
+	@PostMapping("/register")
+	public String registerCustomer(@ModelAttribute RegisterRequest request, Model model) {
+		try {
+			String message = service.register(request);
+			model.addAttribute("successMessage", message);
+			return "redirect:/login"; // redirect to login page on success
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", e.getMessage());
+			return "register"; // return to registration page on error
+		}
+	}
+
+	@PostMapping(value = "/register/verify-email")
 	@ResponseBody
-	public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) {
-		System.out.println(email);
-		System.out.println(otp);
-		return service.verifyOtp(email, otp);
+	public ResponseEntity<String> verifyEmail(@RequestParam String email) {
+		System.out.println("in request for " + email);
+		return service.verifyEmail(email);
+	}
+
+	@PutMapping("/register/verify-email")
+	@ResponseBody
+	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+		return service.verifyEmail(otpVerifyRequest);
 	}
 }

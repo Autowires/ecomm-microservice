@@ -1,10 +1,8 @@
-package com.microservices.authentication.dto;
+package com.microservices.app.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class LoginResponse {
 	private long userId;
 	private String username;

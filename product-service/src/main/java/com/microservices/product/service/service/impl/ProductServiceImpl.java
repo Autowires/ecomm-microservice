@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.microservices.product.service.dao.ProductDao;
+import com.microservices.product.service.dto.ProductDTO;
 import com.microservices.product.service.dto.ProductForm;
 import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
@@ -60,6 +61,12 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductInfoResponse getProducInfo(long productId) {
 		return dao.getProductInfo(productId);
+	}
+
+	@Override
+	public List<Product> getAllProducts(Long retailerId) {
+	
+		return dao.getAllProducts(retailerId);
 	}
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.microservices.product.service.dto.ProductDTO;
 import com.microservices.product.service.dto.ProductForm;
 import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
@@ -69,4 +70,10 @@ public class ProductController {
 		Product product = productService.findProductById(productId);
 		return ResponseEntity.ok(product);
 	}
+	@GetMapping("/getAllProducts/{retailerId}")
+	public List<Product> getAllProducts(@PathVariable Long retailerId){
+		return productService.getAllProducts(retailerId);
+	}
+	
+	
 }

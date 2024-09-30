@@ -29,6 +29,7 @@ public class Product {
     @Column(nullable = false)
     private String category;
     private Integer stock;
+    private String imageUrl;
 
     @CreationTimestamp
     private LocalDateTime registeredAt;

@@ -3,6 +3,7 @@ package com.microservices.app.service;
 import java.util.List;
 
 import com.microservices.app.dto.Product;
+import com.microservices.app.dto.ProductForm;
 
 public interface ProductService {
 
@@ -13,6 +14,12 @@ public interface ProductService {
 	List<Object> recentProducts();
 	
 	Object getproduct(int pid);
+
+	List<Object> getAllProducts(Long retailerId);
+
+	String deleteProduct( long retailerId,long productId);
+
+	String updateProduct(long l, long m, ProductForm form);
 
 
 }

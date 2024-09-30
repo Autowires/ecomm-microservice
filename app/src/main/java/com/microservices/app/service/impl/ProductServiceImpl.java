@@ -1,17 +1,23 @@
 package com.microservices.app.service.impl;
 
 import java.net.URI;
+
 import java.util.List;
+
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties.Build;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microservices.app.dto.Product;
+import com.microservices.app.dto.ProductForm;
 import com.microservices.app.service.ProductService;
 
-import jakarta.ws.rs.core.UriBuilder;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -73,4 +79,52 @@ public class ProductServiceImpl implements ProductService {
                 .toUriString();
 		return template.getForObject(uri,Object.class);
 	}
+
+	@Override
+	public List<Object> getAllProducts(Long retailerId) {
+	    String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/products/getAllProducts/" + retailerId)
+	                                     .build()
+	                                     .toUriString();
+	 
+	    return  template.getForObject(uri, List.class);
+	   
+	}
+
+	
+	@Override
+	public String updateProduct(long retailerId, long productId, ProductForm form) {
+	    String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/products/updateProduct/{retailerId}/{productId}")
+	    		                         .buildAndExpand(retailerId,productId)
+	                                     .toUriString();
+	    System.out.println(uri);
+	    ResponseEntity<String> response = template.exchange(
+	        uri, 
+	        HttpMethod.PUT, 
+	        new HttpEntity<>(form), 
+	        String.class
+	    );
+	   
+	    return response.getBody();
+	}
+
+
+	@Override
+	public String deleteProduct(long retailerId, long productId) {
+	    String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/products/deleteProduct/{retailerId}/{productId}")
+	                                     .buildAndExpand(retailerId,productId)
+	                                     .toUriString();
+	    System.out.println(uri);
+ 	    ResponseEntity<String> response = template.exchange(
+	        uri, 
+	        HttpMethod.DELETE, 
+	        null, 
+	        String.class
+	    );
+	    
+	    return response.getBody();
+	}
+
+
+
+
 }

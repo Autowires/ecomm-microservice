@@ -1,8 +1,6 @@
 package com.microservices.app.controller.retailer;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.microservices.app.dto.ProductForm;
 import com.microservices.app.service.ProductService;
@@ -25,8 +24,8 @@ public class InventoryController {
 
 	@GetMapping
 	public String getAllProducts(Model model) {
-		List<Map<String, Object>> allProducts = new ArrayList<>();
-		productService.getAllProducts((long) 2);
+		List<Object> allProducts = productService.getAllProducts((long) 2);
+		System.out.println(allProducts);
 		model.addAttribute("products", allProducts);
 		return "retailer/inventory";
 	}
@@ -38,8 +37,14 @@ public class InventoryController {
 
 	@PostMapping("/add-product")
 	public String addProduct(Model model, ProductForm form) {
-		productService.addProduct(form, 1);
-		return "redirect:/retailer/inventory";
+		try {
+			String mes = productService.addProduct(form, 2);
+			return "redirect:/retailer/inventory";
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", e.getMessage());
+			return "retailer/product-add";
+		}
 	}
 
 	@PutMapping("/updateProduct")
@@ -50,9 +55,9 @@ public class InventoryController {
 	}
 
 	@DeleteMapping("/deleteProduct")
-	public String deleteProduct(Model model) {
+	public String deleteProduct(Model model, @RequestParam long productId) {
 		System.out.println("inside the client");
-		String message = productService.deleteProduct((long) 1, (long) 1);
+		String message = productService.deleteProduct((long) 2, (long) productId);
 		model.addAttribute("message", message);
 		return "redirect:/retailer/inventory";
 	}

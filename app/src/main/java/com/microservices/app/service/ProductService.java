@@ -21,6 +21,6 @@ public interface ProductService {
 
 	String updateProduct(long l, long m, ProductForm form);
 
-	void addProduct(ProductForm form, int i);
+	String addProduct(ProductForm form, long retailerId);
 
 }

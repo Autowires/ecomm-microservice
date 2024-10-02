@@ -71,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
 	public List<Object> getAllProducts(Long retailerId) {
 		String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/products/getAllProducts/" + retailerId).build()
 				.toUriString();
+		System.out.println(uri);
 
 		return template.getForObject(uri, List.class);
 
@@ -97,8 +98,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void addProduct(ProductForm form, int i) {
-
+	public String addProduct(ProductForm form, long retailerId) {
+		String uri = getUri() + "/products//addproduct/{retailerId}";
+		return template.postForObject(uri, form, String.class, retailerId);
 	}
 
 }

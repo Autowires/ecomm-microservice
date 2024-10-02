@@ -119,7 +119,7 @@
 
                                     <form method="POST" action="inventory/deleteProduct" style="display:inline;">
                                         <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="id" value="${product.id}">
+                                        <input type="hidden" name="productId" value="${product.id}">
                                         <button type="submit" class="btn btn-delete">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservices.product.service.dto.ProductDTO;
 import com.microservices.product.service.dto.ProductForm;
 import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
@@ -49,7 +48,7 @@ public class ProductController {
 		return productService.recentAdds();
 	}
 
-	@PostMapping("addproduct/{retailerId}")
+	@PostMapping("/addproduct/{retailerId}")
 	public String addProduct(@PathVariable long retailerId, @RequestBody ProductForm form) {
 		return productService.addProduct(retailerId, form);
 	}
@@ -70,10 +69,10 @@ public class ProductController {
 		Product product = productService.findProductById(productId);
 		return ResponseEntity.ok(product);
 	}
+
 	@GetMapping("/getAllProducts/{retailerId}")
-	public List<Product> getAllProducts(@PathVariable Long retailerId){
+	public List<Product> getAllProducts(@PathVariable Long retailerId) {
 		return productService.getAllProducts(retailerId);
 	}
-	
-	
+
 }

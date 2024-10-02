@@ -14,4 +14,7 @@ public interface CartItemService {
 	List<CartResponse> getBuyerCartById(Long buyerId);
 
 	void addItemToCart(Long buyerId, Long productId, Integer quantity);
+
+	void clearBuyerCart(Long buyerId);
+
 }

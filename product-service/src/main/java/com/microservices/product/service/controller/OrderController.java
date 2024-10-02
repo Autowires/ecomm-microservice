@@ -46,17 +46,32 @@ public class OrderController {
     	List<OrderDTO> orderDto=createOrderDto(orders);
     	return ResponseEntity.ok(orderDto);
     }
-    
-//   public ResponseEntity<List<OrderDTO>> PlacedOrders(@PathVariable Long buyerId){
-//	   
-//   }
+   
+  @DeleteMapping("/cancleOrder/{orderId}")   
+  public ResponseEntity<ApiResponse> cancelOrderById(@PathVariable Long orderId){
+	try {
+		  orderService.cancelorderById(orderId);
+		  return ResponseEntity.ok(new ApiResponse("Order cancelled sucessFully",null));
+	}catch(Exception e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((new ApiResponse(e.getMessage(),  null)));
+	}
 
-//    @DeleteMapping("/deleteorder/{buyerId}")
-//    public ResponseEntity<ApiResponse> cancleOrder(buyerId){
-//    	List<Orders> orders=orderService.getBuyerOrderById(buyerId);
-//    }
-//    
-    
+
+  }
+  @GetMapping("/retailerorders/{retailerId}")
+  public ResponseEntity<List<Orders>> getRetailerordersById(@PathVariable long retailerId){
+	  System.out.println(retailerId);
+		List<Orders> orders=orderService.getAllRetailerOrders(retailerId);
+//		List<OrderDTO> orderDto=createOrderDto(orders);
+//		return ResponseEntity.ok(orderDto);
+		return ResponseEntity.ok(orders);
+	
+  }
+  
+  
+  
+  
+
     
 	private List<OrderDTO> createOrderDto(List<Orders> orders) {
 

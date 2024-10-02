@@ -1,16 +1,26 @@
 package com.microservices.product.service.service.impl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.microservices.product.service.dao.OrderItemRepository;
 import com.microservices.product.service.dao.OrdersRepository;
 import com.microservices.product.service.dao.ProductRepository;
+import com.microservices.product.service.dto.CartResponse;
+import com.microservices.product.service.dto.OrderDTO;
+import com.microservices.product.service.entity.CartItem;
+import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.OrderItem;
+import com.microservices.product.service.entity.OrderStatus;
 import com.microservices.product.service.entity.Orders;
 import com.microservices.product.service.service.BuyerServvice;
+import com.microservices.product.service.service.CartItemService;
 import com.microservices.product.service.service.OrderService;
 
 import jakarta.transaction.Transactional;
@@ -19,20 +29,58 @@ import jakarta.transaction.Transactional;
 public class OrderServiceImplementation implements OrderService {
 	@Autowired
 	private OrdersRepository orderRepository;
-//	@Autowired
-//	private CartService cartService;
+	@Autowired
+	private CartItemService cartItemService;
 	@Autowired
 	private BuyerServvice buyeService;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
+	@Autowired
+	private BuyerServvice buyerServvice;
+	
 	@Transactional
 	@Override
 	public Orders placeOrder(Orders order, Long buyerId) {
 		// TODO Auto-generated method stub
 
-//		Cart cart = null;
-////					cartService.getBuyerCartById(buyerId);
+		List<CartResponse> cartItems = cartItemService.getBuyerCartById(buyerId);
+		Customer customer=buyerServvice.getBuyerById(buyerId);
+		
+		 double totalAmount = cartItems.stream()
+                 .mapToDouble(item -> item.getQuantity() * item.getPrice())
+                 .sum();
+		
+		 Orders orders = createOrders(order,customer);
+		 orders.setTotalAmount(totalAmount);
+		 
+		 Set<OrderItem> orderItems = new HashSet<>();
+		    for (CartResponse cartItem : cartItems) {
+		    	var product = productRepository.findById(cartItem.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
+		    	product.setStock(product.getStock()-cartItem.getQuantity());
+		    	productRepository.save(product);
+		        OrderItem orderItem = new OrderItem(orders, product, cartItem.getQuantity(), cartItem.getPrice());
+		 
+		        if(orderItem!=null) {
+		        	System.out.println("Orderitem has values");
+		        	System.out.println("orderItem price is "+orderItem.getPrice());
+		        }
+		        
+		        orderItems.add(orderItem);
+		    }
+		    orders.setOrderItems(orderItems);
+		    Orders savedOrder = orderRepository.save(orders);
+
+		    // Optionally: Clear the buyer's cart after placing the order
+		    if(savedOrder!=null) {
+		    	 cartItemService.clearBuyerCart(buyerId);
+		    }
+		   
+
+		  // Initially set to PLACED
+
 //		System.out.println("cartid is " + cart.getCartId());
 //		System.out.println(cart);
 //		if (cart != null) {
@@ -56,11 +104,11 @@ public class OrderServiceImplementation implements OrderService {
 ////			throw new OrderProcessingException("failed to place the order try agian after some time");
 ////		}
 //		return orders;
-		return null;
+		    return savedOrder;
 
 	}
 
-	private List<OrderItem> createOrderItems(Orders orders, Object cart) {
+	private List<OrderItem> createOrderItems(Orders order, Object cart) {
 		System.out.println("inside the List<OrderItem>  ");
 		List<OrderItem> orderedItems = new ArrayList();
 //		for (CartItem cartItem : cart.getItems()) {
@@ -78,17 +126,20 @@ public class OrderServiceImplementation implements OrderService {
 		return orderedItems;
 	}
 
-	private Orders createOrders(Orders order, Object cart) {
-//		Customer customer = buyeService.getBuyerById(cart.getBuyerId());
+	private Orders createOrders(Orders order, Customer customer) {
+
 		Orders orders = new Orders();
-//		orders.setBuyername(customer.getUsername());
-//		orders.setBuyerId(customer.getId());
-//		orders.setOrderDate(LocalDate.now().plusDays(7));
-//		orders.setDeliveryDate(LocalDate.now());
-//		orders.setOrderStatus(OrderStatus.PLACED);
-//		orders.setPaymentType(order.getPaymentType());
-//		orders.setAddress(order.getAddress());
-//		orders.setTotalAmount(order.getTotalAmount());
+		System.out.println();
+		
+		    orders.setBuyerId(customer.getId());
+		    orders.setAddress(order.getAddress());
+		    orders.setPaymentType(order.getPaymentType());
+		    orders.setBuyername(order.getBuyername());
+		    orders.setTotalAmount(order.getTotalAmount());
+		    orders.setOrderDate(LocalDate.now());
+		    orders.setDeliveryDate(LocalDate.now().plusDays(5)); // Set delivery date to 5 days after the order date
+		    orders.setOrderStatus(OrderStatus.PLACED); // Initially set to PLACED
+
 		return orders;
 	}
 
@@ -98,10 +149,28 @@ public class OrderServiceImplementation implements OrderService {
 		return orders;
 	}
 
-//	@Override
-//	public OrderDTO convertToDto(Orders order) {
-//		 return modelMapper.map(order, OrderDto.class);
-//		return null;
-//	}
+	@Override
+	public void cancelorderById(Long orderId) {
+		Orders order=orderRepository.findById(orderId).orElseThrow(()->new RuntimeException("Order Not found"));
+		if(order.getOrderStatus()==OrderStatus.PLACED) {
+			order.setOrderStatus(OrderStatus.CANCELLED);
+			  orderRepository.save(order);
+		}else {
+			throw new RuntimeException("Order cannot be cancelled as it is already " + order.getOrderStatus());
+		}
+		
+	}
+
+	@Override
+	public List<Orders> getAllRetailerOrders(long retailerId) {
+		List<Orders> orders= orderItemRepository.findOrdersByRetailerId(retailerId);
+	    System.out.println(orders);
+	    if(!orders.isEmpty()) {
+	    	System.out.println("orders have values");
+	    }
+		return orders;
+	}
+
+	
 
 }

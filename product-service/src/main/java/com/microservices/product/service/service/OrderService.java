@@ -11,6 +11,10 @@ public interface OrderService {
 
 	List<Orders> getBuyerOrderById(Long buyerId);
 
+	void cancelorderById(Long orderId);
+
+	List<Orders> getAllRetailerOrders(long retailerId);
+
 //	OrderDTO convertToDto(Orders order);
 
 }

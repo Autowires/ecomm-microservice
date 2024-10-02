@@ -12,14 +12,15 @@ public interface ProductService {
 	List<String> getAllCategories();
 
 	List<Object> recentProducts();
-	
+
 	Object getproduct(int pid);
 
 	List<Object> getAllProducts(Long retailerId);
 
-	String deleteProduct( long retailerId,long productId);
+	String deleteProduct(long retailerId, long productId);
 
 	String updateProduct(long l, long m, ProductForm form);
 
+	void addProduct(ProductForm form, int i);
 
 }

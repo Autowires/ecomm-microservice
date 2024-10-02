@@ -53,4 +53,10 @@ public class CartItemserviceImplementation implements CartItemService {
 		ci.setQuantity(quantity);
 		cartItemRepository.save(ci);
 	}
+
+	@Override
+	public void clearBuyerCart(Long buyerId) {
+		 cartItemRepository.deleteAllByBuyerId(buyerId);
+		
+	}
 }

@@ -15,89 +15,100 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservices.product.service.dto.ApiResponse;
+import com.microservices.product.service.dto.CheckoutRequest;
 import com.microservices.product.service.dto.OrderDTO;
 import com.microservices.product.service.dto.OrderItemDTO;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.Orders;
 import com.microservices.product.service.entity.Product;
 import com.microservices.product.service.service.OrderService;
-import com.microservices.product.service.dto.*;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    @Autowired	
-   private OrderService orderService;
-    
-    @PostMapping("/placeorder/{buyerId}")
-    public ResponseEntity<ApiResponse> placeOrder(@RequestBody Orders order, @PathVariable Long buyerId){
-     try {
-    	 Orders ordered=orderService.placeOrder(order,buyerId);
-    	 System.out.println("placeOrder"+ordered);
-    	 return ResponseEntity.ok(new ApiResponse("ordered place sucessFuly", null));
-     }catch(Exception e ) {
-    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((new ApiResponse(e.getMessage(),  null)));
-     }
+	@Autowired
+	private OrderService orderService;
 
-    	
-    }
-    @GetMapping("/buyerid/{buyerId}")   	
-    public ResponseEntity<List<OrderDTO>> getBuyerOrderById(@PathVariable Long buyerId){
-    	List<Orders> orders=orderService.getBuyerOrderById(buyerId);
-    	List<OrderDTO> orderDto=createOrderDto(orders);
-    	return ResponseEntity.ok(orderDto);
-    }
-    
-//   public ResponseEntity<List<OrderDTO>> PlacedOrders(@PathVariable Long buyerId){
-//	   
-//   }
+	@PostMapping("/placeorder/{buyerId}")
+	public ResponseEntity<ApiResponse> placeOrder(@RequestBody CheckoutRequest request, @PathVariable Long buyerId) {
+		try {
+			Orders ordered = orderService.placeOrder(request, buyerId);
+			System.out.println("placeOrder" + ordered);
+			return ResponseEntity.ok(new ApiResponse("ordered place sucessFuly", null));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((new ApiResponse(e.getMessage(), null)));
+		}
 
-//    @DeleteMapping("/deleteorder/{buyerId}")
-//    public ResponseEntity<ApiResponse> cancleOrder(buyerId){
-//    	List<Orders> orders=orderService.getBuyerOrderById(buyerId);
-//    }
-//    
-    
-    
+	}
+
+	@GetMapping("/buyerid/{buyerId}")
+	public ResponseEntity<List<OrderDTO>> getBuyerOrderById(@PathVariable Long buyerId) {
+		List<Orders> orders = orderService.getBuyerOrderById(buyerId);
+		List<OrderDTO> orderDto = createOrderDto(orders);
+		return ResponseEntity.ok(orderDto);
+	}
+
+	@DeleteMapping("/cancleOrder/{orderId}")
+	public ResponseEntity<ApiResponse> cancelOrderById(@PathVariable Long orderId) {
+		try {
+			orderService.cancelorderById(orderId);
+			return ResponseEntity.ok(new ApiResponse("Order cancelled sucessFully", null));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((new ApiResponse(e.getMessage(), null)));
+		}
+
+	}
+
+	@GetMapping("/retailerorders/{retailerId}")
+	public ResponseEntity<List<Orders>> getRetailerordersById(@PathVariable long retailerId) {
+		System.out.println(retailerId);
+		List<Orders> orders = orderService.getAllRetailerOrders(retailerId);
+//		List<OrderDTO> orderDto=createOrderDto(orders);
+//		return ResponseEntity.ok(orderDto);
+		return ResponseEntity.ok(orders);
+
+	}
+
 	private List<OrderDTO> createOrderDto(List<Orders> orders) {
 
 		ArrayList<OrderDTO> orderedItemsList = new ArrayList<>();
-	    
-	    for (Orders order : orders) {
-	        OrderDTO orderDto = new OrderDTO();
-	        orderDto.setOrderId(order.getOrderId());
-	        orderDto.setOrderDate(order.getOrderDate());
-	        orderDto.setDeliveryDate(order.getDeliveryDate());
-	        orderDto.setTotalAmount(order.getTotalAmount());
-            orderDto.setBuyername(order.getBuyername()) ;
-            orderDto.setOrderStatus(order.getOrderStatus());
-            orderDto.setAddress(order.getAddress());
-            orderDto.setPaymentType(order.getPaymentType());
-            System.out.println(order.getOrderStatus());
-	        // Convert OrderItems to OrderItemDTO
-	        List<OrderItemDTO> orderItemDtos = new ArrayList<>();
-	        
-	        for (OrderItem orderItem : order.getOrderItems()) {
-	            OrderItemDTO orderItemDto = new OrderItemDTO();
+
+		for (Orders order : orders) {
+			OrderDTO orderDto = new OrderDTO();
+			orderDto.setOrderId(order.getOrderId());
+			orderDto.setOrderDate(order.getOrderDate());
+			orderDto.setDeliveryDate(order.getDeliveryDate());
+			orderDto.setTotalAmount(order.getTotalAmount());
+			orderDto.setBuyername(order.getBuyername());
+			orderDto.setOrderStatus(order.getOrderStatus());
+			orderDto.setAddress(order.getAddress());
+			orderDto.setPaymentType(order.getPaymentType());
+			System.out.println(order.getOrderStatus());
+			// Convert OrderItems to OrderItemDTO
+			List<OrderItemDTO> orderItemDtos = new ArrayList<>();
+
+			for (OrderItem orderItem : order.getOrderItems()) {
+				OrderItemDTO orderItemDto = new OrderItemDTO();
 //	            orderItemDto.set(orderItem.getOrderItemId());
-	            orderItemDto.setQuantity(orderItem.getQuantity());
-	            orderItemDto.setPrice(orderItem.getPrice());
-	            
-	            // Set product details
-	            Product product = orderItem.getProduct();
-	            if (product != null) {
+				orderItemDto.setQuantity(orderItem.getQuantity());
+				orderItemDto.setPrice(orderItem.getPrice());
+
+				// Set product details
+				Product product = orderItem.getProduct();
+				if (product != null) {
 //	                orderItemDto.setProductId(product.getId());
-	                orderItemDto.setProductName(product.getTitle());
-	                orderItemDto.setDiscription(product.getDescription());
-	                orderItemDto.setPrice(product.getPrice());
-	            }
+					orderItemDto.setProductName(product.getTitle());
+					orderItemDto.setDiscription(product.getDescription());
+					orderItemDto.setPrice(product.getPrice());
+				}
 
-	            orderItemDtos.add(orderItemDto);
-	        }
+				orderItemDtos.add(orderItemDto);
+			}
 
-	        orderDto.setOrderItems(orderItemDtos);
-	        orderedItemsList.add(orderDto);
-	    }
+			orderDto.setOrderItems(orderItemDtos);
+			orderedItemsList.add(orderDto);
+		}
 
-	    return orderedItemsList;
+		return orderedItemsList;
 	}
 }

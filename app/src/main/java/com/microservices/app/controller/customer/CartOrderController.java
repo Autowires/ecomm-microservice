@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.microservices.app.dto.CheckoutRequest;
+
 @Controller
 public class CartOrderController {
+
 	@Autowired
 	private DiscoveryClient discoveryClient;
 
@@ -56,6 +60,32 @@ public class CartOrderController {
 		String path = getProductServiceUri() + "/customers/{ui}/cart/{ci}";
 		restTemplate.delete(path, 1, cartItemId);
 		return "redirect:/cart";
+	}
+
+	@GetMapping("/checkout")
+	public String checkoutPage() {
+		return "customer/checkout";
+	}
+
+	@PostMapping("/checkout")
+	public String confirmOrder(Model model, CheckoutRequest request) {
+		try {
+			String path = getProductServiceUri() + "/orders/placeorder/{buyerId}";
+			restTemplate.postForEntity(path, request, Object.class, 1);
+			return "redirect:/orders";
+		} catch (Exception e) {
+			model.addAttribute("errorMessage", e.getMessage());
+			e.printStackTrace();
+			return "customer/checkout";
+		}
+	}
+
+	@GetMapping("/orders")
+	public String customerOrdersPage(Model model) {
+		String path = getProductServiceUri() + "/orders/buyerid/{buyerId}";
+		var orders = restTemplate.getForObject(path, List.class, 1);
+		model.addAttribute("orders", orders);
+		return "orders/customer-orders";
 	}
 
 }

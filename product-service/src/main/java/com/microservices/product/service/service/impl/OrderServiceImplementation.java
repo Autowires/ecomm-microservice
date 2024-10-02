@@ -13,8 +13,7 @@ import com.microservices.product.service.dao.OrderItemRepository;
 import com.microservices.product.service.dao.OrdersRepository;
 import com.microservices.product.service.dao.ProductRepository;
 import com.microservices.product.service.dto.CartResponse;
-import com.microservices.product.service.dto.OrderDTO;
-import com.microservices.product.service.entity.CartItem;
+import com.microservices.product.service.dto.CheckoutRequest;
 import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.OrderStatus;
@@ -40,46 +39,43 @@ public class OrderServiceImplementation implements OrderService {
 
 	@Autowired
 	private BuyerServvice buyerServvice;
-	
+
 	@Transactional
 	@Override
-	public Orders placeOrder(Orders order, Long buyerId) {
+	public Orders placeOrder(CheckoutRequest request, Long buyerId) {
 		// TODO Auto-generated method stub
 
 		List<CartResponse> cartItems = cartItemService.getBuyerCartById(buyerId);
-		Customer customer=buyerServvice.getBuyerById(buyerId);
-		
-		 double totalAmount = cartItems.stream()
-                 .mapToDouble(item -> item.getQuantity() * item.getPrice())
-                 .sum();
-		
-		 Orders orders = createOrders(order,customer);
-		 orders.setTotalAmount(totalAmount);
-		 
-		 Set<OrderItem> orderItems = new HashSet<>();
-		    for (CartResponse cartItem : cartItems) {
-		    	var product = productRepository.findById(cartItem.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
-		    	product.setStock(product.getStock()-cartItem.getQuantity());
-		    	productRepository.save(product);
-		        OrderItem orderItem = new OrderItem(orders, product, cartItem.getQuantity(), cartItem.getPrice());
-		 
-		        if(orderItem!=null) {
-		        	System.out.println("Orderitem has values");
-		        	System.out.println("orderItem price is "+orderItem.getPrice());
-		        }
-		        
-		        orderItems.add(orderItem);
-		    }
-		    orders.setOrderItems(orderItems);
-		    Orders savedOrder = orderRepository.save(orders);
+		Customer customer = buyerServvice.getBuyerById(buyerId);
 
-		    // Optionally: Clear the buyer's cart after placing the order
-		    if(savedOrder!=null) {
-		    	 cartItemService.clearBuyerCart(buyerId);
-		    }
-		   
+		double totalAmount = cartItems.stream().mapToDouble(item -> item.getQuantity() * item.getPrice()).sum();
 
-		  // Initially set to PLACED
+		Orders orders = createOrders(request, customer, totalAmount);
+
+		Set<OrderItem> orderItems = new HashSet<>();
+		for (CartResponse cartItem : cartItems) {
+			var product = productRepository.findById(cartItem.getProductId())
+					.orElseThrow(() -> new RuntimeException("Product not found"));
+			product.setStock(product.getStock() - cartItem.getQuantity());
+			productRepository.save(product);
+			OrderItem orderItem = new OrderItem(orders, product, cartItem.getQuantity(), cartItem.getPrice());
+
+			if (orderItem != null) {
+				System.out.println("Orderitem has values");
+				System.out.println("orderItem price is " + orderItem.getPrice());
+			}
+
+			orderItems.add(orderItem);
+		}
+		orders.setOrderItems(orderItems);
+		Orders savedOrder = orderRepository.save(orders);
+
+		// Optionally: Clear the buyer's cart after placing the order
+		if (savedOrder != null) {
+			cartItemService.clearBuyerCart(buyerId);
+		}
+
+		// Initially set to PLACED
 
 //		System.out.println("cartid is " + cart.getCartId());
 //		System.out.println(cart);
@@ -104,7 +100,7 @@ public class OrderServiceImplementation implements OrderService {
 ////			throw new OrderProcessingException("failed to place the order try agian after some time");
 ////		}
 //		return orders;
-		    return savedOrder;
+		return savedOrder;
 
 	}
 
@@ -126,19 +122,18 @@ public class OrderServiceImplementation implements OrderService {
 		return orderedItems;
 	}
 
-	private Orders createOrders(Orders order, Customer customer) {
-
+	private Orders createOrders(CheckoutRequest request, Customer customer, double totalAmount) {
 		Orders orders = new Orders();
 		System.out.println();
-		
-		    orders.setBuyerId(customer.getId());
-		    orders.setAddress(order.getAddress());
-		    orders.setPaymentType(order.getPaymentType());
-		    orders.setBuyername(order.getBuyername());
-		    orders.setTotalAmount(order.getTotalAmount());
-		    orders.setOrderDate(LocalDate.now());
-		    orders.setDeliveryDate(LocalDate.now().plusDays(5)); // Set delivery date to 5 days after the order date
-		    orders.setOrderStatus(OrderStatus.PLACED); // Initially set to PLACED
+
+		orders.setBuyerId(customer.getId());
+		orders.setAddress(request.getAddress());
+		orders.setPaymentType(request.getPaymentType());
+		orders.setBuyername(request.getBuyerName());
+		orders.setTotalAmount(totalAmount);
+		orders.setOrderDate(LocalDate.now());
+		orders.setDeliveryDate(LocalDate.now().plusDays(5)); // Set delivery date to 5 days after the order date
+		orders.setOrderStatus(OrderStatus.PLACED); // Initially set to PLACED
 
 		return orders;
 	}
@@ -151,26 +146,24 @@ public class OrderServiceImplementation implements OrderService {
 
 	@Override
 	public void cancelorderById(Long orderId) {
-		Orders order=orderRepository.findById(orderId).orElseThrow(()->new RuntimeException("Order Not found"));
-		if(order.getOrderStatus()==OrderStatus.PLACED) {
+		Orders order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order Not found"));
+		if (order.getOrderStatus() == OrderStatus.PLACED) {
 			order.setOrderStatus(OrderStatus.CANCELLED);
-			  orderRepository.save(order);
-		}else {
+			orderRepository.save(order);
+		} else {
 			throw new RuntimeException("Order cannot be cancelled as it is already " + order.getOrderStatus());
 		}
-		
+
 	}
 
 	@Override
 	public List<Orders> getAllRetailerOrders(long retailerId) {
-		List<Orders> orders= orderItemRepository.findOrdersByRetailerId(retailerId);
-	    System.out.println(orders);
-	    if(!orders.isEmpty()) {
-	    	System.out.println("orders have values");
-	    }
+		List<Orders> orders = orderItemRepository.findOrdersByRetailerId(retailerId);
+		System.out.println(orders);
+		if (!orders.isEmpty()) {
+			System.out.println("orders have values");
+		}
 		return orders;
 	}
-
-	
 
 }

@@ -2,12 +2,12 @@ package com.microservices.product.service.service;
 
 import java.util.List;
 
-import com.microservices.product.service.dto.OrderDTO;
+import com.microservices.product.service.dto.CheckoutRequest;
 import com.microservices.product.service.entity.Orders;
 
 public interface OrderService {
 
-	Orders placeOrder(Orders order, Long buyerId);
+	Orders placeOrder(CheckoutRequest request, Long buyerId);
 
 	List<Orders> getBuyerOrderById(Long buyerId);
 

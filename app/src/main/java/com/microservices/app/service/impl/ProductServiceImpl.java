@@ -103,4 +103,10 @@ public class ProductServiceImpl implements ProductService {
 		return template.postForObject(uri, form, String.class, retailerId);
 	}
 
+	@Override
+	public Object getRetailerproduct(long productId) {
+		String uri = getUri() + "/products/getproductbyid/{productId}";
+		return template.getForObject(uri, Object.class, productId);
+	}
+
 }

@@ -110,20 +110,7 @@
                                     <img src="${product.imageUrl}" alt="${product.title}" class="img-thumbnail" style="width: 60px; height: 60px;">
                                 </td>
                                 <td class="action-buttons">
-                                    <form method="GET" action="inventory/updateProduct" style="display:inline;">
-                                        <input type="hidden" name="id" value="${product.id}">
-                                        <button type="submit" class="btn btn-update">
-                                            <i class="fas fa-edit"></i> Update
-                                        </button>
-                                    </form>
-
-                                    <form method="POST" action="inventory/deleteProduct" style="display:inline;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="productId" value="${product.id}">
-                                        <button type="submit" class="btn btn-delete">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                	<a href="inventory/${product.id}/updateProduct" class="btn btn-update">Update</a>
                                 </td>
                             </tr>
                         </c:forEach>

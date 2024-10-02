@@ -7,9 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -47,11 +46,22 @@ public class InventoryController {
 		}
 	}
 
-	@PutMapping("/updateProduct")
-	public String updateProduct(@RequestBody ProductForm form, Model model) {
-		String message = productService.updateProduct((long) 1, (long) 4, form);
-		model.addAttribute("message", message);
-		return "redirect:/retailer/inventory";
+	@GetMapping("/{id}/updateProduct")
+	public String updateProduct(Model model, @PathVariable long id) {
+		model.addAttribute("product", productService.getRetailerproduct(id));
+		return "retailer/product-update";
+	}
+
+	@PostMapping("/{id}/updateProduct")
+	public String updateProduct(ProductForm form, Model model, @PathVariable long id) {
+		try {
+			String message = productService.updateProduct((long) 2, id, form);
+			return "redirect:/retailer/inventory";
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", e.getMessage());
+			return "retailer/product-update";
+		}
 	}
 
 	@DeleteMapping("/deleteProduct")

@@ -19,8 +19,10 @@ public interface ProductService {
 
 	String deleteProduct(long retailerId, long productId);
 
-	String updateProduct(long l, long m, ProductForm form);
+	String updateProduct(long retailerId, long productId, ProductForm form);
 
 	String addProduct(ProductForm form, long retailerId);
+
+	Object getRetailerproduct(long productId);
 
 }

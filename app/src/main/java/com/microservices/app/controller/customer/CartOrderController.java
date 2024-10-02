@@ -80,4 +80,12 @@ public class CartOrderController {
 		}
 	}
 
+	@GetMapping("/orders")
+	public String customerOrdersPage(Model model) {
+		String path = getProductServiceUri() + "/orders/buyerid/{buyerId}";
+		var orders = restTemplate.getForObject(path, List.class, 1);
+		model.addAttribute("orders", orders);
+		return "orders/customer-orders";
+	}
+
 }

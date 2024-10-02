@@ -11,6 +11,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.microservices.authentication.Repo.UserRepo;
 import com.microservices.authentication.dto.LoginResponse;
+import com.microservices.authentication.entity.MyUser;
+import com.microservices.authentication.exception.UserNotFoundException;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -68,4 +70,42 @@ public class LoginServiceImpl implements LoginService {
 	private void sendOtpEmail(String to, String otp) {
 		emailService.sendEmail(to, "Your OTP Code", "Your OTP code is: " + otp);
 	}
+     @Override
+	public String verifyEmail(String email, String otp) {
+		String storedOtp = otpStore.get(email);
+		Long expiryTime = otpExpiry.get(email);
+
+		if (storedOtp == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "incorrect email");
+		}
+
+		if (System.currentTimeMillis() > expiryTime) {
+			otpStore.remove(email);
+			otpExpiry.remove(email);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP has expired. Please request a new OTP.");
+		}
+
+		if (!storedOtp.equals(otp)) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not matched");
+		}
+
+		otpVerified.put(email, true);
+		return "OTP verified.";
+	}
+
+     @Override
+     public String deleteAccount(Long id)  {
+         
+    	 MyUser user = userDao.findById(id)
+                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found."));
+	 
+             userDao.deleteById(id);
+             String to=user.getEmail();
+             String subject = "Account Deletion Confirmation";
+             String body = "Your account has been successfully deleted.";
+             emailService.sendEmail(to,subject, body);
+             return "User account deleted successfully.";
+          
+
+}
 }

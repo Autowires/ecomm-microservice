@@ -57,9 +57,6 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
     	       "FROM Retailer r WHERE r.status = 'UNDER_REVIEW'")
     	List<retailerDto> retailersUnderReview();
 
-
-
-
- }
+	  }
     
 

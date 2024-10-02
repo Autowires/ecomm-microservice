@@ -10,4 +10,6 @@ public interface LoginService {
 
 	LoginResponse login(String email, String password);
 
+	String verifyEmail(String email, String otp);
+
 }

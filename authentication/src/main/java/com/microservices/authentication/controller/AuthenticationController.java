@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microservices.authentication.dto.LoginRequest;
 import com.microservices.authentication.dto.LoginResponse;
+import com.microservices.authentication.dto.OTPVerifyRequest;
 import com.microservices.authentication.service.LoginService;
 
 @RestController
@@ -30,6 +31,12 @@ public class AuthenticationController {
 		String message = service.existsByEmail(email);
 		return ResponseEntity.ok(message);
 	}
+	@PostMapping("/forgotpassword/verify-otp")
+	public ResponseEntity<String> verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+		String message = service.verifyEmail(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
+		return ResponseEntity.ok(message);
+	}
+
 
 	@PutMapping("/updatePassword")
 	public ResponseEntity<String> updatePassword(@RequestParam String email, @RequestParam String password) {

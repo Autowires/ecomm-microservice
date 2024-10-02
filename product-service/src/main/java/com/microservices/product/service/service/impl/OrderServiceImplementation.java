@@ -129,7 +129,7 @@ public class OrderServiceImplementation implements OrderService {
 		orders.setBuyerId(customer.getId());
 		orders.setAddress(request.getAddress());
 		orders.setPaymentType(request.getPaymentType());
-		orders.setBuyername(request.getBuyerName());
+		orders.setBuyername(request.getName());
 		orders.setTotalAmount(totalAmount);
 		orders.setOrderDate(LocalDate.now());
 		orders.setDeliveryDate(LocalDate.now().plusDays(5)); // Set delivery date to 5 days after the order date

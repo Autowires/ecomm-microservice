@@ -1,4 +1,4 @@
-package com.microservices.product.service.dto;
+package com.microservices.app.dto;
 
 import lombok.Data;
 

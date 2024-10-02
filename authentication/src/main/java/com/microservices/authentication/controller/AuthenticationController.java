@@ -2,6 +2,8 @@ package com.microservices.authentication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +43,12 @@ public class AuthenticationController {
 	@PutMapping("/updatePassword")
 	public ResponseEntity<String> updatePassword(@RequestParam String email, @RequestParam String password) {
 		String message = service.updatePassword(email, password);
+		return ResponseEntity.ok(message);
+	}
+	
+	@DeleteMapping("/deleteAccount")
+	public ResponseEntity<String> deleteAccount(@RequestParam Long id){
+		String message=service.deleteAccount(id);
 		return ResponseEntity.ok(message);
 	}
 }

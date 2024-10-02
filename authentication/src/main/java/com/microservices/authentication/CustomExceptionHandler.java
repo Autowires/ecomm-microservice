@@ -1,6 +1,7 @@
 package com.microservices.authentication;
 
 import java.util.HashMap;
+
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.microservices.authentication.exception.UserNotFoundException;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -33,4 +36,12 @@ public class CustomExceptionHandler {
 		errors.put("errors", fieldErrors);
 		return ResponseEntity.badRequest().body(errors);
 	}
+	@ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+        errorResponse.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 }

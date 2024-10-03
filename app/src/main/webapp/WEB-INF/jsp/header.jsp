@@ -51,7 +51,7 @@
             <!-- Wishlist Button: Redirect to login if not logged in -->
             <c:choose>
               <c:when test="${empty sessionScope.user}">
-                <a href="login" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
+                <a href="wishlist" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                   <i class="fas fa-heart m-1 me-md-2"></i>
                   <p class="d-none d-md-block mb-0">Wishlist</p>
                 </a>

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/wishlist")
 public class WishlistController {
@@ -23,33 +25,71 @@ public class WishlistController {
 	private DiscoveryClient dicoveryClient;
 
 	@GetMapping
-	public ModelAndView listWishlist() {
+	public ModelAndView listWishlist(HttpSession session) {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("wish");
+		
+		// Pavan check whether the session has user info or not!
+		Long userId = (Long) session.getAttribute("userId");
+		if(userId == null)
+		{
+			mv.setViewName("redirect:/login");
+			return mv;
+		}
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
-		URI uri = instances.get(0).getUri();
-		List response = rt.getForObject(uri + "/customers/{id}/wishlist", List.class, 2);
-		mv.addObject("wishlist", response);
+        if (instances == null || instances.isEmpty()) {
+            mv.setViewName("error");
+            return mv;
+        }
+        
+        URI uri = instances.get(0).getUri();
+        List response = rt.getForObject(uri + "/customers/{id}/wishlist", List.class, userId);
+        mv.addObject("wishlist", response);
+        mv.setViewName("wish");
 		return mv;
+		
 	}
 
 	@PostMapping("/delete")
-	public ModelAndView deleteProduct(@RequestParam long productId) {
+	public ModelAndView deleteProduct(@RequestParam long productId, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
+		Long userId = (Long)session.getAttribute("userId");
+		if(userId == null)
+		{
+			mv.setViewName("redirect:/login");
+			return mv;
+		}
+		
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
+		if (instances == null || instances.isEmpty()) {
+            mv.setViewName("error");
+            return mv;
+        }
 		URI uri = instances.get(0).getUri();
-		rt.delete(uri + "/customers/{userId}/wishlist?productId={productId}", 2, productId);
+		rt.delete(uri + "/customers{userId}/wishlist?productId={productId}",userId,productId);
 		mv.setViewName("redirect:/wishlist");
 		return mv;
 	}
 
 	@PostMapping("/add")
-	public ModelAndView addProduct(@RequestParam long productId) {
+	public ModelAndView addProduct(@RequestParam long productId, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
+		
+		Long userId = (Long) session.getAttribute("userId");
+		if(userId == null)
+		{
+			mv.setViewName("redirect:/login");
+			return mv;
+		}
+		
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
+		if(instances == null || instances.isEmpty())
+		{
+			mv.setViewName("error");
+			return mv;
+		}
 		URI uri = instances.get(0).getUri();
-		rt.postForObject(uri + "/customers/{userId}/wishlist?productId={productId}", null, String.class, 2, productId);
-		mv.setViewName("redirect:/wishlist");
-		return mv;
+		 rt.postForObject(uri + "/customers/{userId}/wishlist?productId={productId}", null, String.class, userId, productId);
+	        mv.setViewName("redirect:/wishlist");
+	        return mv;
 	}
 }

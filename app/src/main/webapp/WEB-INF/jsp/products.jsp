@@ -22,17 +22,25 @@
 <header>
   <!-- Heading -->
   <div class="bg-primary mb-4">
-    <div class="container py-4">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center">
       <h3 class="text-white mt-2">Products</h3>
-      <!-- Breadcrumb -->
-      <nav class="d-flex mb-2">
-        <h6 class="mb-0">
-          <a href="" class="text-white-50">Home</a>
-        </h6>
-      </nav>
-      <!-- Breadcrumb -->
+      <!-- Breadcrumb and Button -->
+      <div>
+        <nav class="d-flex mb-2">
+          <h6 class="mb-0">
+            <a href="/" class="text-white-50">Home</a>
+          </h6>
+        </nav>
+      </div>
+      <button style="background-color: red; border: none; padding: 10px 20px; border-radius: 5px;">
+        <a href="/products" style="color: #ffffff; text-decoration: none; font-weight: bold;">Back To All Products</a>
+      </button>
+      <!-- Breadcrumb and Button -->
     </div>
   </div>
+</div>
+
   <!-- Heading -->
 </header>
 

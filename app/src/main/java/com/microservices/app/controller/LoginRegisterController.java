@@ -90,6 +90,8 @@ public class LoginRegisterController {
 
 	@PostMapping("/register")
 	public String registerCustomer(@ModelAttribute RegisterRequest request, Model model) {
+		System.out.println(request.getAge());
+		System.out.println(request.getCity());
 		try {
 			String message = service.register(request);
 			model.addAttribute("successMessage", message);

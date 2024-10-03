@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class MyUser {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String username;
@@ -42,6 +42,8 @@ public class MyUser {
 
 	@Column(nullable = false)
 	private String email;
+	
+	private String city;
 
 	@Max(9999999999L)
 	private Long contactNo;

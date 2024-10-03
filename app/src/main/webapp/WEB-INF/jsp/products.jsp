@@ -29,7 +29,7 @@
       <div>
         <nav class="d-flex mb-2">
           <h6 class="mb-0">
-            <a href="/" class="text-white-50">Home</a>
+            <a href="/products" class="text-white-50">Home</a>
           </h6>
         </nav>
       </div>

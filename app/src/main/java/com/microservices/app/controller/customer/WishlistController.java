@@ -72,6 +72,7 @@ public class WishlistController {
 
 	@PostMapping("/add")
 	public ModelAndView addProduct(@RequestParam long productId, HttpSession session) {
+		System.out.println(productId);
 		ModelAndView mv = new ModelAndView();
 		
 		Long userId = (Long) session.getAttribute("userId");

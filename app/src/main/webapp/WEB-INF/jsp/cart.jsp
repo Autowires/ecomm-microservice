@@ -45,7 +45,7 @@ body {
 				<!-- Breadcrumb -->
 				<nav class="d-flex">
 					<h6 class="mb-0">
-						<a href="" class="text-white-50">Home</a> <span
+						<a href="/products" class="text-white-50">Home</a> <span
 							class="text-white-50 mx-2"> > </span> <a href=""
 							class="text-white"><u>Shopping cart</u></a>
 					</h6>

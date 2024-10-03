@@ -43,9 +43,12 @@
             <div class="mt-3" style="display:flex">
                 <form action="/cart" method="post">
                     <input type="hidden" name="productId" value="${product.id}">
-                    <button type="submit" class="btn btn-primary me-2">Add to Cart</button>
+                    <button  type="submit" class="btn btn-primary me-2">Add to Cart</button>
                 </form>
+                <form  action="/wishlist/add" method="post">
+                <input type="hidden" name="productId" value="${product.id}">
                 <button type="button" class="btn btn-outline-secondary">Add to Wishlist</button>
+                </form>
             </div>
         </div>
 

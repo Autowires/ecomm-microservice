@@ -33,7 +33,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/{productId}")
-	public String productinfo(@PathVariable int productId, Model model) {
+	public String productinfo(@PathVariable int  productId, Model model) {
 
 		Object productinfo = productService.getproduct(productId);
 		model.addAttribute("product", productinfo);

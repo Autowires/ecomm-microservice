@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  # MySQL Database (Shared between all services)
+  shared-db:
+    image: mysql:8.0
+    container_name: shared-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shared_db
+    volumes:
+      - shared-db-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+  authentication-service:
+    image: authentication:latest
+    container_name: authentication-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - eureka-server
+      - shared-db
+
+  eureka-server:
+    image: eureka-server
+    ports:
+      - "8761:8761"
+
+volumes:
+  shared-db-data:

@@ -19,4 +19,6 @@ public interface LoginService {
 
 	String register(RegisterRequest request);
 
+	String existsByEmail(String email);
+
 }

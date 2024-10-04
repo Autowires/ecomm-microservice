@@ -88,6 +88,13 @@ public class LoginServiceImpl implements LoginService {
 	  OtpVerificationRequest requestBody = new OtpVerificationRequest(email, otp);
 	  
 	  return template.postForObject(uri, requestBody, String.class); }
+
+	@Override
+	public String updatePassword(String email, String password) {
+		var uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/auth/updatePassword").queryParam("email", email).queryParam("password", password).encode().toUriString();
+				
+		return template.postForObject(uri, null, String.class);
+	}
 	 
 
 

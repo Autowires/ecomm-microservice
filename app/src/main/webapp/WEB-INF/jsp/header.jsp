@@ -32,7 +32,7 @@
           <div class="d-flex float-end">
             <!-- Check if user is logged in using JSTL -->
             <c:choose>
-              <c:when test="${empty sessionScope.user}">
+              <c:when test="${empty sessionScope.username}">
                 <!-- If user is not logged in, show "Sign in" button -->
                 <a href="login" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                   <i class="fas fa-user-alt m-1 me-md-2"></i>
@@ -43,21 +43,21 @@
                 <!-- If user is logged in, display their username -->
                 <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                   <i class="fas fa-user-alt m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">${sessionScope.user.username}</p>
+                  <p class="d-none d-md-block mb-0">${sessionScope.username}</p>
                 </a>
               </c:otherwise>
             </c:choose>
 
             <!-- Wishlist Button: Redirect to login if not logged in -->
             <c:choose>
-              <c:when test="${empty sessionScope.user}">
+              <c:when test="${empty sessionScope.username}">
                 <a href="wishlist" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                   <i class="fas fa-heart m-1 me-md-2"></i>
                   <p class="d-none d-md-block mb-0">Wishlist</p>
                 </a>
               </c:when>
               <c:otherwise>
-                <a href="wishlist.jsp" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
+                <a href="wishlist" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                   <i class="fas fa-heart m-1 me-md-2"></i>
                   <p class="d-none d-md-block mb-0">Wishlist</p>
                 </a>
@@ -66,7 +66,7 @@
 
             <!-- Cart Button: Redirect to login if not logged in -->
             <c:choose>
-              <c:when test="${empty sessionScope.user}">
+              <c:when test="${empty sessionScope.username}">
                 <a href="cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
                   <i class="fas fa-shopping-cart m-1 me-md-2"></i>
                   <p class="d-none d-md-block mb-0">My cart</p>

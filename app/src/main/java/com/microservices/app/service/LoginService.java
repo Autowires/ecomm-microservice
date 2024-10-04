@@ -23,4 +23,6 @@ public interface LoginService {
 
 	String verifyOtp(String email, String otp);
 
+	String updatePassword(String email, String password);
+
 }

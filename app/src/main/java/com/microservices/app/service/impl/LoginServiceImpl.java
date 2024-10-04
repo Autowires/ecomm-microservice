@@ -75,4 +75,11 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
+	@Override
+	public String existsByEmail(String email) {
+		var uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/auth/forgotpassword")
+				.queryParam("email",email).encode().toUriString();
+		return template.postForObject(uri,null,String.class);
+	}
+
 }

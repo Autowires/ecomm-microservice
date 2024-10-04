@@ -115,4 +115,10 @@ public class LoginRegisterController {
 	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
 		return service.verifyEmail(otpVerifyRequest);
 	}
+	@PostMapping("/forgotpassword")
+	public String passwordRecovery(@RequestParam String email,Model model) {
+		String message = service.existsByEmail(email);
+		System.out.println(message);
+		return "passwordRecovery";
+	}
 }

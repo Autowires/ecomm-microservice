@@ -45,7 +45,7 @@ public class LoginRegisterController {
 				return "login";
 			}
 			session.setAttribute("role", user.getRole());
-			session.setAttribute("userId", user.getId());
+			session.setAttribute("userId", user.getUserId());
 			session.setAttribute("username", user.getUsername());
 			switch (user.getRole()) {
 			case "RETAILER":

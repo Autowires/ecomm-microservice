@@ -10,24 +10,50 @@ services:
       - shared-db-data:/var/lib/mysql
     ports:
       - "3307:3306"
+
+  # Eureka service registry
+  eureka-server:
+    image: eureka-server
+    container_name: eureka-server-service
+    ports:
+      - "8761:8761"
+
+  # Spring cloud api-gateway service
+  api-gateway:
+    image: api-gateway:latest
+    container_name: api-gateway-service
+    env_file: ".env"
+    ports:
+      - "8079:8079"
+    depends_on:
+      - eureka-server
+
+  # Authentication service
   authentication-service:
     image: authentication:latest
     container_name: authentication-service
     ports:
       - "8081:8081"
+    env_file: ".env"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE= http://eureka-server:8761/eureka 
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
       - shared-db
+      - api-gateway
 
-  eureka-server:
-    image: eureka-server
+  # Client app
+  app:
+    image: zip-app:latest
+    container_name: zip-app-service
+    env_file: ".env"
     ports:
-      - "8761:8761"
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - api-gateway
 
 volumes:
   shared-db-data:

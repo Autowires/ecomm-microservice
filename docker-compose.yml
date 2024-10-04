@@ -1,4 +1,20 @@
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.6
+    container_name: keycloak-provider
+    command: 
+      - start-dev
+      - --import-realm
+    ports:
+      - "8080:8080"
+
+    volumes:
+      - ./keycloak/:/opt/keycloak/data/import/
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT_BACKCHANNEL: true
+
   # MySQL Database (Shared between all services)
   shared-db:
     image: mysql:8.0

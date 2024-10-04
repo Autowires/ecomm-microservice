@@ -54,6 +54,16 @@ services:
     depends_on:
       - eureka-server
       - api-gateway
+  
+  # Grafana
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana-dashboard
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
 
 volumes:
   shared-db-data:
+  grafana-storage: {}

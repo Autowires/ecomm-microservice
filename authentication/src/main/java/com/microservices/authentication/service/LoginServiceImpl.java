@@ -54,6 +54,7 @@ public class LoginServiceImpl implements LoginService {
 	public String existsByEmail(String email) {
 		if (userDao.existsBymail(email)) {
 			String otp = generateOtp();
+			System.out.println(otp);
 			sendOtpEmail(email, otp);
 			otpStore.put(email, otp);
 			otpExpiry.put(email, System.currentTimeMillis() + OTP_EXPIRY_TIME);

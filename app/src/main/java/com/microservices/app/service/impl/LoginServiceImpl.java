@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microservices.app.dto.OTPVerifyRequest;
+import com.microservices.app.dto.OtpVerificationRequest;
 import com.microservices.app.dto.RegisterRequest;
 import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
@@ -81,5 +82,16 @@ public class LoginServiceImpl implements LoginService {
 				.queryParam("email",email).encode().toUriString();
 		return template.postForObject(uri,null,String.class);
 	}
+	@Override
+	public String verifyOtp(String email, String otp) {
+	    var uri = getUri() + "/auth/forgotpassword/verify-otp";
+	    
+	    // Create the request body
+	    OtpVerificationRequest requestBody = new OtpVerificationRequest(email, otp);
+	    
+	    // Send the request with the request body
+	    return template.postForObject(uri, requestBody, String.class);
+	}
+
 
 }

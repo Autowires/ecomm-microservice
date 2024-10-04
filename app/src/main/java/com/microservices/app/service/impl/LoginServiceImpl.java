@@ -76,22 +76,19 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
-	@Override
-	public String existsByEmail(String email) {
-		var uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/auth/forgotpassword")
-				.queryParam("email",email).encode().toUriString();
-		return template.postForObject(uri,null,String.class);
-	}
-	@Override
-	public String verifyOtp(String email, String otp) {
-	    var uri = getUri() + "/auth/forgotpassword/verify-otp";
-	    
-	    // Create the request body
-	    OtpVerificationRequest requestBody = new OtpVerificationRequest(email, otp);
-	    
-	    // Send the request with the request body
-	    return template.postForObject(uri, requestBody, String.class);
-	}
+	
+	  @Override public String existsByEmail(String email) { var
+	  uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/auth/forgotpassword")
+	  .queryParam("email",email).encode().toUriString(); return
+	  template.postForObject(uri,null,String.class); }
+	  
+	  @Override public String verifyOtp(String email, String otp) { var uri =
+	  getUri() + "/auth/forgotpassword/verify-otp";
+	  
+	  OtpVerificationRequest requestBody = new OtpVerificationRequest(email, otp);
+	  
+	  return template.postForObject(uri, requestBody, String.class); }
+	 
 
 
 }

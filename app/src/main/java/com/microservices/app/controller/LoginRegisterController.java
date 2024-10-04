@@ -116,18 +116,18 @@ public class LoginRegisterController {
 	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
 		return service.verifyEmail(otpVerifyRequest);
 	}
-	@RequestMapping("/passwordRecovery")
-	public String passwordRecoveryPage() {
-		return "passwordRecovery";
-	}
-	@PostMapping("/forgotpassword")
-	public String passwordRecovery(@RequestParam String email,Model model) {
-		String message = service.existsByEmail(email);
-		return "passwordRecovery";
-	}
-	@PostMapping("/forgotpassword/verify-otp")
-	public String verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest) {
-		String message = service.verifyOtp(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
-		return "passwordRecovery";
-	}
+
+	
+	  @RequestMapping("/passwordRecovery") public String passwordRecoveryPage() {
+	  return "passwordRecovery"; }
+	  
+	  @PostMapping("/forgotpassword") public String passwordRecovery(@RequestParam
+	  String email,Model model) { String message = service.existsByEmail(email);
+	  return "passwordRecovery"; }
+	 
+	  @PostMapping("/forgotpassword/verify-otp") public String
+	  verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest) { String message
+	  = service.verifyOtp(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
+	  return "passwordRecovery"; }
+	 
 }

@@ -109,4 +109,17 @@ public class ProductServiceImpl implements ProductService {
 		return template.getForObject(uri, Object.class, productId);
 	}
 
+	@Override
+	public List<Object> getRetailerOrders(long id) {
+	    String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/orders/retailerorders/{retailerId}")
+	        .buildAndExpand(id)
+	        .toUriString();
+
+	    System.out.println(uri);  // Debugging line to check the constructed URI
+
+	    return template.getForObject(uri, List.class, id);
+	}
+
+	
+
 }

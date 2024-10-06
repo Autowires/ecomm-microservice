@@ -1,5 +1,7 @@
 package com.microservices.app.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.microservices.app.dto.OTPVerifyRequest;
+import com.microservices.app.dto.Product;
 import com.microservices.app.dto.RegisterRequest;
 import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
+import com.microservices.app.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,9 +30,18 @@ public class LoginRegisterController {
 
 	@Autowired
 	private LoginService service;
+	@Autowired
+	 private ProductService productService;
 
+		/*
+		 * @GetMapping("/") 
+		 * public String home( Model model) { 
+		 * return "index"; }
+		 */
 	@GetMapping("/")
-	public String home() {
+	public String recentAdds(Model model){
+		List<Object> products=productService.recentProducts();
+		model.addAttribute("newProducts", products);
 		return "index";
 	}
 
@@ -36,9 +49,10 @@ public class LoginRegisterController {
 	public String login() {
 		return "login";
 	}
-
-	@PostMapping("/login")
-	public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
+    
+	@PostMapping("/Login")
+	public String login(@RequestParam String email, @RequestParam String password,   
+			            @RequestParam(required = false) String category,HttpSession session, Model model) {
 		try {
 			User user = service.authenticateUser(email, password);
 			if (user == null) {
@@ -48,6 +62,11 @@ public class LoginRegisterController {
 			session.setAttribute("role", user.getRole());
 			session.setAttribute("userId", user.getUserId());
 			session.setAttribute("username", user.getUsername());
+			
+			 // Redirect to the category page if category exists
+	        if (category != null && !category.isEmpty()) {
+	            return "redirect:/products-view?category=" + category;
+	        }
 			switch (user.getRole()) {
 			case "RETAILER":
 				return "redirect:/retailer";
@@ -65,6 +84,17 @@ public class LoginRegisterController {
 		session.invalidate();
 		return "redirect:/";
 	}
+	 @GetMapping("/products-view")
+	    public String productsViews(@RequestParam(required = false) String category,
+	                                @RequestParam(required = false) String search, 
+	                                Model model) {
+	        List<Product> products = productService.getProducts(category, search);
+	        List<String> categories = productService.getAllCategories();
+	        model.addAttribute("categories", categories);
+	        model.addAttribute("products", products);
+	        return "products";
+	    }
+
 
 	@GetMapping("/register-retailer")
 	public String showRetailerRegistrationForm() {

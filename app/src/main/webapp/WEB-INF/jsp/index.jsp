@@ -2,8 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,18 +51,7 @@
         </c:forEach>
     </div>
 </div>
-
-
             </div>
-           <!--
-            <button class="carousel-control-prev" type="button" data-bs-target="#newProductsCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#newProductsCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button> -->
         </div>
     </div>
 </section>
@@ -135,7 +122,7 @@
       </div>
         <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card w-100 my-2 shadow">
-          <img src="img/kids1.webp" class="card-img-top" style="aspect-ratio: 1 / 1" alt="kids fashion"  onClick="onCategoryClick('kidsfashion')"/>
+          <img src="img/kids1.webp" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Kids Fashion"  onClick="onCategoryClick('kidsfashion')"/>
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">Kids Fashion</h5>
             <div class="card-footer mt-auto"></div>
@@ -144,31 +131,13 @@
       </div>
         <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card w-100 my-2 shadow">
-          <img src="img/fashionacces.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="fashion accessories" onClick="onCategoryClick('fashionaccessories')" />
+          <img src="img/fashionacces.jpg" class="card-img-top" style="aspect-ratio: 1 / 1" alt="Fashion Accessories" onClick="onCategoryClick('fashionaccessories')" />
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">Fashion Accessories</h5>
             <div class="card-footer mt-auto"></div>
           </div>
         </div>
       </div>
-      
-      <!-- Continue for other categories -->
-      <script type="text/javascript">
-  function onCategoryClick(category) {
-    // Check if user is logged in
-    if (!isUserLoggedIn()) {
-      window.location.href = "/login?redirect=" + encodeURIComponent(category);
-    } else {
-      window.location.href = "/products?category=" + encodeURIComponent(category);
-    }
-  }
-
-  // Example check for user login status
-  function isUserLoggedIn() {
-    // You can check for session storage, local storage, or any session cookie
-    return sessionStorage.getItem("token") !== null; // or your specific logic
-  }
-</script>
     </div>
   </div>
 </section>
@@ -188,7 +157,7 @@
           </span>
           <figcaption class="info">
             <h6 class="title">Reasonable prices</h6>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
           </figcaption>
         </figure>
       </div>
@@ -199,7 +168,7 @@
           </span>
           <figcaption class="info">
             <h6 class="title">Best quality</h6>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
           </figcaption>
         </figure>
       </div>
@@ -210,7 +179,7 @@
           </span>
           <figcaption class="info">
             <h6 class="title">Worldwide shipping</h6>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
           </figcaption>
         </figure>
       </div>
@@ -219,12 +188,12 @@
 </section>
 <!-- Feature Section End -->
 
+<script>
+function onCategoryClick(category) {
+    window.location.href = "/products-view?category=" + encodeURIComponent(category);
+}
+</script>
+
 <jsp:include page="footer.jsp" />
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
-
 </body>
 </html>

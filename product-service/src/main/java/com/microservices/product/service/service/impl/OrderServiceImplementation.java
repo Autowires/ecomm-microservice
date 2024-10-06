@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.microservices.product.service.dao.OrderItemRepository;
@@ -14,6 +15,8 @@ import com.microservices.product.service.dao.OrdersRepository;
 import com.microservices.product.service.dao.ProductRepository;
 import com.microservices.product.service.dto.CartResponse;
 import com.microservices.product.service.dto.CheckoutRequest;
+import com.microservices.product.service.dto.OrderMessage;
+import com.microservices.product.service.dto.OrderResponse;
 import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.OrderStatus;
@@ -39,15 +42,18 @@ public class OrderServiceImplementation implements OrderService {
 
 	@Autowired
 	private BuyerServvice buyerServvice;
+	
+	
 
 	@Transactional
 	@Override
-	public Orders placeOrder(CheckoutRequest request, Long buyerId) {
-		// TODO Auto-generated method stub
+	public OrderResponse placeOrder(CheckoutRequest request, Long buyerId) {
+		
 
 		List<CartResponse> cartItems = cartItemService.getBuyerCartById(buyerId);
 		Customer customer = buyerServvice.getBuyerById(buyerId);
-
+		 String customerEmail=customer.getEmail();
+		
 		double totalAmount = cartItems.stream().mapToDouble(item -> item.getQuantity() * item.getPrice()).sum();
 
 		Orders orders = createOrders(request, customer, totalAmount);
@@ -68,7 +74,9 @@ public class OrderServiceImplementation implements OrderService {
 			orderItems.add(orderItem);
 		}
 		orders.setOrderItems(orderItems);
+		
 		Orders savedOrder = orderRepository.save(orders);
+
 
 		// Optionally: Clear the buyer's cart after placing the order
 		if (savedOrder != null) {
@@ -100,7 +108,8 @@ public class OrderServiceImplementation implements OrderService {
 ////			throw new OrderProcessingException("failed to place the order try agian after some time");
 ////		}
 //		return orders;
-		return savedOrder;
+		
+		 return new OrderResponse(savedOrder, customerEmail);
 
 	}
 

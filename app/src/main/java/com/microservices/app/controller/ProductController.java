@@ -31,6 +31,7 @@ public class ProductController {
 		model.addAttribute("products", products);
 		return "products";
 	}
+	
 
 	@GetMapping("/{productId}")
 	public String productinfo(@PathVariable int  productId, Model model) {
@@ -40,5 +41,6 @@ public class ProductController {
 		return "productinfo";
 
 	}
+	
 
 }

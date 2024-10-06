@@ -60,7 +60,8 @@
 <body>
     <div class="login-container">
         <h2 class="text-center mb-4">Login</h2>
-        <form id="loginForm" action="/login" method="post">
+        <form id="loginForm" action="/Login" method="post">
+         <input type="hidden" name="category" value="${param.category}"/>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input id="email" name="email" class="form-control" required>

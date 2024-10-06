@@ -37,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 		ServiceInstance serviceInstance = instances.get(0);
+		System.out.println(serviceInstance);
 		return serviceInstance.getUri();
 	}
 

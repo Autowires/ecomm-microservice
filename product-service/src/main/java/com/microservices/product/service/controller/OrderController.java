@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,8 @@ import com.microservices.product.service.dto.ApiResponse;
 import com.microservices.product.service.dto.CheckoutRequest;
 import com.microservices.product.service.dto.OrderDTO;
 import com.microservices.product.service.dto.OrderItemDTO;
+import com.microservices.product.service.dto.OrderMessage;
+import com.microservices.product.service.dto.OrderResponse;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.Orders;
 import com.microservices.product.service.entity.Product;
@@ -28,11 +31,20 @@ import com.microservices.product.service.service.OrderService;
 public class OrderController {
 	@Autowired
 	private OrderService orderService;
+	 @Autowired
+	    private KafkaTemplate<String, OrderMessage> kafkaTemplate;
+
+	    private static final String TOPIC = "orderplaced";
 
 	@PostMapping("/placeorder/{buyerId}")
 	public ResponseEntity<ApiResponse> placeOrder(@RequestBody CheckoutRequest request, @PathVariable Long buyerId) {
 		try {
-			Orders ordered = orderService.placeOrder(request, buyerId);
+			OrderResponse ordered = orderService.placeOrder(request, buyerId);
+			
+            String customerEmail =ordered.getEmail() ;
+            OrderMessage orderMessage = new OrderMessage(customerEmail, ordered.getOrders().getOrderId());
+    
+            kafkaTemplate.send(TOPIC, orderMessage);
 			System.out.println("placeOrder" + ordered);
 			return ResponseEntity.ok(new ApiResponse("ordered place sucessFuly", null));
 		} catch (Exception e) {

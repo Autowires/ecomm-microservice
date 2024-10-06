@@ -41,7 +41,7 @@ public class AuthenticationController {
 	}
 
 
-	@PutMapping("/updatePassword")
+	@PostMapping("/updatePassword")
 	public ResponseEntity<String> updatePassword(@RequestParam String email, @RequestParam String password) {
 		String message = service.updatePassword(email, password);
 		return ResponseEntity.ok(message);

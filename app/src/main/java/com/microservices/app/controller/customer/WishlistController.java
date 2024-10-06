@@ -65,7 +65,8 @@ public class WishlistController {
             return mv;
         }
 		URI uri = instances.get(0).getUri();
-		rt.delete(uri + "/customers{userId}/wishlist?productId={productId}",userId,productId);
+		System.out.print(userId+"from controller");
+		rt.delete(uri + "/customers/{userId}/wishlist?productId={productId}",userId,productId);
 		mv.setViewName("redirect:/wishlist");
 		return mv;
 	}

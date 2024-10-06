@@ -1,5 +1,8 @@
 package com.microservices.app.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -116,11 +119,77 @@ public class LoginRegisterController {
 	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
 		return service.verifyEmail(otpVerifyRequest);
 	}
-	@RequestMapping("/")
-	@PostMapping("/forgotpassword")
-	public String passwordRecovery(@RequestParam String email,Model model) {
-		String message = service.existsByEmail(email);
-		System.out.println(message);
-		return "passwordRecovery";
-	}
+
+	
+	  @RequestMapping("/passwordRecovery") 
+	  public String passwordRecoveryPage() {
+		  return "passwordRecovery"; 
+	  }
+	  
+	  @PostMapping("/forgotpassword")
+	  public ResponseEntity<Map<String, Object>> passwordRecovery(@RequestParam String email) {
+	      Map<String, Object> response = new HashMap<>();
+	      
+	      String message = service.existsByEmail(email);
+	      
+	      if (message != null) { // assuming message is null if email doesn't exist
+	          response.put("success", true);
+	          response.put("errorMessage", null);
+	      } else {
+	          response.put("success", false);
+	          response.put("errorMessage", "Email not found");
+	      }
+	      
+	      return ResponseEntity.ok(response);
+	  }
+	  @PostMapping("/forgotpassword/verify-otp")
+	    public ResponseEntity<Map<String, Object>> verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+	        String message = service.verifyOtp(otpVerifyRequest.getEmail(), otpVerifyRequest.getOtp());
+	        Map<String, Object> response = new HashMap<>();
+
+	        if (message.equals("OTP verified.")) {
+	            response.put("success", true);
+	        } else {
+	            response.put("success", false);
+	            response.put("otpErrorMessage", message);
+	        }
+
+	        return ResponseEntity.ok(response);
+	    }
+	  
+	  
+	  @PostMapping("/updatePassword")
+	  @ResponseBody
+	  public ResponseEntity<Map<String, Object>> updatePassword(
+	          @RequestParam String email, 
+	          @RequestParam String Password) {
+
+	      String message = service.updatePassword(email, Password);
+	      boolean success = message.contains("success");
+	        Map<String, Object> response = new HashMap<>();
+
+	      if (success) {
+	    	  response.put("success", success);
+	          return ResponseEntity.ok(response);
+	      } else {
+	          return ResponseEntity.badRequest().body(response);
+	      }
+	  }
+		/*
+		 * @PostMapping("/updatePassword") public String updatePassword(@RequestParam
+		 * String email, @RequestParam String Password, Model model) { String message =
+		 * service.updatePassword(email, Password); System.out.println("Hello");
+		 * model.addAttribute("message", message); return "login";
+		 * 
+		 * }
+		 */
+	 
+		/*
+		 * @PostMapping("/forgotpassword/verify-otp") public String
+		 * verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest, Model model) {
+		 * String message = service.verifyOtp(otpVerifyRequest.getEmail(),
+		 * otpVerifyRequest.getOtp()); model.addAttribute("message",message); return
+		 * "passwordRecovery"; }
+		 */
+	 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microservices.app.dto.OTPVerifyRequest;
+import com.microservices.app.dto.OtpVerificationRequest;
 import com.microservices.app.dto.RegisterRequest;
 import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
@@ -75,11 +76,26 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
+	
+	  @Override public String existsByEmail(String email) { var
+	  uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/auth/forgotpassword")
+	  .queryParam("email",email).encode().toUriString(); return
+	  template.postForObject(uri,null,String.class); }
+	  
+	  @Override public String verifyOtp(String email, String otp) { var uri =
+	  getUri() + "/auth/forgotpassword/verify-otp";
+	  
+	  OtpVerificationRequest requestBody = new OtpVerificationRequest(email, otp);
+	  
+	  return template.postForObject(uri, requestBody, String.class); }
+
 	@Override
-	public String existsByEmail(String email) {
-		var uri=UriComponentsBuilder.fromHttpUrl(getUri()+"/auth/forgotpassword")
-				.queryParam("email",email).encode().toUriString();
-		return template.postForObject(uri,null,String.class);
+	public String updatePassword(String email, String password) {
+		var uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/auth/updatePassword").queryParam("email", email).queryParam("password", password).encode().toUriString();
+				
+		return template.postForObject(uri, null, String.class);
 	}
+	 
+
 
 }

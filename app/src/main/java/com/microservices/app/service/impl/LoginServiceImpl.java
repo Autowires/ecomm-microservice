@@ -91,9 +91,8 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public String updatePassword(String email, String password) {
-		var uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/auth/updatePassword").queryParam("email", email).queryParam("password", password).encode().toUriString();
-				
-		return template.postForObject(uri, null, String.class);
+		var uri=getUri()+"auth/updatePassword?email={1}&password={2}";
+         return template.patchForObject(uri,null,String.class,email,password);
 	}
 	 
 

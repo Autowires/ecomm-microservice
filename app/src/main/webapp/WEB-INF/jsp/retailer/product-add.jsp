@@ -37,7 +37,7 @@ body {
 </head>
 <body>
 	<!-- Include Header -->
-	<jsp:include page="../header.jsp" />
+	<jsp:include page="header.jsp" />
 
 	<div class="container form-container">
 		<div class="row justify-content-center">

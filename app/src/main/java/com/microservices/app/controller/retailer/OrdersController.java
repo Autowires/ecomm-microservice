@@ -8,8 +8,12 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+
+import com.microservices.app.dto.OrderStatus;
 
 @Controller
 @RequestMapping("/retailer/orders")
@@ -28,9 +32,16 @@ public class OrdersController {
 
 	@GetMapping
 	public String getAllOrders(Model model) {
-		String path = getProductServiceUri() + "/orders/retailerorders/" + 4;
+		String path = getProductServiceUri() + "/orders/retailerorders/" + 2;
 		var orders = restTemplate.getForObject(path, List.class);
 		model.addAttribute("orders", orders);
 		return "orders/retailer-orders";
+	}
+
+	@PostMapping("/update")
+	public String updateStatus(Model model, @RequestParam OrderStatus status, @RequestParam long orderItemId) {
+		String path = getProductServiceUri() + "/orderitems/" + orderItemId + "/updateStatus?status=" + status;
+		restTemplate.put(path, null);
+		return "redirect:/retailer/orders";
 	}
 }

@@ -94,7 +94,8 @@
                             <!-- Update Status Form -->
                             <td>
                                 <c:if test="${item.orderStatus != 'CANCELLED' && item.orderStatus != 'DELIVERED'}">
-                                    <form action="orderitems/${item.orderItemId}/updateStatus" method="POST" class="status-form">
+                                    <form action="/retailer/orders/update" method="POST" class="status-form">
+                                    	<input type="hidden" name="orderItemId" value="${item.orderItemId}">
                                         <select name="status" class="form-select">
                                             <option value="PROCESSING" ${item.orderStatus == 'PROCESSING' ? 'selected' : ''}>Processing</option>
                                             <option value="SHIPPED" ${item.orderStatus == 'SHIPPED' ? 'selected' : ''}>Shipped</option>

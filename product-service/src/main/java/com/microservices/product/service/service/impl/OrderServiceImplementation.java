@@ -3,6 +3,7 @@ package com.microservices.product.service.service.impl;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class OrderServiceImplementation implements OrderService {
 
 	private Orders createOrders(CheckoutRequest request, Customer customer, double totalAmount) {
 		Orders orders = new Orders();
-		System.out.println();
+		System.out.println(request);
 
 		orders.setBuyerId(customer.getId());
 		orders.setAddress(request.getAddress());
@@ -129,6 +130,11 @@ public class OrderServiceImplementation implements OrderService {
 			throw new RuntimeException("Unsupported status: " + status);
 		order.setOrderStatus(status);
 		orderItemRepository.save(order);
+	}
+
+	@Override
+	public Optional<Orders> getOrderById(long orderId) {
+		return orderRepository.findById(orderId);
 	}
 
 }

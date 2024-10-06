@@ -1,6 +1,7 @@
 package com.microservices.product.service.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.microservices.product.service.dto.CheckoutRequest;
 import com.microservices.product.service.entity.OrderStatus;
@@ -17,5 +18,7 @@ public interface OrderService {
 	List<Orders> getAllRetailerOrders(long retailerId);
 
 	void updateItemStatus(Long orderItemId, OrderStatus status);
+
+	Optional<Orders> getOrderById(long orderId);
 
 }

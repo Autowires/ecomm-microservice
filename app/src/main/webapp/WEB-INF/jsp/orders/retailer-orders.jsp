@@ -56,7 +56,7 @@
             <thead>
                 <tr>
                     <th>Order ID</th>
-                    <th>Buyer Name</th>
+                    <th>Ordered date</th>
                     <th>Delivery Address</th>
                     <th>Payment Method</th>
                     <th>Product Name</th>
@@ -72,7 +72,7 @@
                         <tr>
                             <!-- Order Info -->
                             <td>${order.orderId}</td>
-                            <td>${order.Buyername}</td>
+                            <td>${order.orderDate}</td>
                             <td>${order.address}</td>
                             <td>${order.paymentType}</td>
                             

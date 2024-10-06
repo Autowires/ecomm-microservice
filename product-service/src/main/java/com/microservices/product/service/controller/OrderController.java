@@ -55,43 +55,53 @@ public class OrderController {
 		return ResponseEntity.ok(orderDto);
 	}
 
+	@GetMapping("/{orderId}")
+	public ResponseEntity<OrderDTO> getOrderById(@PathVariable long orderId) {
+		Orders order = orderService.getOrderById(orderId).get();
+		return ResponseEntity.ok(convert(order));
+	}
+
 	private List<OrderDTO> createOrderDto(List<Orders> orders) {
 
 		ArrayList<OrderDTO> orderedItemsList = new ArrayList<>();
 
 		for (Orders order : orders) {
-			OrderDTO orderDto = new OrderDTO();
-			orderDto.setOrderId(order.getOrderId());
-			orderDto.setOrderDate(order.getOrderDate());
-			orderDto.setTotalAmount(order.getTotalAmount());
-			orderDto.setBuyername(order.getBuyername());
-			orderDto.setAddress(order.getAddress());
-			orderDto.setPaymentType(order.getPaymentType());
-			// Convert OrderItems to OrderItemDTO
-			List<OrderItemDTO> orderItemDtos = new ArrayList<>();
-
-			for (OrderItem orderItem : order.getOrderItems()) {
-				OrderItemDTO orderItemDto = new OrderItemDTO();
-				orderItemDto.setOrderItemId(orderItem.getOrderItemId());
-				orderItemDto.setQuantity(orderItem.getQuantity());
-				orderItemDto.setPrice(orderItem.getPrice());
-				orderItemDto.setOrderStatus(orderItem.getOrderStatus());
-
-				// Set product details
-				Product product = orderItem.getProduct();
-				if (product != null) {
-					orderItemDto.setProductName(product.getTitle());
-					orderItemDto.setDiscription(product.getDescription());
-					orderItemDto.setPrice(product.getPrice());
-				}
-
-				orderItemDtos.add(orderItemDto);
-			}
-
-			orderDto.setOrderItems(orderItemDtos);
-			orderedItemsList.add(orderDto);
+			orderedItemsList.add(convert(order));
 		}
 
 		return orderedItemsList;
+	}
+
+	private OrderDTO convert(Orders order) {
+		OrderDTO orderDto = new OrderDTO();
+		orderDto.setOrderId(order.getOrderId());
+		orderDto.setOrderDate(order.getOrderDate());
+		orderDto.setTotalAmount(order.getTotalAmount());
+		orderDto.setBuyername(order.getBuyername());
+		orderDto.setAddress(order.getAddress());
+		orderDto.setPaymentType(order.getPaymentType());
+		// Convert OrderItems to OrderItemDTO
+		List<OrderItemDTO> orderItemDtos = new ArrayList<>();
+
+		for (OrderItem orderItem : order.getOrderItems()) {
+			OrderItemDTO orderItemDto = new OrderItemDTO();
+			orderItemDto.setOrderItemId(orderItem.getOrderItemId());
+			orderItemDto.setQuantity(orderItem.getQuantity());
+			orderItemDto.setPrice(orderItem.getPrice());
+			orderItemDto.setOrderStatus(orderItem.getOrderStatus());
+
+			// Set product details
+			Product product = orderItem.getProduct();
+			if (product != null) {
+				orderItemDto.setProductName(product.getTitle());
+				orderItemDto.setDiscription(product.getDescription());
+				orderItemDto.setPrice(product.getPrice());
+			}
+
+			orderItemDtos.add(orderItemDto);
+		}
+
+		orderDto.setOrderItems(orderItemDtos);
+		return orderDto;
 	}
 }

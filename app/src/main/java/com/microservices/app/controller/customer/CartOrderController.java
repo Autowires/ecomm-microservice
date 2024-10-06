@@ -63,7 +63,10 @@ public class CartOrderController {
 	}
 
 	@GetMapping("/checkout")
-	public String checkoutPage() {
+	public String checkoutPage(Model model) {
+		String baseUrl1 = getProductServiceUri() + "/customers/{ui}/cart";
+		Object reposnse = restTemplate.getForObject(baseUrl1, Object.class, 1);
+		model.addAttribute("cartItems", reposnse);
 		return "customer/checkout";
 	}
 

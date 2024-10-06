@@ -79,9 +79,12 @@
                         <h4>Order Summary</h4>
                     </div>
                     <div class="card-body">
+                    <c:set var="totalPrice"></c:set>
                         <p class="mb-1"><strong>Items in Cart:</strong></p>
                         <ul>
                             <c:forEach var="item" items="${cartItems}">
+                            <c:set var="totalPrice"
+									value="${item.price * item.quantity + totalPrice}"></c:set>
                                 <li>${item.productName} - $${item.price} x ${item.quantity}</li>
                             </c:forEach>
                         </ul>

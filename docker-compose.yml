@@ -44,9 +44,39 @@ services:
       - shared-db
       - api-gateway
 
+  # Product service
+  product-service:
+    image: product-service
+    container_name: product-service
+    ports:
+      - "8083:8083"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
+
+  customer-service:
+    image: customer-service
+    container_name: customer-service
+    ports:
+      - "8084:8084"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
   # Client app
   app:
-    image: zip-app:latest
+    image: app:latest
     container_name: zip-app-service
     env_file: ".env"
     ports:

@@ -91,4 +91,12 @@ public class CartOrderController {
 		return "orders/customer-orders";
 	}
 
+	@PostMapping("/orders/cancel")
+	public String cancelOrder(Model model, @RequestParam long orderItemId) {
+		String path = getProductServiceUri() + "//orderitems/" + orderItemId + "/cancel";
+		restTemplate.delete(path);
+		return "redirect:/orders";
+
+	}
+
 }

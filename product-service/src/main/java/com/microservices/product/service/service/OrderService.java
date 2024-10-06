@@ -3,6 +3,7 @@ package com.microservices.product.service.service;
 import java.util.List;
 
 import com.microservices.product.service.dto.CheckoutRequest;
+import com.microservices.product.service.entity.OrderStatus;
 import com.microservices.product.service.entity.Orders;
 
 public interface OrderService {
@@ -11,10 +12,10 @@ public interface OrderService {
 
 	List<Orders> getBuyerOrderById(Long buyerId);
 
-	void cancelorderById(Long orderId);
+	void cancelorderItemById(Long orderItemId);
 
 	List<Orders> getAllRetailerOrders(long retailerId);
 
-//	OrderDTO convertToDto(Orders order);
+	void updateItemStatus(Long orderItemId, OrderStatus status);
 
 }

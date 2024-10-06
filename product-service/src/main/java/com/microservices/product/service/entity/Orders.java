@@ -1,24 +1,19 @@
 package com.microservices.product.service.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Setter
 @Getter
@@ -29,10 +24,7 @@ public class Orders {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId;
 	private LocalDate orderDate; // Set default to current date
-    private LocalDate deliveryDate ; // Default to 5 days after order date
 	private double totalAmount;
-	@Enumerated(EnumType.STRING)
-	private OrderStatus orderStatus;
 	@JsonManagedReference
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<OrderItem> orderItems = new HashSet<>();
@@ -40,5 +32,5 @@ public class Orders {
 	private String address;
 	private String paymentType;
 	private String Buyername;
-	
+
 }

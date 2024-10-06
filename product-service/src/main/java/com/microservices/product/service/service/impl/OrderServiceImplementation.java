@@ -1,7 +1,6 @@
 package com.microservices.product.service.service.impl;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +58,7 @@ public class OrderServiceImplementation implements OrderService {
 			product.setStock(product.getStock() - cartItem.getQuantity());
 			productRepository.save(product);
 			OrderItem orderItem = new OrderItem(orders, product, cartItem.getQuantity(), cartItem.getPrice());
+			orderItem.setOrderStatus(OrderStatus.PLACED);
 
 			if (orderItem != null) {
 				System.out.println("Orderitem has values");
@@ -75,51 +75,8 @@ public class OrderServiceImplementation implements OrderService {
 			cartItemService.clearBuyerCart(buyerId);
 		}
 
-		// Initially set to PLACED
-
-//		System.out.println("cartid is " + cart.getCartId());
-//		System.out.println(cart);
-//		if (cart != null) {
-//			System.out.println("cart is not null");
-//		}
-//		Orders orders = createOrders(order, cart);
-//		System.out.println("create order" + orders);
-////			Orders savedOrder = orderRepository.save(order); // Save Order first, making it persistent
-//
-//		List<OrderItem> orderItemList = createOrderItems(orders, cart);
-//		System.out.println("orderItemList" + orderItemList);
-//		orders.setOrderItems(new HashSet<>(orderItemList));
-//		orders = orderRepository.save(orders);
-//		if (orders != null) {
-//			System.out.println(cart.getCartId());
-//			cartService.clearBuyerCart(cart.getCartId());
-//		}
-////		}
-//
-////		catch(Exception e) {
-////			throw new OrderProcessingException("failed to place the order try agian after some time");
-////		}
-//		return orders;
 		return savedOrder;
 
-	}
-
-	private List<OrderItem> createOrderItems(Orders order, Object cart) {
-		System.out.println("inside the List<OrderItem>  ");
-		List<OrderItem> orderedItems = new ArrayList();
-//		for (CartItem cartItem : cart.getItems()) {
-//			Product product = cartItem.getProduct();
-//			OrderItem orderItem = new OrderItem();
-//			int quantity = cartItem.getQuantity();
-//			product.setStock(product.getStock() - quantity);
-//			orderItem.setPrice(product.getPrice());
-//			orderItem.setProduct(product);
-//			orderItem.setQuantity(quantity);
-//			orderItem.setOrder(orders);
-//			orderedItems.add(orderItem);
-//			productRepository.save(product);
-//		}
-		return orderedItems;
 	}
 
 	private Orders createOrders(CheckoutRequest request, Customer customer, double totalAmount) {
@@ -132,9 +89,6 @@ public class OrderServiceImplementation implements OrderService {
 		orders.setBuyername(request.getName());
 		orders.setTotalAmount(totalAmount);
 		orders.setOrderDate(LocalDate.now());
-		orders.setDeliveryDate(LocalDate.now().plusDays(5)); // Set delivery date to 5 days after the order date
-		orders.setOrderStatus(OrderStatus.PLACED); // Initially set to PLACED
-
 		return orders;
 	}
 
@@ -145,11 +99,12 @@ public class OrderServiceImplementation implements OrderService {
 	}
 
 	@Override
-	public void cancelorderById(Long orderId) {
-		Orders order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order Not found"));
+	public void cancelorderItemById(Long orderItemId) {
+		OrderItem order = orderItemRepository.findById(orderItemId)
+				.orElseThrow(() -> new RuntimeException("OrderItem Not found"));
 		if (order.getOrderStatus() == OrderStatus.PLACED) {
 			order.setOrderStatus(OrderStatus.CANCELLED);
-			orderRepository.save(order);
+			orderItemRepository.save(order);
 		} else {
 			throw new RuntimeException("Order cannot be cancelled as it is already " + order.getOrderStatus());
 		}
@@ -164,6 +119,16 @@ public class OrderServiceImplementation implements OrderService {
 			System.out.println("orders have values");
 		}
 		return orders;
+	}
+
+	@Override
+	public void updateItemStatus(Long orderItemId, OrderStatus status) {
+		OrderItem order = orderItemRepository.findById(orderItemId)
+				.orElseThrow(() -> new RuntimeException("OrderItem Not found"));
+		if (status == OrderStatus.PROCESSING)
+			throw new RuntimeException("Unsupported status: " + status);
+		order.setOrderStatus(status);
+		orderItemRepository.save(order);
 	}
 
 }

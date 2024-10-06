@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,25 +47,12 @@ public class OrderController {
 		return ResponseEntity.ok(orderDto);
 	}
 
-	@DeleteMapping("/cancleOrder/{orderId}")
-	public ResponseEntity<ApiResponse> cancelOrderById(@PathVariable Long orderId) {
-		try {
-			orderService.cancelorderById(orderId);
-			return ResponseEntity.ok(new ApiResponse("Order cancelled sucessFully", null));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((new ApiResponse(e.getMessage(), null)));
-		}
-
-	}
-
 	@GetMapping("/retailerorders/{retailerId}")
-	public ResponseEntity<List<Orders>> getRetailerordersById(@PathVariable long retailerId) {
+	public ResponseEntity<List<OrderDTO>> getRetailerordersById(@PathVariable long retailerId) {
 		System.out.println(retailerId);
 		List<Orders> orders = orderService.getAllRetailerOrders(retailerId);
-//		List<OrderDTO> orderDto=createOrderDto(orders);
-//		return ResponseEntity.ok(orderDto);
-		return ResponseEntity.ok(orders);
-
+		List<OrderDTO> orderDto = createOrderDto(orders);
+		return ResponseEntity.ok(orderDto);
 	}
 
 	private List<OrderDTO> createOrderDto(List<Orders> orders) {
@@ -77,26 +63,23 @@ public class OrderController {
 			OrderDTO orderDto = new OrderDTO();
 			orderDto.setOrderId(order.getOrderId());
 			orderDto.setOrderDate(order.getOrderDate());
-			orderDto.setDeliveryDate(order.getDeliveryDate());
 			orderDto.setTotalAmount(order.getTotalAmount());
 			orderDto.setBuyername(order.getBuyername());
-			orderDto.setOrderStatus(order.getOrderStatus());
 			orderDto.setAddress(order.getAddress());
 			orderDto.setPaymentType(order.getPaymentType());
-			System.out.println(order.getOrderStatus());
 			// Convert OrderItems to OrderItemDTO
 			List<OrderItemDTO> orderItemDtos = new ArrayList<>();
 
 			for (OrderItem orderItem : order.getOrderItems()) {
 				OrderItemDTO orderItemDto = new OrderItemDTO();
-//	            orderItemDto.set(orderItem.getOrderItemId());
+				orderItemDto.setOrderItemId(orderItem.getOrderItemId());
 				orderItemDto.setQuantity(orderItem.getQuantity());
 				orderItemDto.setPrice(orderItem.getPrice());
+				orderItemDto.setOrderStatus(orderItem.getOrderStatus());
 
 				// Set product details
 				Product product = orderItem.getProduct();
 				if (product != null) {
-//	                orderItemDto.setProductId(product.getId());
 					orderItemDto.setProductName(product.getTitle());
 					orderItemDto.setDiscription(product.getDescription());
 					orderItemDto.setPrice(product.getPrice());

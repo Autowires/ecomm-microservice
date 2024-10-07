@@ -20,6 +20,7 @@ public class OAuthConfig {
 				)
 				.oauth2Login(oAuth -> oAuth
 					.defaultSuccessUrl("/admin")
+					.loginPage("/")
 				)
 				.build();
 		// @formatter:on

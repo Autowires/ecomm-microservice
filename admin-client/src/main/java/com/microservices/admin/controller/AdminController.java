@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,21 +36,23 @@ public class AdminController {
 	}
 
 	@GetMapping("/admin")
-	public ModelAndView getUserAndView(@RequestParam(required = false) String role) {
+	public ModelAndView getUserAndView(@RequestParam(required = false) String role, OAuth2AuthenticationToken token) {
 		ModelAndView mv = new ModelAndView("admin/users");
 		String path = role != null ? "/admin/users?role=" + role : "/admin/users";
 		String baseUrl = getAuthenticationServiceUri() + path;
 		List<UserDTO> users = restTemplate.getForObject(baseUrl, List.class);
 		mv.addObject("users", users);
+		mv.addObject("principal", token.getPrincipal().getAttributes());
 		return mv;
 	}
 
 	@GetMapping("/admin/reviewRequest")
-	public ModelAndView reviewRequests() {
+	public ModelAndView reviewRequests(OAuth2AuthenticationToken token) {
 		ModelAndView mv = new ModelAndView("admin/reviewRequest");
 		String baseUrl = getAuthenticationServiceUri() + "/admin/users/underReview";
 		List<Object> retailersUnderReview = restTemplate.getForObject(baseUrl, List.class);
 		mv.addObject("users", retailersUnderReview);
+		mv.addObject("principal", token.getPrincipal().getAttributes());
 		return mv;
 	}
 

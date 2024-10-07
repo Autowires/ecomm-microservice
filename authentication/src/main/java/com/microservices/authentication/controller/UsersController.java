@@ -3,14 +3,12 @@ package com.microservices.authentication.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.microservices.authentication.dto.UserResponseProjection;
 import com.microservices.authentication.dto.retailerDto;
@@ -25,8 +23,7 @@ public class UsersController {
 	private MyUserService userService;
 
 	@GetMapping
-	public ResponseEntity<List<UserResponseProjection>> getUserAndView(
-			@SessionAttribute(required = false) @RequestParam(required = false) String role) {
+	public ResponseEntity<List<UserResponseProjection>> getUserAndView(@RequestParam(required = false) String role) {
 
 		if (role == null || role.isBlank()) {
 			return ResponseEntity.ok(userService.getAllUsers());
@@ -51,11 +48,8 @@ public class UsersController {
 	}
 
 	@GetMapping("/underReview")
-	public ResponseEntity<?> retailersUnderReview() {
+	public ResponseEntity<List<retailerDto>> retailersUnderReview() {
 		List<retailerDto> retailers = userService.retailersUnderReview();
-		if (retailers == null || retailers.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No retailers under review");
-		}
 		return ResponseEntity.ok(retailers);
 	}
 

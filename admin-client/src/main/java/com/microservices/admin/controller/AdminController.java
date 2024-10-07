@@ -5,9 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,7 +37,8 @@ public class AdminController {
 	@GetMapping("/admin")
 	public ModelAndView getUserAndView(@RequestParam(required = false) String role) {
 		ModelAndView mv = new ModelAndView("admin/users");
-		String baseUrl = getAuthenticationServiceUri() + "/admin/users?role=" + role;
+		String path = role != null ? "/admin/users?role=" + role : "/admin/users";
+		String baseUrl = getAuthenticationServiceUri() + path;
 		List<UserDTO> users = restTemplate.getForObject(baseUrl, List.class);
 		mv.addObject("users", users);
 		return mv;
@@ -50,14 +48,8 @@ public class AdminController {
 	public ModelAndView reviewRequests() {
 		ModelAndView mv = new ModelAndView("admin/reviewRequest");
 		String baseUrl = getAuthenticationServiceUri() + "/admin/users/underReview";
-
-		List<Object> retailersUnderReview = restTemplate
-				.exchange(baseUrl, HttpMethod.GET, new HttpEntity<>(new HttpHeaders()), List.class).getBody();
-
-		if (retailersUnderReview != null && !retailersUnderReview.isEmpty()) {
-			mv.addObject("users", retailersUnderReview);
-		}
-
+		List<Object> retailersUnderReview = restTemplate.getForObject(baseUrl, List.class);
+		mv.addObject("users", retailersUnderReview);
 		return mv;
 	}
 

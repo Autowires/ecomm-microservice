@@ -34,7 +34,7 @@ public class OrderController {
 	 @Autowired
 	    private KafkaTemplate<String, OrderMessage> kafkaTemplate;
 
-	    private static final String TOPIC = "orderplaced";
+	   // private static final String TOPIC = "orderplaced";
 
 	@PostMapping("/placeorder/{buyerId}")
 	public ResponseEntity<ApiResponse> placeOrder(@RequestBody CheckoutRequest request, @PathVariable Long buyerId) {
@@ -42,9 +42,11 @@ public class OrderController {
 			OrderResponse ordered = orderService.placeOrder(request, buyerId);
 			
             String customerEmail =ordered.getEmail() ;
+            System.out.println("from the controller"+customerEmail);
+            System.out.println("from the controller"+ordered.getOrders().getOrderId());
             OrderMessage orderMessage = new OrderMessage(customerEmail, ordered.getOrders().getOrderId());
     
-            kafkaTemplate.send(TOPIC, orderMessage);
+            kafkaTemplate.send("notificationTopic", orderMessage);
 			System.out.println("placeOrder" + ordered);
 			return ResponseEntity.ok(new ApiResponse("ordered place sucessFuly", null));
 		} catch (Exception e) {

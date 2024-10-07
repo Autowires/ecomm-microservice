@@ -1,43 +1,96 @@
-version: '3.8'
+version: '3.8'  # Specify the Compose file version
+
 services:
   zookeeper:
-    image: zookeeper:3.6
+    image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zookeeper:2888:3888
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
 
-  kafka:
-    image: confluentinc/cp-kafka:7.3.0
-    container_name: kafka
+  broker:
+    image: confluentinc/cp-kafka:latest
+    container_name: broker
     ports:
       - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
-  producer:
+  shared-db:
+    image: mysql:8.0
+    container_name: shared-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shared_db
+    volumes:
+      - shared-db-data:/var/lib/mysql  # Reference to the volume
+    ports:
+      - "3307:3306"
+
+  eureka-server:
+    image: eureka-server
+    container_name: eureka-server-service
+    ports:
+      - "8761:8761"
+
+  api-gateway:
+    image: api-gateway:latest
+    container_name: api-gateway-service
+    env_file: ".env"
+    ports:
+      - "8079:8079"
+    depends_on:
+      - eureka-server
+
+  authentication-service:
+    image: authentication:latest
+    container_name: authentication-service
+    ports:
+      - "8081:8081"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
+
+  product-service:
     image: product-service
     container_name: product-service
     ports:
-      - "8083:8083" 
-    depends_on:
-      - kafka
+      - "8083:8083"
+    env_file: ".env"
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
 
-  consumer:
-    image: authentication 
-    container_name: authentication
+  app:
+    image: app:latest
+    container_name: zip-app-service
+    env_file: ".env"
     ports:
-      - "8081:8081"  
+      - "8080:8080"
     depends_on:
-      - kafka
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      - eureka-server
+      - api-gateway
+
+volumes:
+  shared-db-data:  # Define the volume at the bottom

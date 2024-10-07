@@ -38,24 +38,6 @@ body {
 	<!--Main Navigation-->
 	<%@include file="header.jsp"%>
 
-	<header>
-		<!-- Heading -->
-		<div class="bg-primary">
-			<div class="container py-4">
-				<!-- Breadcrumb -->
-				<nav class="d-flex">
-					<h6 class="mb-0">
-						<a href="/products" class="text-white-50">Home</a> <span
-							class="text-white-50 mx-2"> > </span> <a href=""
-							class="text-white"><u>Shopping cart</u></a>
-					</h6>
-				</nav>
-				<!-- Breadcrumb -->
-			</div>
-		</div>
-		<!-- Heading -->
-	</header>
-
 	<!-- cart + summary -->
 	<section class="bg-light my-5">
 		<div class="container">

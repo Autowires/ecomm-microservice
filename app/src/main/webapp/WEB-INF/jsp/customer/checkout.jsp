@@ -46,7 +46,7 @@ body {
 					<div class="card-body">
 						<!-- Billing Address Form -->
 						<h5>Billing Address</h5>
-						<form method="post">
+						<form method="post" id="checkout-form">
 							<div class="mb-3">
 								<label for="name" class="form-label">Full Name</label> <input
 									type="text" class="form-control" id="name" name="name" required>
@@ -68,16 +68,18 @@ body {
 							</div>
 							<hr>
 							<h5>Payment Method</h5>
-							<div class="mb-3">
+							<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_P6C9prLtlRt6EX" async> </script> </form>
+							<!-- <div class="mb-3">
 								<label for="paymentType" class="form-label">Select
 									Payment Type</label> <select class="form-select" id="paymentType"
 									name="paymentType" required>
 									<option value="cash">Cash on Delivery</option>
 								</select>
-							</div>
-							<button type="submit" class="btn btn-primary w-100">Confirm
-								Order</button>
+							</div> -->
+							
 						</form>
+						<button type="submit" class="btn btn-primary w-100" form="checkout-form">Confirm
+								Order</button>
 					</div>
 				</div>
 			</div>

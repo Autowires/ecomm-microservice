@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%@ taglib uri="jakarta.tags.core" prefix="c"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -41,7 +42,7 @@ body {
 </head>
 <body>
 	<!-- Include Header -->
-	<jsp:include page="../header.jsp" />
+	  <%@include file="header.jsp"%>
 
 	<div class="container form-container">
 		<div class="row justify-content-center">

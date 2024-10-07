@@ -47,7 +47,7 @@
 </head>
 <body>
     <!-- Include Header -->
-    <jsp:include page="../header.jsp" />
+    <jsp:include page="../retailer/header.jsp" />
 
     <div class="container mt-4">
         <h2 class="mb-4">Your Product Orders</h2>

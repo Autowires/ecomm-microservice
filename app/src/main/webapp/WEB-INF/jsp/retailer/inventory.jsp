@@ -66,7 +66,7 @@
 <body>
 
     <!-- Include header -->
-    <%@include file="../header.jsp"%>
+    <%@include file="header.jsp"%>
 
     <!-- Inventory Header Section -->
     <header class="inventory-header">

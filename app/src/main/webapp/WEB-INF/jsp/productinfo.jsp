@@ -103,7 +103,7 @@
 				</c:choose>
 			</div>
 
-			<c:if test="${role = 'CUSTOMER'}">
+			<c:if test="${role == 'CUSTOMER'}">
 				<div class="row mt-5">
 					<div class="col-lg-6 offset-lg-3">
 						<h4>Submit Your Review</h4>

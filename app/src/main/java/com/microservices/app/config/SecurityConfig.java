@@ -14,7 +14,7 @@ public class SecurityConfig {
 
 		registrationBean.setFilter(new ProtectedRequestFilter());
 		// retailer request mappings
-		registrationBean.addUrlPatterns("/retailer/*");
+		registrationBean.addUrlPatterns("/retailer/*", "/retailerDash");
 		// customer request mappings
 		registrationBean.addUrlPatterns("/cart/*", "/wishlist/*", "/orders/*", "/reviews/*", "/checkout");
 		registrationBean.setOrder(2);

@@ -39,6 +39,7 @@ public class LoginRegisterController {
 	public String login() {
 		return "login";
 	}
+
 	@PostMapping(value = "/register/verify-email")
 	@ResponseBody
 	public ResponseEntity<String> verifyEmail(@RequestParam String email) {
@@ -51,6 +52,7 @@ public class LoginRegisterController {
 	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
 		return service.verifyEmail(otpVerifyRequest);
 	}
+
 	@PostMapping("/register")
 	public String registerCustomer(@ModelAttribute RegisterRequest request, Model model) {
 		try {
@@ -67,6 +69,12 @@ public class LoginRegisterController {
 	@GetMapping("/retailerDash")
 	public String retailerDash(Model model) {
 		return "retailer/retailerDash";
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
 	}
 
 	@PostMapping("/login")
@@ -120,10 +128,6 @@ public class LoginRegisterController {
 			return "register-retailer"; // return to registration page on error
 		}
 	}
-
-
-
-	
 
 	@RequestMapping("/passwordRecovery")
 	public String passwordRecoveryPage() {

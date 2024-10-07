@@ -5,111 +5,159 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- FontAwesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <style>
+        /* Custom styles */
+        header {
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-light .navbar-toggler {
+            border-color: #ddd;
+        }
+
+        .navbar-light .navbar-toggler:hover {
+            background-color: #f1f1f1;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #5a5a5a;
+        }
+
+        .nav-link:hover {
+            color: #007bff;
+        }
+
+        .header-logo img {
+            height: 60px;
+        }
+
+        .user-menu i {
+            font-size: 1.2rem;
+        }
+
+        .user-menu .nav-link p {
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .bg-white {
+            background-color: #fff !important;
+        }
+
+        .input-group button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .input-group input {
+            border-right: none;
+        }
+    </style>
 </head>
 <body>
-<!--Main Navigation-->
-<header>
-  <!-- Jumbotron -->
-  <div class="p-3 text-center bg-white border-bottom">
-    <div class="container">
-      <div class="row gy-3">
-        <!-- Left elements -->
-        <div class="col-lg-2 col-sm-4 col-4" style="margin-top:-5px">
-          <a href="#" target="_blank" class="float-start">
-            <img src="/img/zip.png" height="65" alt="Logo" />
-          </a>
+    <!--Main Navigation-->
+    <header>
+        <!-- Jumbotron -->
+        <div class="p-3 text-center bg-white border-bottom">
+            <div class="container">
+                <div class="row gy-3 align-items-center">
+                    <!-- Left elements: Logo -->
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+                        <a href="#" target="_blank" class="header-logo float-start">
+                            <img src="/img/zip.png" alt="Logo">
+                        </a>
+                    </div>
+                    
+                    <!-- Center elements: User Info and Links -->
+                    <div class="col-lg-5 col-md-5 col-sm-12 col-12">
+                        <form action="/products" method="get">
+                            <div class="input-group">
+                                <input type="search" class="form-control" placeholder="Search" name="search" />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    
+                    <!-- Right elements: Search Bar -->
+                    <div class="col-lg-5 col-md-4 col-sm-8 col-8 ms-auto user-menu">
+                        <div class="d-flex justify-content-end">
+                            <!-- Conditional user login state -->
+                            <c:choose>
+                                <c:when test="${empty role}">
+                                    <a href="/login" class="me-3 nav-link d-flex align-items-center">
+                                        <p>Login</p>
+                                    </a>
+                                    <a href="/register" class="me-3 nav-link d-flex align-items-center">
+                                        <p>Signup</p>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="#" class="me-3 nav-link d-flex align-items-center">
+                                        <p>Welcome, ${sessionScope.username}</p>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <!-- Role-based navigation -->
+                            <c:choose>
+                                <c:when test="${role == 'CUSTOMER'}">
+                                    <a href="/wishlist" class="me-3 nav-link d-flex align-items-center">
+                                        <i class="fas fa-heart"></i>
+                                        <p>Wishlist</p>
+                                    </a>
+                                    <a href="/reviews" class="me-3 nav-link d-flex align-items-center">
+                                        <i class="fas fa-star"></i>
+                                        <p>Reviews</p>
+                                    </a>
+                                    <a href="/cart" class="me-3 nav-link d-flex align-items-center">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <p>My Cart</p>
+                                    </a>
+                                    <a href="/orders" class="me-3 nav-link d-flex align-items-center">
+                                        <i class="fas fa-box"></i>
+                                        <p>My Orders</p>
+                                    </a>
+                                    <a href="/logout" class="nav-link d-flex align-items-center">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <p>Logout</p>
+                                    </a>
+                                </c:when>
+                            </c:choose>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Left elements -->
+        <!-- Jumbotron End -->
 
-        <!-- Center elements -->
-        <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-          <div class="d-flex float-end">
-            <!-- Check if user is logged in using JSTL -->
-            <c:choose>
-              <c:when test="${empty sessionScope.username}">
-                <!-- If user is not logged in, show "Sign in" button -->
-                <a href="login" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-                  <i class="fas fa-user-alt m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">Sign in</p>
-                </a>
-              </c:when>
-              <c:otherwise>
-                <!-- If user is logged in, display their username -->
-                <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-                  <i class="fas fa-user-alt m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">${sessionScope.username}</p>
-                </a>
-              </c:otherwise>
-            </c:choose>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <!-- Toggle button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLeftAlignExample"
+                    aria-controls="navbarLeftAlignExample" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+        <!-- Navbar End -->
+    </header>
 
-            <!-- Wishlist Button: Redirect to login if not logged in -->
-            <c:choose>
-              <c:when test="${empty sessionScope.username}">
-                <a href="wishlist" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-                  <i class="fas fa-heart m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">Wishlist</p>
-                </a>
-              </c:when>
-              <c:otherwise>
-                <a href="wishlist" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-                  <i class="fas fa-heart m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">Wishlist</p>
-                </a>
-              </c:otherwise>
-            </c:choose>
-
-            <!-- Cart Button: Redirect to login if not logged in -->
-            <c:choose>
-              <c:when test="${empty sessionScope.username}">
-                <a href="cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
-                  <i class="fas fa-shopping-cart m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">My cart</p>
-                </a>
-              </c:when>
-              <c:otherwise>
-                <a href="cart" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
-                  <i class="fas fa-shopping-cart m-1 me-md-2"></i>
-                  <p class="d-none d-md-block mb-0">My cart</p>
-                </a>
-              </c:otherwise>
-            </c:choose>
-          </div>
-        </div>
-        <!-- Center elements -->
-
-        <!-- Right elements -->
-        <div class="col-lg-5 col-md-12 col-12">
-        <form action = "/products" method="get">
-          <div class="input-group">
-            <input type="search" id="form1" class="form-control" placeholder="Search" name="search" />
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-          </form>
-        </div>
-        <!-- Right elements -->
-      </div>
-    </div>
-  </div>
-  <!-- Jumbotron -->
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
-    <div class="container">
-      <!-- Toggle button -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLeftAlignExample" aria-controls="navbarLeftAlignExample" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-  </nav>
-  <!-- Navbar End -->
-</header>
+    <!-- Bootstrap JS (Bundle with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+        crossorigin="anonymous"></script>
 </body>
 </html>

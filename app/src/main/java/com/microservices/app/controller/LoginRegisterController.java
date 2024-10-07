@@ -39,6 +39,30 @@ public class LoginRegisterController {
 	public String login() {
 		return "login";
 	}
+	@PostMapping(value = "/register/verify-email")
+	@ResponseBody
+	public ResponseEntity<String> verifyEmail(@RequestParam String email) {
+		System.out.println("in request for " + email);
+		return service.verifyEmail(email);
+	}
+
+	@PutMapping("/register/verify-email")
+	@ResponseBody
+	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+		return service.verifyEmail(otpVerifyRequest);
+	}
+	@PostMapping("/register")
+	public String registerCustomer(@ModelAttribute RegisterRequest request, Model model) {
+		try {
+			String message = service.register(request);
+			model.addAttribute("successMessage", message);
+			return "redirect:/login"; // redirect to login page on success
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", e.getMessage());
+			return "register"; // return to registration page on error
+		}
+	}
 
 	@GetMapping("/retailerDash")
 	public String retailerDash(Model model) {
@@ -97,33 +121,9 @@ public class LoginRegisterController {
 		}
 	}
 
-	@PostMapping("/register")
-	public String registerCustomer(@ModelAttribute RegisterRequest request, Model model) {
-		System.out.println(request.getAge());
-		System.out.println(request.getCity());
-		try {
-			String message = service.register(request);
-			model.addAttribute("successMessage", message);
-			return "redirect:/login"; // redirect to login page on success
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("errorMessage", e.getMessage());
-			return "register"; // return to registration page on error
-		}
-	}
 
-	@PostMapping(value = "/register/verify-email")
-	@ResponseBody
-	public ResponseEntity<String> verifyEmail(@RequestParam String email) {
-		System.out.println("in request for " + email);
-		return service.verifyEmail(email);
-	}
 
-	@PutMapping("/register/verify-email")
-	@ResponseBody
-	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
-		return service.verifyEmail(otpVerifyRequest);
-	}
+	
 
 	@RequestMapping("/passwordRecovery")
 	public String passwordRecoveryPage() {

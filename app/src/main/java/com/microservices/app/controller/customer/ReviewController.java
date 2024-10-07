@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,29 +27,29 @@ public class ReviewController {
 	private DiscoveryClient dicoveryClient;
 
 	@GetMapping
-	public ModelAndView listWishlist() {
+	public ModelAndView listWishlist(@SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("customer/reviews");
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
 		URI uri = instances.get(0).getUri();
-		List response = rt.getForObject(uri + "/customers/{id}/reviews", List.class, 2);
+		List response = rt.getForObject(uri + "/customers/{id}/reviews", List.class, userId);
 		mv.addObject("reviews", response);
 		return mv;
 	}
 
 	@PostMapping("/delete")
-	public ModelAndView deleteProduct(@RequestParam long reviewId) {
+	public ModelAndView deleteProduct(@RequestParam long reviewId, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
 		URI uri = instances.get(0).getUri();
-		rt.delete(uri + "/customers/{userId}/reviews/{reviewId}", 2, reviewId);
+		rt.delete(uri + "/customers/{userId}/reviews/{reviewId}", userId, reviewId);
 		mv.setViewName("redirect:/reviews");
 		return mv;
 	}
 
 	@PostMapping("/add")
 	public ModelAndView addProduct(@RequestParam long productId, @RequestParam String reviewContent,
-			@RequestParam int rating) {
+			@RequestParam int rating, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
 		URI uri = instances.get(0).getUri();
@@ -56,7 +57,7 @@ public class ReviewController {
 		request.put("productId", productId);
 		request.put("reviewContent", reviewContent);
 		request.put("rating", rating);
-		rt.postForObject(uri + "/customers/{userId}/reviews", request, String.class, 2);
+		rt.postForObject(uri + "/customers/{userId}/reviews", request, String.class, userId);
 		mv.setViewName("redirect:/reviews");
 		return mv;
 	}

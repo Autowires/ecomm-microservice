@@ -25,15 +25,13 @@ public class ProductController {
 			@RequestParam(required = false) String search, Model model) {
 		List<Product> products = productService.getProducts(category, search);
 		List<String> categories = productService.getAllCategories();
-		System.out.println(products);
-		System.out.println(categories);
 		model.addAttribute("categories", categories);
 		model.addAttribute("products", products);
 		return "products";
 	}
 
 	@GetMapping("/{productId}")
-	public String productinfo(@PathVariable int  productId, Model model) {
+	public String productinfo(@PathVariable int productId, Model model) {
 
 		Object productinfo = productService.getproduct(productId);
 		model.addAttribute("product", productinfo);

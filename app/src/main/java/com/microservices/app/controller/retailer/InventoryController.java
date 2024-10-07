@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.microservices.app.dto.ProductForm;
 import com.microservices.app.service.ProductService;
@@ -22,8 +23,8 @@ public class InventoryController {
 	private ProductService productService;
 
 	@GetMapping
-	public String getAllProducts(Model model) {
-		List<Object> allProducts = productService.getAllProducts((long) 2);
+	public String getAllProducts(Model model, @SessionAttribute Long userId) {
+		List<Object> allProducts = productService.getAllProducts(userId);
 		System.out.println(allProducts);
 		model.addAttribute("products", allProducts);
 		return "retailer/inventory";
@@ -35,9 +36,9 @@ public class InventoryController {
 	}
 
 	@PostMapping("/add-product")
-	public String addProduct(Model model, ProductForm form) {
+	public String addProduct(Model model, ProductForm form, @SessionAttribute Long userId) {
 		try {
-			String mes = productService.addProduct(form, 2);
+			String mes = productService.addProduct(form, userId);
 			return "redirect:/retailer/inventory";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -53,9 +54,9 @@ public class InventoryController {
 	}
 
 	@PostMapping("/{id}/updateProduct")
-	public String updateProduct(ProductForm form, Model model, @PathVariable long id) {
+	public String updateProduct(ProductForm form, Model model, @PathVariable long id, @SessionAttribute Long userId) {
 		try {
-			String message = productService.updateProduct((long) 2, id, form);
+			String message = productService.updateProduct(userId, id, form);
 			return "redirect:/retailer/inventory";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,9 +66,9 @@ public class InventoryController {
 	}
 
 	@DeleteMapping("/deleteProduct")
-	public String deleteProduct(Model model, @RequestParam long productId) {
+	public String deleteProduct(Model model, @RequestParam long productId, @SessionAttribute Long userId) {
 		System.out.println("inside the client");
-		String message = productService.deleteProduct((long) 2, (long) productId);
+		String message = productService.deleteProduct(userId, productId);
 		model.addAttribute("message", message);
 		return "redirect:/retailer/inventory";
 	}

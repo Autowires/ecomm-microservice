@@ -37,7 +37,7 @@ public class UsersController {
 	}
 
 	// This method handles PUT requests to update a user's status.
-	@PutMapping("/admin/users/status")
+	@PutMapping("/status")
 	public String putUserStatus(@RequestParam long userId, @RequestParam UserStatus status) {
 		try {
 			// Call the service layer to update the user status

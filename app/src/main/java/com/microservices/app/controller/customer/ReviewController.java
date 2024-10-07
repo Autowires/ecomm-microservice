@@ -26,7 +26,7 @@ public class ReviewController {
 	private DiscoveryClient dicoveryClient;
 
 	@GetMapping
-	public ModelAndView listWishlist() {
+	public ModelAndView listReview() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("customer/reviews");
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
@@ -37,7 +37,7 @@ public class ReviewController {
 	}
 
 	@PostMapping("/delete")
-	public ModelAndView deleteProduct(@RequestParam long reviewId) {
+	public ModelAndView deleteReview(@RequestParam long reviewId) {
 		ModelAndView mv = new ModelAndView();
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
 		URI uri = instances.get(0).getUri();
@@ -47,7 +47,7 @@ public class ReviewController {
 	}
 
 	@PostMapping("/add")
-	public ModelAndView addProduct(@RequestParam long productId, @RequestParam String reviewContent,
+	public ModelAndView addReview(@RequestParam long productId, @RequestParam String reviewContent,
 			@RequestParam int rating) {
 		ModelAndView mv = new ModelAndView();
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");

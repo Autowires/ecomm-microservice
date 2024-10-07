@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -181,6 +184,22 @@ public class LoginRegisterController {
 		} else {
 			return ResponseEntity.badRequest().body(response);
 		}
+	}
+
+	@GetMapping("/error")
+	public String handleError(HttpServletRequest request) {
+		Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+
+		if (status != null) {
+			Integer statusCode = Integer.valueOf(status.toString());
+
+			if (statusCode == HttpStatus.NOT_FOUND.value()) {
+				return "404";
+			} else if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
+				return "403";
+			}
+		}
+		return "error";
 	}
 
 }

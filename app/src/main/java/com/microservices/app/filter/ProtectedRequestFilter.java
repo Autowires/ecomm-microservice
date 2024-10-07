@@ -41,15 +41,15 @@ public class ProtectedRequestFilter implements Filter {
 		logger.info("Role " + userRole);
 
 		// Check for access to /retailer/* URLs
-		if (requestURI.startsWith(httpRequest.getContextPath() + "/retailer") && !userRole.equals("RETAILER")) {
+		if (requestURI.startsWith("/retailer") && !userRole.equals("RETAILER")) {
 			httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. Insufficient permissions.");
 			return;
-		} else {
-			if (!userRole.equals("CUSTOMER")) {
-				logger.info("Access designed for customer endpoints");
-				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. Insufficient permissions.");
-				return;
-			}
+		}
+		
+		if (!requestURI.startsWith("/retailer") && !userRole.equals("CUSTOMER")) {
+			logger.info("Access designed for customer endpoints");
+			httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied. Insufficient permissions.");
+			return;
 		}
 
 		chain.doFilter(httpRequest, httpResponse);

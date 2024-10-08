@@ -4,7 +4,7 @@ services:
     image: mysql:8.0
     container_name: shared-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: shared_db
     volumes:
       - shared-db-data:/var/lib/mysql
@@ -37,8 +37,8 @@ services:
     env_file: ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     depends_on:
       - eureka-server
       - shared-db
@@ -53,8 +53,8 @@ services:
     env_file: ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     depends_on:
       - eureka-server
       - shared-db
@@ -69,8 +69,8 @@ services:
     env_file: ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     depends_on:
       - eureka-server
       - shared-db

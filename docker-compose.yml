@@ -1,0 +1,114 @@
+services:
+  # MySQL Database (Shared between all services)
+  shared-db:
+    image: mysql:8.0
+    container_name: shared-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: shared_db
+    volumes:
+      - shared-db-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  # Eureka service registry
+  eureka-server:
+    image: akhilkumarreddy/eureka-server:latest
+    container_name: eureka-server-service
+    ports:
+      - "8761:8761"
+
+  # Spring cloud api-gateway service
+  api-gateway:
+    image: akhilkumarreddy/api-gateway:latest
+    container_name: api-gateway-service
+    env_file: ".env"
+    ports:
+      - "8079:8079"
+    depends_on:
+      - eureka-server
+
+  # Authentication service
+  authentication-service:
+    image: akhilkumarreddy/authentication:latest
+    container_name: authentication-service
+    ports:
+      - "8081:8081"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
+
+  # Product service
+  product-service:
+    image: akhilkumarreddy/product-service:latest
+    container_name: product-service
+    ports:
+      - "8083:8083"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
+
+  # Customer service
+  customer-service:
+    image: akhilkumarreddy/customer-service:latest
+    container_name: customer-service
+    ports:
+      - "8084:8084"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - eureka-server
+      - shared-db
+      - api-gateway
+
+  # Client app
+  app:
+    image: akhilkumarreddy/app:latest
+    container_name: zip-app-service
+    env_file: ".env"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - api-gateway
+
+  # Prometheus monitoring service
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    depends_on:
+      - product-service
+
+  # Grafana dashboard service
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana-dashboard
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+volumes:
+  shared-db-data:
+  grafana-storage: {}

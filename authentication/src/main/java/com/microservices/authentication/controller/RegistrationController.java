@@ -37,6 +37,7 @@ public class RegistrationController {
 
 	@PostMapping("/register")
 	public String registerCustomer(@RequestBody @Valid RegistrationRequest request) {
+		
 		return registrationService.register(request);
 	}
 

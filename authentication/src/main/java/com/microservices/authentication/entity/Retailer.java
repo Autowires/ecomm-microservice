@@ -28,7 +28,7 @@ public class Retailer extends MyUser{
 	@Column(nullable = false)
 	private String address;
 
-	private String city;
+	
 	
 	
 	

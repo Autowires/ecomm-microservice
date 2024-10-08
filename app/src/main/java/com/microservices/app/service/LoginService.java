@@ -19,4 +19,10 @@ public interface LoginService {
 
 	String register(RegisterRequest request);
 
+	String existsByEmail(String email);
+
+	String verifyOtp(String email, String otp);
+
+	String updatePassword(String email, String password);
+
 }

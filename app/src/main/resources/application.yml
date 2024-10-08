@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: app
+# JSP setup
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+    hiddenmethod:
+      filter:
+        enabled: true
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+

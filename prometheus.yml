@@ -1,0 +1,60 @@
+global:
+  scrape_interval: 5s
+
+rule_files:
+
+scrape_configs:
+
+  # - job_name: 'eureka-server'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #       - targets: ['host.docker.internal:8761']
+  #         labels:
+  #           application: 'eureka-server'
+            
+  # - job_name: 'api-gateway'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #       - targets: ['host.docker.internal:8079']
+  #         labels:
+  #           application: 'api-gateway'   
+            
+            
+  # - job_name: 'authentication'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #       - targets: ['host.docker.internal:8081']
+  #         labels:
+  #           application: 'authentication'      
+            
+            
+  - job_name: 'product-service'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+        - targets: ['host.docker.internal:8083']
+          labels:
+            application: 'product-service'      
+            
+            
+             
+  # - job_name: 'customer-service'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #       - targets: ['host.docker.internal:8084']
+  #         labels:
+  #           application: 'customer-service' 
+         
+         
+             
+  # - job_name: 'app'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #       - targets: ['host.docker.internal:8080']
+  #         labels:
+  #           application: 'app'                  

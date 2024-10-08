@@ -56,5 +56,4 @@ public interface UserRepo extends JpaRepository<MyUser, Long> {
 	@Query("SELECT new com.microservices.authentication.dto.retailerDto(r.id, r.username, r.email, r.shopName, r.GSTIN, r.pannumber, r.address, r.status) "
 			+ "FROM Retailer r WHERE r.status in ('UNDER_REVIEW','REJECTED')")
 	List<retailerDto> retailersUnderReview();
-
 }

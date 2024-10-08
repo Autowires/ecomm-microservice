@@ -41,7 +41,6 @@ public class RegistrationService {
 
 	@Transactional
 	public String register(RegistrationRequest request) {
-
 		checkOTPVerfifed(request.getEmail());
 
 		if (userDao.existsByDetails(request.getEmail(), request.getContactNo())) {
@@ -53,6 +52,7 @@ public class RegistrationService {
 		customer.setEmail(request.getEmail());
 		customer.setContactNo(request.getContactNo());
 		customer.setPassword(request.getPassword());
+		System.out.println(request.getCity());
 		customer.setCity(request.getCity());
 		customer.setStatus(MyUser.UserStatus.ACTIVE);
 		customer.setUserType("CUSTOMER");

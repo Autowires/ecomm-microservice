@@ -13,14 +13,14 @@ services:
 
   # Eureka service registry
   eureka-server:
-    image: eureka-server
+    image: akhilkumarreddy/eureka-server:latest
     container_name: eureka-server-service
     ports:
       - "8761:8761"
 
   # Spring cloud api-gateway service
   api-gateway:
-    image: api-gateway:latest
+    image: akhilkumarreddy/api-gateway:latest
     container_name: api-gateway-service
     env_file: ".env"
     ports:
@@ -30,7 +30,7 @@ services:
 
   # Authentication service
   authentication-service:
-    image: authentication:latest
+    image: akhilkumarreddy/authentication:latest
     container_name: authentication-service
     ports:
       - "8081:8081"
@@ -46,7 +46,7 @@ services:
 
   # Product service
   product-service:
-    image: product-service
+    image: akhilkumarreddy/product-service:latest
     container_name: product-service
     ports:
       - "8083:8083"
@@ -60,8 +60,9 @@ services:
       - shared-db
       - api-gateway
 
+  # Customer service
   customer-service:
-    image: customer-service
+    image: akhilkumarreddy/customer-service:latest
     container_name: customer-service
     ports:
       - "8084:8084"
@@ -74,9 +75,10 @@ services:
       - eureka-server
       - shared-db
       - api-gateway
+
   # Client app
   app:
-    image: app:latest
+    image: akhilkumarreddy/app:latest
     container_name: zip-app-service
     env_file: ".env"
     ports:
@@ -85,17 +87,17 @@ services:
       - eureka-server
       - api-gateway
 
-  # prometheus
+  # Prometheus monitoring service
   prometheus:
     image: prom/prometheus
     volumes:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
     ports:
-      - 9090:9090
+      - "9090:9090"
     depends_on:
       - product-service
-  
-  # Grafana
+
+  # Grafana dashboard service
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana-dashboard

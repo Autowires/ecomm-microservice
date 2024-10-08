@@ -23,6 +23,7 @@ public class ProductInfoResponse {
 	private Integer stock;
 	private LocalDateTime registeredAt;
 	private LocalDateTime modifiedAt;
+	private String imageUrl;
 	private List<ReviewResponse> reviews;
 
 	// Constructor mapping the Product entity to this response class
@@ -36,6 +37,7 @@ public class ProductInfoResponse {
 		this.stock = product.getStock();
 		this.registeredAt = product.getRegisteredAt();
 		this.modifiedAt = product.getModifiedAt();
+		this.imageUrl=  product.getImageUrl();
 		reviews = new LinkedList<>();
 	}
 

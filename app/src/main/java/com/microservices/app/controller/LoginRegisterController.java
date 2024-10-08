@@ -1,6 +1,7 @@
 package com.microservices.app.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.microservices.app.dto.OTPVerifyRequest;
+import com.microservices.app.dto.Product;
 import com.microservices.app.dto.RegisterRequest;
 import com.microservices.app.dto.RetailerRegister;
 import com.microservices.app.dto.User;
 import com.microservices.app.service.LoginService;
+import com.microservices.app.service.ProductService;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,9 +35,14 @@ public class LoginRegisterController {
 
 	@Autowired
 	private LoginService service;
+	
+	@Autowired
+	private ProductService productService;
 
 	@GetMapping("/")
-	public String home() {
+	public String home(Model model) {
+		List<Object> product=productService.recentProducts();
+		model.addAttribute("newProducts",product);
 		return "index";
 	}
 

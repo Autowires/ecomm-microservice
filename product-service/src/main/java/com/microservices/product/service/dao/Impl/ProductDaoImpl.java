@@ -60,6 +60,7 @@ public class ProductDaoImpl implements ProductDao {
 		product.setPrice(form.getPrice());
 		product.setCategory(form.getCategory());
 		product.setStock(form.getStock());
+		product.setImageUrl(form.getImageUrl());
 
 		sessionFactory.inTransaction(session -> {
 			product.setRetailerId(retailerId);
@@ -76,6 +77,7 @@ public class ProductDaoImpl implements ProductDao {
 		product.setPrice(form.getPrice());
 		product.setCategory(form.getCategory());
 		product.setStock(form.getStock());
+		product.setImageUrl(form.getImageUrl());
 		product.setId(productId);
 
 		return sessionFactory.fromTransaction(session -> {

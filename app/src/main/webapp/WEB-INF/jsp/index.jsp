@@ -58,7 +58,7 @@
 					<c:forEach var="product" items="${newProducts}">
 						<div class="col-md-2">
 							<div class="card text-center">
-								<img src="img/${product.id}.jpg" class="img-fluid"
+								<img src="${product.imageUrl}" class="img-fluid"
 									style="width: 150px; height: 150px;" alt="${product.title}" />
 								<div class="card-body">
 									<h6 class="card-title">${product.title}</h6>

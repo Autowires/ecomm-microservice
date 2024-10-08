@@ -1,5 +1,6 @@
 
 @baseurl = http://localhost:8081/auth
+@adminurl = http://localhost:8081/admin
 
 ### Login
 # 200 - { token, role }
@@ -58,3 +59,12 @@ Content-Type: application/json
 
     
 }
+
+### Users
+GET {{adminurl}}/users
+
+### Update user status
+PUT {{adminurl}}/users/status?userId=54&status=REJECTED
+
+### Retailer under reviews
+GET {{adminurl}}/users/reviewRequest

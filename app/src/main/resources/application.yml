@@ -1,7 +1,7 @@
 spring:
   application:
     name: app
-# JSP setup
+  # JSP setup
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -18,3 +18,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+logging:
+  file:
+    name: logs/app.log      
+  level:
+    root: info                

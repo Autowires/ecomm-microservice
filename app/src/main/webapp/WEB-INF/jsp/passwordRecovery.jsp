@@ -100,7 +100,7 @@
                 success: function(response) {
                     if (response.success) {
                         $('#emailForm').hide();
-                        $('#otpSection').removeClass('hidden');
+                        $('#otpSection').removeClass('hidden'); // Show OTP section only if OTP was sent successfully
                     } else {
                         $('#emailError').text(response.errorMessage); 
                     }
@@ -130,25 +130,39 @@
             });
         });
 
-        // Password reset submission
         $('#resetPasswordForm').on('submit', function(e) {
             e.preventDefault();
             const newPassword = $('#newPassword').val();
             const confirmPassword = $('#confirmPassword').val();
             const email = $('#email').val();
+            
+            // Password validation for letters and numbers
+            const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // At least one letter and one number
+            
+            if (!passwordPattern.test(newPassword)) {
+                $('#passwordError').text('Password must contain at least one letter and one number.'); 
+                return; // Stop submission if the password is invalid
+            } else {
+                $('#passwordError').text(''); // Clear previous error message
+            }
+
             if (newPassword !== confirmPassword) {
                 $('#passwordError').text('Passwords do not match'); 
             } else {
                 $.ajax({
                     url: '/updatePassword',
                     type: 'POST',
-                    data: { Password: newPassword, email: email },
+                    contentType: 'application/json',
+                    data: JSON.stringify({ Password: newPassword, email: email }),
                     success: function(response) {
                         if (response.success) {
                             window.location.href = '/login'; 
                         } else {
-                            $('#passwordError').text(response.passwordErrorMessage); 
+                            $('#passwordError').text('Failed to update the password.');
                         }
+                    },
+                    error: function(response) {
+                        $('#passwordError').text('An error occurred. Please try again.');
                     }
                 });
             }

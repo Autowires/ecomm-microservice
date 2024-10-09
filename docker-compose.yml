@@ -5,7 +5,7 @@ services:
     container_name: shared-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: shared_db
+      MYSQL_DATABASE: microDb
     volumes:
       - shared-db-data:/var/lib/mysql
     ports:

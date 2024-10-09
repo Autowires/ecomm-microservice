@@ -27,7 +27,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
       - api-gateway
@@ -42,7 +42,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
       - api-gateway
@@ -57,7 +57,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
       - api-gateway

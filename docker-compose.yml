@@ -37,8 +37,8 @@ services:
     env_file: ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
       - shared-db
@@ -53,8 +53,8 @@ services:
     env_file: ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
       - shared-db
@@ -69,8 +69,8 @@ services:
     env_file: ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
       - shared-db

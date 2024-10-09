@@ -17,7 +17,7 @@ import jakarta.transaction.Transactional;
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
 	@Query("SELECT new com.microservices.product.service.dto.CartResponse( "
-			+ "c.id, p.id, p.title, p.price, c.quantity) " + "FROM CartItem c " + "JOIN c.product p "
+			+ "c.id, p.id, p.title, p.price, c.quantity,p.stock,p.imageUrl) " + "FROM CartItem c " + "JOIN c.product p "
 			+ "WHERE c.customer.id = :customerId")
 	List<CartResponse> findCartItemsByCustomerId(@Param("customerId") long customerId);
 

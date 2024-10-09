@@ -75,7 +75,7 @@ body {
 													type="hidden"> <input name="quantity" type="number"
 													value="${item.quantity}" class="form-input me-4"
 													style="width: 100px;">
-												<button>Update</button>
+												<input type="submit" value="submit">
 											</form>
 										</div>
 										<div class="">

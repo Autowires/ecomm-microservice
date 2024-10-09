@@ -18,6 +18,7 @@ import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.OrderStatus;
 import com.microservices.product.service.entity.Orders;
+import com.microservices.product.service.exception.ResourceNotFoundException;
 import com.microservices.product.service.service.BuyerServvice;
 import com.microservices.product.service.service.CartItemService;
 import com.microservices.product.service.service.OrderService;
@@ -56,6 +57,13 @@ public class OrderServiceImplementation implements OrderService {
 		for (CartResponse cartItem : cartItems) {
 			var product = productRepository.findById(cartItem.getProductId())
 					.orElseThrow(() -> new RuntimeException("Product not found"));
+			
+			if(product.getStock()==0) {
+				throw new ResourceNotFoundException("product is out of stock");
+			}else if(product.getStock()<cartItem.getQuantity()) {
+				throw new ResourceNotFoundException("decrease your cart quantity");
+				
+			}
 			product.setStock(product.getStock() - cartItem.getQuantity());
 			productRepository.save(product);
 			OrderItem orderItem = new OrderItem(orders, product, cartItem.getQuantity(), cartItem.getPrice());

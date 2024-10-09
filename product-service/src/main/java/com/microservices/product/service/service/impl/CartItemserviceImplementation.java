@@ -34,10 +34,11 @@ public class CartItemserviceImplementation implements CartItemService {
 	@Override
 	public CartItem updateItemQuntity(Long cartId, Long productId, Integer quantity) {
 		var item = cartItemRepository.findById(cartId).orElseThrow();
-		item.setQuantity(quantity);
+		var available = item.getProduct().getStock();
+		item.setQuantity(Math.min(available, quantity));
 		return cartItemRepository.save(item);
 	}
-
+	
 	@Override
 	public List<CartResponse> getBuyerCartById(Long buyerId) {
 		return cartItemRepository.findCartItemsByCustomerId(buyerId);

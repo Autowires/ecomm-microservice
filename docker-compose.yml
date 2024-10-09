@@ -30,7 +30,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
-      - shared-db
       - api-gateway
 
   # Product service
@@ -46,7 +45,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
-      - shared-db
       - api-gateway
 
   # Customer service
@@ -62,7 +60,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - eureka-server
-      - shared-db
       - api-gateway
 
   # Client app

@@ -89,24 +89,24 @@
 <!-- AJAX and jQuery to handle form submissions without page reloads -->
 <script>
     $(document).ready(function() {
-    	// Email submission
-    	$('#emailForm').on('submit', function(e) {
-    	    e.preventDefault();
-    	    const email = $('#email').val();
-    	    $.ajax({
-    	        url: '/forgotpassword',
-    	        type: 'POST',
-    	        data: { email: email },
-    	        success: function(response) {
-    	            if (response.success) {
-    	                $('#emailForm').hide();
-    	                $('#otpSection').removeClass('hidden'); // Show OTP section only if OTP was sent successfully
-    	            } else {
-    	                $('#emailError').text(response.errorMessage); 
-    	            }
-    	        }
-    	    });
-    	});
+        // Email submission
+        $('#emailForm').on('submit', function(e) {
+            e.preventDefault();
+            const email = $('#email').val();
+            $.ajax({
+                url: '/forgotpassword',
+                type: 'POST',
+                data: { email: email },
+                success: function(response) {
+                    if (response.success) {
+                        $('#emailForm').hide();
+                        $('#otpSection').removeClass('hidden'); // Show OTP section only if OTP was sent successfully
+                    } else {
+                        $('#emailError').text(response.errorMessage); 
+                    }
+                }
+            });
+        });
 
         // OTP submission
         $('#otpForm').on('submit', function(e) {
@@ -136,6 +136,16 @@
             const confirmPassword = $('#confirmPassword').val();
             const email = $('#email').val();
             
+            // Password validation for letters and numbers
+            const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // At least one letter and one number
+            
+            if (!passwordPattern.test(newPassword)) {
+                $('#passwordError').text('Password must contain at least one letter and one number.'); 
+                return; // Stop submission if the password is invalid
+            } else {
+                $('#passwordError').text(''); // Clear previous error message
+            }
+
             if (newPassword !== confirmPassword) {
                 $('#passwordError').text('Passwords do not match'); 
             } else {
@@ -157,8 +167,6 @@
                 });
             }
         });
-
-
     });
 </script>
 

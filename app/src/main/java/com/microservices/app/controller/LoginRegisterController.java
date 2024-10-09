@@ -152,7 +152,6 @@ public class LoginRegisterController {
 	@PostMapping("/forgotpassword")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> passwordRecovery(@RequestParam String email) {
-	    System.out.println(email); // Check if this prints the email
 	    Map<String, Object> response = new HashMap<>();
 
 	    // Call service method to check email and send OTP

@@ -1,11 +1,11 @@
 package com.microservices.authentication.entity;
 
-
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,12 +42,13 @@ public class MyUser {
 
 	@Column(nullable = false)
 	private String email;
-	
+
 	private String city;
 
 	@Max(9999999999L)
 	private Long contactNo;
 
+	@JsonIgnore
 	private String password;
 
 	@CreationTimestamp
@@ -62,6 +63,6 @@ public class MyUser {
 	private UserStatus status;
 
 	public enum UserStatus {
-		UNDER_REVIEW, ACTIVE,DEACTIVATED,REJECTED
+		UNDER_REVIEW, ACTIVE, DEACTIVATED, REJECTED
 	}
 }

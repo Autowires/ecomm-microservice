@@ -1,16 +1,5 @@
 services:
-  # MySQL Database (Shared between all services)
-  shared-db:
-    image: mysql:8.0
-    container_name: shared-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: microDb
-    volumes:
-      - shared-db-data:/var/lib/mysql
-    ports:
-      - "3307:3306"
-
+ 
   # Eureka service registry
   eureka-server:
     image: akhilkumarreddy/eureka-server:latest

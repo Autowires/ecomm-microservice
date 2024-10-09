@@ -24,8 +24,8 @@
 				<label for="role" class="mr-2">Filter by Role:</label> 
 				<select name="role" id="role" class="form-control">
 					<option value="">All Roles</option>
-					<option value="CUSTOMER" <c:if test="${param.userType == 'CUSTOMER'}">selected</c:if>>Customer</option>
-					<option value="RETAILER" <c:if test="${param.userType == 'RETAILER'}">selected</c:if>>Retailer</option>
+					<option value="CUSTOMER" <c:if test="${param.role == 'CUSTOMER'}">selected</c:if>>Customer</option>
+					<option value="RETAILER" <c:if test="${param.role == 'RETAILER'}">selected</c:if>>Retailer</option>
 				</select>
 			</div>
 			<button type="submit" class="btn btn-primary">Filter</button>

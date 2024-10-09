@@ -59,7 +59,7 @@ public class WishlistController {
 
 	@PostMapping("/add")
 	public ModelAndView addProduct(@RequestParam long productId, @SessionAttribute Long userId) {
-		System.out.println(productId);
+		
 		ModelAndView mv = new ModelAndView();
 
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");

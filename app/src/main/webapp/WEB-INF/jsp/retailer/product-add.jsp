@@ -46,9 +46,9 @@ body {
 					<div class="card-header">
 						<h4>Add New Product</h4>
 					</div>
-					<div class="card-body">
+					<%--<div class="card-body">
 						<!-- Form for adding a new product with two-column layout -->
-						<form method="post">
+				 <form method="post">
 							<div class="row">
 								<!-- Left Column -->
 								<div class="col-md-6">
@@ -96,7 +96,78 @@ body {
 								<button type="submit" class="btn btn-primary w-100">Add
 									Product</button>
 							</div>
-						</form>
+	
+						</form> --%>
+						
+	<div class="card-body">
+		<!-- Form for adding a new product with two-column layout -->
+	<form method="post" novalidate>
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="title" class="form-label">Product Title</label> 
+                <input type="text" class="form-control" id="title" name="title" required>
+                <div class="invalid-feedback">Please enter a product title.</div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                <div class="invalid-feedback">Please enter a description.</div>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label> 
+                <input type="number" step="0.01" class="form-control" id="price" name="price" required min="0">
+                <div class="invalid-feedback">Please enter a valid price greater than or equal to 0.</div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label> 
+                <input type="text" class="form-control" id="category" name="category" required>
+                <div class="invalid-feedback">Please enter a category.</div>
+            </div>
+            <div class="mb-3">
+                <label for="stock" class="form-label">Stock Quantity</label> 
+                <input type="number" class="form-control" id="stock" name="stock" required min="1">
+                <div class="invalid-feedback">Please enter a stock quantity of at least 1.</div>
+            </div>
+            <div class="mb-3">
+                <label for="imageUrl" class="form-label">Image URL</label> 
+                <input type="url" class="form-control" id="imageUrl" name="imageUrl">
+                <div class="invalid-feedback">Please enter a valid image URL.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary w-100">Add Product</button>
+    </div>
+</form>
+</div>
+
+<script>
+   
+    (function () {
+        'use strict';
+
+        
+        var form = document.querySelector('form');
+
+       
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    })();
+</script>
+						
 					</div>
 				</div>
 			</div>

@@ -27,6 +27,11 @@
             background-color: #28a745; /* Green color */
             color: white;
         }
+
+        .error-message {
+            color: red; /* Red color for error messages */
+            font-size: 0.875rem; /* Smaller font size for messages */
+        }
     </style>
     <script>
         let otpVerified = false;
@@ -72,6 +77,43 @@
                 $('#otpModal').modal('hide');
             }
         }
+
+        function validateForm() {
+            const age = parseInt(document.forms["registerForm"]["age"].value);
+            const mobile = document.forms["registerForm"]["contactNo"].value;
+            const username = document.forms["registerForm"]["username"].value;
+            const password = document.forms["registerForm"]["password"].value;
+
+            // Reset error messages
+            document.getElementById("passwordError").innerText = "";
+
+            // Validate age
+            if (age < 19 || age > 110) {
+                alert("Age must be between 19 and 110.");
+                return false;
+            }
+
+            // Validate mobile number
+            if (mobile.length !== 10) {
+                alert("Mobile number must be 10 digits.");
+                return false;
+            }
+
+            // Validate username
+            if (/^\d/.test(username)) {
+                alert("Username must not start with a number.");
+                return false;
+            }
+
+            // Validate password: must contain mix of letters, numbers, and special characters
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                document.getElementById("passwordError").innerText = "Password must be at least 8 characters long and include a mix of letters, numbers, and special characters.";
+                return false;
+            }
+
+            return true; // Form is valid
+        }
     </script>
 </head>
 
@@ -87,7 +129,7 @@
             <div class="alert alert-success">${successMessage}</div>
         </c:if>
 
-        <form action="/register" method="post">
+        <form name="registerForm" action="/register" method="post" onsubmit="return validateForm()">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" name="username" required>
@@ -105,19 +147,22 @@
 
             <div class="form-group">
                 <label for="contactNo">Contact Number</label>
-                <input type="tel" class="form-control" name="contactNo" required maxlength="10">            </div>
-             <div class="form-group">
-                <label for="age">Age</label>
-                <input type="age" class="form-control" name="age" required>
+                <input type="tel" class="form-control" name="contactNo" required maxlength="10" pattern="\d{10}" title="Must be 10 digits">
             </div>
-             <div class="form-group">
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" name="age" required min="19" max="110">
+            </div>
+            <div class="form-group">
                 <label for="city">City</label>
-                <input type="city" class="form-control" name="city" required>
+                <input type="text" class="form-control" name="city" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" required>
+                <input type="password" class="form-control" name="password" required minlength="8">
+                <small id="passwordError" class="error-message"></small> <!-- Error message for password -->
+                <small class="form-text text-muted">Password must be at least 8 characters long and include letters, numbers, and special characters.</small>
             </div>
 
             <button type="submit" class="btn btn-primary" id="registerButton" disabled>Register</button>

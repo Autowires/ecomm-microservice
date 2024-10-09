@@ -36,8 +36,7 @@ public class MyUser {
 
 	private String username;
 
-	@Min(19)
-	@Max(100)
+	
 	private Integer age;
 
 	@Column(nullable = false)
@@ -45,7 +44,7 @@ public class MyUser {
 	
 	private String city;
 
-	@Max(9999999999L)
+	
 	private Long contactNo;
 
 	private String password;

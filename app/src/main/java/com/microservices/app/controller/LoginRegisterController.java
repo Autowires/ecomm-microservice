@@ -132,11 +132,14 @@ public class LoginRegisterController {
 		try {
 			String message = service.registerRetailer(request);
 			model.addAttribute("successMessage", message);
-			return "redirect:/login"; // redirect to login page on success
+			// redirect to login page on success
+			return "redirect:/login"; 
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMessage", e.getMessage());
-			return "register-retailer"; // return to registration page on error
+			// return to registration page on error
+			return "register-retailer"; 
+			
 		}
 	}
 
@@ -150,8 +153,8 @@ public class LoginRegisterController {
 		Map<String, Object> response = new HashMap<>();
 
 		String message = service.existsByEmail(email);
-
-		if (message != null) { // assuming message is null if email doesn't exist
+		// assuming message is null if email doesn't exist
+		if (message != null) { 
 			response.put("success", true);
 			response.put("errorMessage", null);
 		} else {
@@ -179,19 +182,20 @@ public class LoginRegisterController {
 
 	@PostMapping("/updatePassword")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam String email,
-			@RequestParam String Password) {
+	public ResponseEntity<Map<String, Object>> updatePassword(@RequestBody Map<String, String> request) {
+	    String email = request.get("email");
+	    String password = request.get("Password");
+	    String message = service.updatePassword(email, password);
+	    boolean success = message.contains("success");
+	    Map<String, Object> response = new HashMap<>();
 
-		String message = service.updatePassword(email, Password);
-		boolean success = message.contains("success");
-		Map<String, Object> response = new HashMap<>();
-
-		if (success) {
-			response.put("success", success);
-			return ResponseEntity.ok(response);
-		} else {
-			return ResponseEntity.badRequest().body(response);
-		}
+	    if (success) {
+	        response.put("success", true);
+	        return ResponseEntity.ok(response);
+	    } else {
+	        response.put("errorMessage", "Password update failed.");
+	        return ResponseEntity.badRequest().body(response);
+	    }
 	}
 
 	@GetMapping("/error")
@@ -210,4 +214,4 @@ public class LoginRegisterController {
 		return "error";
 	}
 
-}
+} 

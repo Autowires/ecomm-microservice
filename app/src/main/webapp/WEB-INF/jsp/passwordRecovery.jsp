@@ -130,29 +130,35 @@
             });
         });
 
-        // Password reset submission
         $('#resetPasswordForm').on('submit', function(e) {
             e.preventDefault();
             const newPassword = $('#newPassword').val();
             const confirmPassword = $('#confirmPassword').val();
             const email = $('#email').val();
+            
             if (newPassword !== confirmPassword) {
                 $('#passwordError').text('Passwords do not match'); 
             } else {
                 $.ajax({
                     url: '/updatePassword',
                     type: 'POST',
-                    data: { Password: newPassword, email: email },
+                    contentType: 'application/json',
+                    data: JSON.stringify({ Password: newPassword, email: email }),
                     success: function(response) {
                         if (response.success) {
                             window.location.href = '/login'; 
                         } else {
-                            $('#passwordError').text(response.passwordErrorMessage); 
+                            $('#passwordError').text('Failed to update the password.');
                         }
+                    },
+                    error: function(response) {
+                        $('#passwordError').text('An error occurred. Please try again.');
                     }
                 });
             }
         });
+
+
     });
 </script>
 

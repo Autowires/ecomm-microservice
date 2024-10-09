@@ -4,7 +4,7 @@ services:
     image: mysql:8.0
     container_name: shared-db
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: shared_db
     volumes:
       - shared-db-data:/var/lib/mysql

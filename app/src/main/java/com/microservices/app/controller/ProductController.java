@@ -35,6 +35,7 @@ public class ProductController {
 
 		Object productinfo = productService.getproduct(productId);
 		model.addAttribute("product", productinfo);
+		model.addAttribute("reviews", productService.getProductReviews(productId));
 		return "productinfo";
 
 	}

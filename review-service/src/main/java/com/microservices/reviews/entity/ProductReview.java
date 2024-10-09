@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,8 +32,10 @@ public class ProductReview {
 	@ManyToOne
 	private Customer customer;
 
-	@Column(nullable = false)
-	private long productId;
+	@JsonIgnore
+	@JoinColumn(nullable = false)
+	@ManyToOne
+	private Product product;
 
 	@Column(nullable = false)
 	private String reviewContent;

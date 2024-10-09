@@ -89,24 +89,24 @@
 <!-- AJAX and jQuery to handle form submissions without page reloads -->
 <script>
     $(document).ready(function() {
-        // Email submission
-        $('#emailForm').on('submit', function(e) {
-            e.preventDefault();
-            const email = $('#email').val();
-            $.ajax({
-                url: '/forgotpassword',
-                type: 'POST',
-                data: { email: email },
-                success: function(response) {
-                    if (response.success) {
-                        $('#emailForm').hide();
-                        $('#otpSection').removeClass('hidden');
-                    } else {
-                        $('#emailError').text(response.errorMessage); 
-                    }
-                }
-            });
-        });
+    	// Email submission
+    	$('#emailForm').on('submit', function(e) {
+    	    e.preventDefault();
+    	    const email = $('#email').val();
+    	    $.ajax({
+    	        url: '/forgotpassword',
+    	        type: 'POST',
+    	        data: { email: email },
+    	        success: function(response) {
+    	            if (response.success) {
+    	                $('#emailForm').hide();
+    	                $('#otpSection').removeClass('hidden'); // Show OTP section only if OTP was sent successfully
+    	            } else {
+    	                $('#emailError').text(response.errorMessage); 
+    	            }
+    	        }
+    	    });
+    	});
 
         // OTP submission
         $('#otpForm').on('submit', function(e) {

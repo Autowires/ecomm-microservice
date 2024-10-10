@@ -1,5 +1,9 @@
 package com.microservices.product.service.controller;
 
+
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +23,8 @@ import com.microservices.product.service.service.OrderService;
 public class OrderItemController {
 	@Autowired
 	private OrderService orderService;
+	
+	private Logger logger = LogManager.getLogger();
 
 	@DeleteMapping("/{orderItemId}/cancel")
 	public ResponseEntity<ApiResponse> cancelOrderById(@PathVariable Long orderItemId) {

@@ -68,7 +68,32 @@ services:
     container_name: zip-app-service
     env_file: ".env"
     ports:
-      - "8080:8080"
+      - "9091:9091"
+    depends_on:
+      - eureka-server
+      - api-gateway
+ # admin-client
+  admin-client:
+    image: akhilkumarreddy/admin-client:latest
+    container_name: zip-admin-client
+    env_file: ".env"
+    ports:
+      - "9090:9090"
+    depends_on:
+      - eureka-server
+      - api-gateway
+
+  # Customer service
+  review-service:
+    image: akhilkumarreddy/review-service:latest
+    container_name: review-service
+    ports:
+      - "8077:8077"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
       - api-gateway

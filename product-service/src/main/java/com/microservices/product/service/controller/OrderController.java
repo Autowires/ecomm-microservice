@@ -3,6 +3,8 @@ package com.microservices.product.service.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import com.microservices.product.service.dto.OrderItemDTO;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.Orders;
 import com.microservices.product.service.entity.Product;
+import com.microservices.product.service.exception.OutOfStockException;
 import com.microservices.product.service.service.OrderService;
 
 @RestController
@@ -28,15 +31,14 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
+	private Logger logger = LogManager.getLogger();
+
 	@PostMapping("/placeorder/{buyerId}")
-	public ResponseEntity<ApiResponse> placeOrder(@RequestBody CheckoutRequest request, @PathVariable Long buyerId) {
-		try {
-			Orders ordered = orderService.placeOrder(request, buyerId);
-			System.out.println("placeOrder" + ordered);
-			return ResponseEntity.ok(new ApiResponse("ordered place sucessFuly", null));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((new ApiResponse(e.getMessage(), null)));
-		}
+	public ResponseEntity<ApiResponse> placeOrder(@RequestBody CheckoutRequest request, @PathVariable Long buyerId)
+			throws OutOfStockException {
+		Orders ordered = orderService.placeOrder(request, buyerId);
+		logger.debug("order placed sucessfully");
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("ordered place sucessFuly", null));
 
 	}
 
@@ -49,7 +51,7 @@ public class OrderController {
 
 	@GetMapping("/retailerorders/{retailerId}")
 	public ResponseEntity<List<OrderDTO>> getRetailerordersById(@PathVariable long retailerId) {
-		System.out.println(retailerId);
+
 		List<Orders> orders = orderService.getAllRetailerOrders(retailerId);
 		List<OrderDTO> orderDto = createOrderDto(orders);
 		return ResponseEntity.ok(orderDto);
@@ -64,7 +66,7 @@ public class OrderController {
 	private List<OrderDTO> createOrderDto(List<Orders> orders) {
 
 		ArrayList<OrderDTO> orderedItemsList = new ArrayList<>();
-
+		// converting orders to orderItemList;
 		for (Orders order : orders) {
 			orderedItemsList.add(convert(order));
 		}

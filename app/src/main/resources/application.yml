@@ -1,7 +1,7 @@
 spring:
   application:
     name: app
-# JSP setup
+  # JSP setup
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -11,10 +11,15 @@ spring:
         enabled: true
 
 server:
-  port: 8080
+  port: 9091
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
+logging:
+  file:
+    name: logs/app.log      
+  level:
+    root: info                

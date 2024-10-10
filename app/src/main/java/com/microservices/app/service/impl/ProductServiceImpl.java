@@ -111,15 +111,25 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Object> getRetailerOrders(long id) {
-	    String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/orders/retailerorders/{retailerId}")
-	        .buildAndExpand(id)
-	        .toUriString();
+		String uri = UriComponentsBuilder.fromHttpUrl(getUri() + "/orders/retailerorders/{retailerId}")
+				.buildAndExpand(id).toUriString();
 
-	    System.out.println(uri);  // Debugging line to check the constructed URI
+		System.out.println(uri); // Debugging line to check the constructed URI
 
-	    return template.getForObject(uri, List.class, id);
+		return template.getForObject(uri, List.class, id);
 	}
 
-	
+	@Override
+	public Object getProductReviews(int productId) {
+		List<ServiceInstance> instances = discoveryClient.getInstances("review-service");
+
+		if (instances == null || instances.isEmpty()) {
+			throw new IllegalStateException("No instances of review service available");
+		}
+
+		ServiceInstance serviceInstance = instances.get(0);
+		String uri = serviceInstance.getUri() + "/reviews?productId=" + productId;
+		return template.getForObject(uri, Object.class, productId);
+	}
 
 }

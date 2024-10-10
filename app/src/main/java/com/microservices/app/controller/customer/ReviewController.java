@@ -30,7 +30,7 @@ public class ReviewController {
 	public ModelAndView listReview(@SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("customer/reviews");
-		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
+		List<ServiceInstance> instances = dicoveryClient.getInstances("review-service");
 		URI uri = instances.get(0).getUri();
 		List response = rt.getForObject(uri + "/customers/{id}/reviews", List.class, userId);
 		mv.addObject("reviews", response);
@@ -40,7 +40,7 @@ public class ReviewController {
 	@PostMapping("/delete")
 	public ModelAndView deleteReview(@RequestParam long reviewId, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
-		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
+		List<ServiceInstance> instances = dicoveryClient.getInstances("review-service");
 		URI uri = instances.get(0).getUri();
 		rt.delete(uri + "/customers/{userId}/reviews/{reviewId}", userId, reviewId);
 		mv.setViewName("redirect:/reviews");
@@ -51,7 +51,7 @@ public class ReviewController {
 	public ModelAndView addReview(@RequestParam long productId, @RequestParam String reviewContent,
 			@RequestParam int rating, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
-		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
+		List<ServiceInstance> instances = dicoveryClient.getInstances("review-service");
 		URI uri = instances.get(0).getUri();
 		Map<String, Object> request = new HashMap<>();
 		request.put("productId", productId);

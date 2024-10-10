@@ -39,7 +39,7 @@
     </style>
 </head>
 <body>
-    <!-- Main Navigation -->
+      <!-- Main Navigation -->
     <%@include file="header.jsp"%>
 
     <!-- Cart + Summary -->

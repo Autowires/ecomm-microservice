@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import com.microservices.product.service.entity.Customer;
 import com.microservices.product.service.entity.OrderItem;
 import com.microservices.product.service.entity.OrderStatus;
 import com.microservices.product.service.entity.Orders;
+import com.microservices.product.service.exception.OutOfStockException;
+import com.microservices.product.service.exception.ProductNotFoundException;
 import com.microservices.product.service.exception.ResourceNotFoundException;
 import com.microservices.product.service.service.BuyerServvice;
 import com.microservices.product.service.service.CartItemService;
@@ -41,9 +45,11 @@ public class OrderServiceImplementation implements OrderService {
 	@Autowired
 	private BuyerServvice buyerServvice;
 
+	private Logger logger = LogManager.getLogger();
+
 	@Transactional
 	@Override
-	public Orders placeOrder(CheckoutRequest request, Long buyerId) {
+	public Orders placeOrder(CheckoutRequest request, Long buyerId) throws OutOfStockException {
 		// TODO Auto-generated method stub
 
 		List<CartResponse> cartItems = cartItemService.getBuyerCartById(buyerId);
@@ -56,13 +62,11 @@ public class OrderServiceImplementation implements OrderService {
 		Set<OrderItem> orderItems = new HashSet<>();
 		for (CartResponse cartItem : cartItems) {
 			var product = productRepository.findById(cartItem.getProductId())
-					.orElseThrow(() -> new RuntimeException("Product not found"));
-			
-			if(product.getStock()==0) {
-				throw new ResourceNotFoundException("product is out of stock");
-			}else if(product.getStock()<cartItem.getQuantity()) {
-				throw new ResourceNotFoundException("decrease your cart quantity");
-				
+					.orElseThrow(() -> new ProductNotFoundException());
+
+			 if (product.getStock() <= cartItem.getQuantity()) {
+				throw new  OutOfStockException(product.getId());
+
 			}
 			product.setStock(product.getStock() - cartItem.getQuantity());
 			productRepository.save(product);
@@ -70,8 +74,7 @@ public class OrderServiceImplementation implements OrderService {
 			orderItem.setOrderStatus(OrderStatus.PLACED);
 
 			if (orderItem != null) {
-				System.out.println("Orderitem has values");
-				System.out.println("orderItem price is " + orderItem.getPrice());
+				logger.debug("orderItem");
 			}
 
 			orderItems.add(orderItem);
@@ -94,6 +97,9 @@ public class OrderServiceImplementation implements OrderService {
 
 		orders.setBuyerId(customer.getId());
 		orders.setAddress(request.getAddress());
+		if(request.getPaymentType()==null) {
+			orders.setPaymentType("razorpay");
+		}
 		orders.setPaymentType(request.getPaymentType());
 		orders.setBuyername(request.getName());
 		orders.setTotalAmount(totalAmount);
@@ -125,7 +131,7 @@ public class OrderServiceImplementation implements OrderService {
 		List<Orders> orders = orderItemRepository.findOrdersByRetailerId(retailerId);
 		System.out.println(orders);
 		if (!orders.isEmpty()) {
-			System.out.println("orders have values");
+			logger.debug("orders have values");
 		}
 		return orders;
 	}

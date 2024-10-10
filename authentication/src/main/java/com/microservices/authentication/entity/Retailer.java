@@ -22,7 +22,7 @@ public class Retailer extends MyUser{
 	private String GSTIN;
 	
 	@Column(nullable = false)
-    @Size(min = 10,max=10)
+  
 	private String pannumber;
 	
 	@Column(nullable = false)

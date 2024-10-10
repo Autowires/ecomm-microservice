@@ -61,6 +61,7 @@ public class LoginRegisterController {
 	@PutMapping("/register/verify-email")
 	@ResponseBody
 	public ResponseEntity<String> verifyEmailOTP(@RequestBody OTPVerifyRequest otpVerifyRequest) {
+		
 		return service.verifyEmail(otpVerifyRequest);
 	}
 
@@ -132,11 +133,14 @@ public class LoginRegisterController {
 		try {
 			String message = service.registerRetailer(request);
 			model.addAttribute("successMessage", message);
-			return "redirect:/login"; // redirect to login page on success
+			// redirect to login page on success
+			return "redirect:/login"; 
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorMessage", e.getMessage());
-			return "register-retailer"; // return to registration page on error
+			// return to registration page on error
+			return "register-retailer"; 
+			
 		}
 	}
 
@@ -146,21 +150,26 @@ public class LoginRegisterController {
 	}
 
 	@PostMapping("/forgotpassword")
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> passwordRecovery(@RequestParam String email) {
-		Map<String, Object> response = new HashMap<>();
+	    Map<String, Object> response = new HashMap<>();
 
-		String message = service.existsByEmail(email);
+	    // Call service method to check email and send OTP
+	    String message = service.existsByEmail(email);
+	    System.out.println(message);
+	    if (message.equals("OTP sent to your email.")) { 
+	        response.put("success", true);
+	        response.put("errorMessage", null); // No error message
+	    } else {
+	        response.put("success", false);
+	        response.put("errorMessage", message); // Email not found
+	    }
 
-		if (message != null) { // assuming message is null if email doesn't exist
-			response.put("success", true);
-			response.put("errorMessage", null);
-		} else {
-			response.put("success", false);
-			response.put("errorMessage", "Email not found");
-		}
-
-		return ResponseEntity.ok(response);
+	    return ResponseEntity.ok(response);
 	}
+
+
+	
 
 	@PostMapping("/forgotpassword/verify-otp")
 	public ResponseEntity<Map<String, Object>> verifyEmail(@RequestBody OTPVerifyRequest otpVerifyRequest) {
@@ -179,19 +188,20 @@ public class LoginRegisterController {
 
 	@PostMapping("/updatePassword")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> updatePassword(@RequestParam String email,
-			@RequestParam String Password) {
+	public ResponseEntity<Map<String, Object>> updatePassword(@RequestBody Map<String, String> request) {
+	    String email = request.get("email");
+	    String password = request.get("Password");
+	    String message = service.updatePassword(email, password);
+	    boolean success = message.contains("success");
+	    Map<String, Object> response = new HashMap<>();
 
-		String message = service.updatePassword(email, Password);
-		boolean success = message.contains("success");
-		Map<String, Object> response = new HashMap<>();
-
-		if (success) {
-			response.put("success", success);
-			return ResponseEntity.ok(response);
-		} else {
-			return ResponseEntity.badRequest().body(response);
-		}
+	    if (success) {
+	        response.put("success", true);
+	        return ResponseEntity.ok(response);
+	    } else {
+	        response.put("errorMessage", "Password update failed.");
+	        return ResponseEntity.badRequest().body(response);
+	    }
 	}
 
 	@GetMapping("/error")
@@ -210,4 +220,4 @@ public class LoginRegisterController {
 		return "error";
 	}
 
-}
+} 

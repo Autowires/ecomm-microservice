@@ -1,7 +1,6 @@
 package com.microservices.product.service.dao.Impl;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.hibernate.Session;
@@ -11,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.microservices.product.service.dao.ProductDao;
-import com.microservices.product.service.dto.ProductDTO;
 import com.microservices.product.service.dto.ProductForm;
 import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
-import com.microservices.product.service.entity.ProductReview;
 
 import jakarta.persistence.criteria.Predicate;
 
@@ -154,30 +151,18 @@ public class ProductDaoImpl implements ProductDao {
 				return null; // Handle case where the product doesn't exist
 			}
 			var responInfoResponse = new ProductInfoResponse(product);
-			// 2. Fetch product reviews associated with this product
-			Query<ProductReview> query = session.createQuery("from ProductReview r where r.product.id = :productId",
-					ProductReview.class);
-			query.setParameter("productId", productId);
-			List<ProductReview> reviews = query.getResultList();
-
-			for (ProductReview rv : reviews) {
-				var r = new ProductInfoResponse.ReviewResponse(rv);
-				responInfoResponse.addReview(r);
-			}
-
 			return responInfoResponse;
 		});
 	}
 
 	@Override
 	public List<Product> getAllProducts(Long retailerId) {
-	    Session session = sessionFactory.openSession();
-	    Query<Product> query = session.createQuery("from Product where retailerId = :retailerId", Product.class);
-	    query.setParameter("retailerId", retailerId);
-	    List<Product> products = query.getResultList();
-	    session.close();
-	    return products;
+		Session session = sessionFactory.openSession();
+		Query<Product> query = session.createQuery("from Product where retailerId = :retailerId", Product.class);
+		query.setParameter("retailerId", retailerId);
+		List<Product> products = query.getResultList();
+		session.close();
+		return products;
 	}
-
 
 }

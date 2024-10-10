@@ -6,10 +6,11 @@ import java.util.Optional;
 import com.microservices.product.service.dto.CheckoutRequest;
 import com.microservices.product.service.entity.OrderStatus;
 import com.microservices.product.service.entity.Orders;
+import com.microservices.product.service.exception.OutOfStockException;
 
 public interface OrderService {
 
-	Orders placeOrder(CheckoutRequest request, Long buyerId);
+	Orders placeOrder(CheckoutRequest request, Long buyerId) throws OutOfStockException;
 
 	List<Orders> getBuyerOrderById(Long buyerId);
 

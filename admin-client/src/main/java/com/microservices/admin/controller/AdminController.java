@@ -35,6 +35,11 @@ public class AdminController {
 		return "index";
 	}
 
+	@GetMapping("/access-denied")
+	public String accessDenied() {
+		return "error/403";
+	}
+
 	@GetMapping("/admin")
 	public ModelAndView getUserAndView(@RequestParam(required = false) String role, OAuth2AuthenticationToken token) {
 		ModelAndView mv = new ModelAndView("admin/users");

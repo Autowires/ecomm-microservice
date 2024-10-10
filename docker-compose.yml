@@ -1,16 +1,5 @@
 services:
-  # MySQL Database (Shared between all services)
-  shared-db:
-    image: mysql:8.0
-    container_name: shared-db
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: shared_db
-    volumes:
-      - shared-db-data:/var/lib/mysql
-    ports:
-      - "3307:3306"
-
+ 
   # Eureka service registry
   eureka-server:
     image: akhilkumarreddy/eureka-server:latest
@@ -36,12 +25,11 @@ services:
       - "8081:8081"
     env_file: ".env"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
-      - shared-db
       - api-gateway
 
   # Product service
@@ -52,12 +40,11 @@ services:
       - "8083:8083"
     env_file: ".env"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
-      - shared-db
       - api-gateway
 
   # Customer service
@@ -68,12 +55,11 @@ services:
       - "8084:8084"
     env_file: ".env"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://shared-db:3306/shared_db
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
-      - shared-db
       - api-gateway
 
   # Client app
@@ -82,7 +68,32 @@ services:
     container_name: zip-app-service
     env_file: ".env"
     ports:
-      - "8080:8080"
+      - "9091:9091"
+    depends_on:
+      - eureka-server
+      - api-gateway
+ # admin-client
+  admin-client:
+    image: akhilkumarreddy/admin-client:latest
+    container_name: zip-admin-client
+    env_file: ".env"
+    ports:
+      - "9090:9090"
+    depends_on:
+      - eureka-server
+      - api-gateway
+
+  # Customer service
+  review-service:
+    image: akhilkumarreddy/review-service:latest
+    container_name: review-service
+    ports:
+      - "8077:8077"
+    env_file: ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://microdb.cjeomwmsm8mk.us-east-1.rds.amazonaws.com:3306/microDb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=akki9398
     depends_on:
       - eureka-server
       - api-gateway

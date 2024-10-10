@@ -24,7 +24,9 @@ public interface ProductService {
 	String addProduct(ProductForm form, long retailerId);
 
 	Object getRetailerproduct(long productId);
-	
+
 	List<Object> getRetailerOrders(long id);
+
+	Object getProductReviews(int productId);
 
 }

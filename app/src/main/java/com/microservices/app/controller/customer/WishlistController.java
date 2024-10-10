@@ -24,7 +24,7 @@ public class WishlistController {
 
 	@Autowired
 	private DiscoveryClient dicoveryClient;
-
+	
 	@GetMapping
 	public ModelAndView listWishlist(HttpSession session, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
@@ -51,7 +51,6 @@ public class WishlistController {
 			return mv;
 		}
 		URI uri = instances.get(0).getUri();
-		System.out.print(userId + "from controller");
 		rt.delete(uri + "/customers/{userId}/wishlist?productId={productId}", userId, productId);
 		mv.setViewName("redirect:/wishlist");
 		return mv;
@@ -59,7 +58,6 @@ public class WishlistController {
 
 	@PostMapping("/add")
 	public ModelAndView addProduct(@RequestParam long productId, @SessionAttribute Long userId) {
-		System.out.println(productId);
 		ModelAndView mv = new ModelAndView();
 
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");

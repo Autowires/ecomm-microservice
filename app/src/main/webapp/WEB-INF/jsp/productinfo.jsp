@@ -87,9 +87,10 @@
 				<!-- Customer Reviews Section -->
 				<h4 style="margin-top: 9%">Customer Reviews</h4>
 				<c:choose>
-					<c:when test="${not empty product.reviews}">
-						<c:forEach var="review" items="${product.reviews}">
+					<c:when test="${not empty reviews}">
+						<c:forEach var="review" items="${reviews}">
 							<div class="review-container">
+								<strong>${review.customer.username}</strong>
 								<strong>Rating: ${review.rating}/5</strong>
 								<p>${review.reviewContent}</p>
 								<small class="text-muted">Reviewed on

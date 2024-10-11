@@ -24,16 +24,11 @@ public class WishlistController {
 
 	@Autowired
 	private DiscoveryClient dicoveryClient;
-	
+
 	@GetMapping
 	public ModelAndView listWishlist(HttpSession session, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
-		if (instances == null || instances.isEmpty()) {
-			mv.setViewName("error");
-			return mv;
-		}
-
 		URI uri = instances.get(0).getUri();
 		List response = rt.getForObject(uri + "/customers/{id}/wishlist", List.class, userId);
 		mv.addObject("wishlist", response);
@@ -46,10 +41,6 @@ public class WishlistController {
 	public ModelAndView deleteProduct(@RequestParam long productId, @SessionAttribute Long userId) {
 		ModelAndView mv = new ModelAndView();
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
-		if (instances == null || instances.isEmpty()) {
-			mv.setViewName("error");
-			return mv;
-		}
 		URI uri = instances.get(0).getUri();
 		rt.delete(uri + "/customers/{userId}/wishlist?productId={productId}", userId, productId);
 		mv.setViewName("redirect:/wishlist");
@@ -61,10 +52,6 @@ public class WishlistController {
 		ModelAndView mv = new ModelAndView();
 
 		List<ServiceInstance> instances = dicoveryClient.getInstances("customer-service");
-		if (instances == null || instances.isEmpty()) {
-			mv.setViewName("error");
-			return mv;
-		}
 		URI uri = instances.get(0).getUri();
 		rt.postForObject(uri + "/customers/{userId}/wishlist?productId={productId}", null, String.class, userId,
 				productId);

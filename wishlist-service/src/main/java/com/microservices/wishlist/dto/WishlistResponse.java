@@ -1,4 +1,4 @@
-package com.microservices.customer.dto;
+package com.microservices.wishlist.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

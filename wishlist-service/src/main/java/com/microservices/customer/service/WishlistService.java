@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.microservices.customer.dto.WishlistResponse;
 
-public interface CustomerService {
+public interface WishlistService {
 
 	List<WishlistResponse> getWishlistedItems(long userId);
 

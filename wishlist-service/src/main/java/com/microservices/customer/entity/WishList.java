@@ -18,7 +18,7 @@ public class WishList {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "customer_user_id", nullable = false)
+	@JoinColumn(nullable = false)
 	private Customer customer;
 
 	@ManyToOne

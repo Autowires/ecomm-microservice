@@ -6,15 +6,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.microservices.customer.dao.CustomerDAO;
-import com.microservices.customer.dao.ProductDAo;
-import com.microservices.customer.dao.WishlistDAO;
 import com.microservices.customer.dto.WishlistResponse;
 import com.microservices.customer.entity.Customer;
 import com.microservices.customer.entity.Product;
 import com.microservices.customer.entity.WishList;
 import com.microservices.customer.exception.AddWishlistItemException;
-import com.microservices.customer.service.CustomerService;
+import com.microservices.customer.repo.CustomerRepository;
+import com.microservices.customer.repo.ProductRepository;
+import com.microservices.customer.repo.WishlistRepository;
+import com.microservices.customer.service.WishlistService;
 
 import jakarta.transaction.Transactional;
 
@@ -24,19 +24,19 @@ import jakarta.transaction.Transactional;
  * It interacts with the database through DAOs (Data Access Objects) and handles transactions.
  */
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class WishlistServiceImpl implements WishlistService {
 
     // DAO for interacting with the wishlist table
     @Autowired
-    private WishlistDAO dao;
+    private WishlistRepository dao;
 
     // DAO for interacting with the customer table
     @Autowired
-    private CustomerDAO customerDAO;
+    private CustomerRepository customerDAO;
 
     // DAO for interacting with the product table
     @Autowired
-    private ProductDAo productDAO;
+    private ProductRepository productDAO;
 
     /**
      * Retrieves the list of products in a customer's wishlist.

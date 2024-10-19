@@ -1,9 +1,9 @@
-package com.microservices.customer.dao;
+package com.microservices.customer.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.microservices.customer.entity.Customer;
 
-public interface CustomerDAO extends JpaRepository<Customer, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 }

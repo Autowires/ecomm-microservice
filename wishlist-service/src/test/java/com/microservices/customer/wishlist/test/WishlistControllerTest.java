@@ -2,7 +2,7 @@ package com.microservices.customer.wishlist.test;
 
 
 import com.microservices.customer.controller.WishlistController;
-import com.microservices.customer.service.CustomerService;
+import com.microservices.customer.service.WishlistService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class WishlistControllerTest {
     private MockMvc mockMvc; // class to perform http requests and http responses.
 
     @MockBean
-    private CustomerService service;
+    private WishlistService service;
 
     @Test  // when we enter 1 it will return an empty list because the user has not added the product into wishlist.
     public void testWishlistView() throws Exception {

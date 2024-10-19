@@ -1,4 +1,4 @@
-package com.microservices.customer.dao;
+package com.microservices.customer.repo;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.microservices.customer.dto.WishlistResponse;
 import com.microservices.customer.entity.WishList;
 
-public interface WishlistDAO extends JpaRepository<WishList, Long> {
+public interface WishlistRepository extends JpaRepository<WishList, Long> {
 	@Query("SELECT new com.microservices.customer.dto.WishlistResponse(w.id, w.product.id, w.product.title, w.product.price) "
 			+ "FROM WishList w " + "WHERE w.customer.id = :customerId")
 	List<WishlistResponse> findWishlistsByCustomerId(@Param("customerId") long customerId);

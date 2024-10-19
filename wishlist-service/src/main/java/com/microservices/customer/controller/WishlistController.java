@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservices.customer.dto.WishlistResponse;
-import com.microservices.customer.service.CustomerService;
+import com.microservices.customer.service.WishlistService;
 
 /**
  * WishlistController handles the RESTful API requests related to customer wishlists.
@@ -32,7 +32,7 @@ public class WishlistController {
     Logger logger = LoggerFactory.getLogger(WishlistController.class);
 
     @Autowired
-    private CustomerService service;
+    private WishlistService service;
 
     /**
      * Retrieves the wishlist for a specific user.

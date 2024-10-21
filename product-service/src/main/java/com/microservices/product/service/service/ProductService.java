@@ -1,11 +1,11 @@
 package com.microservices.product.service.service;
 
-import java.util.List;
-
-import com.microservices.product.service.dto.ProductDTO;
 import com.microservices.product.service.dto.ProductForm;
 import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
 
@@ -23,7 +23,7 @@ public interface ProductService {
 
 	List<Product> recentAdds();
 
-	ProductInfoResponse getProducInfo(long productId);
+	Optional<ProductInfoResponse> getProducInfo(long productId);
 
 	List<Product> getAllProducts(Long retailerId);
 

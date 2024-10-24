@@ -1,15 +1,15 @@
 package com.microservices.product.service.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.microservices.product.service.dao.ProductDao;
 import com.microservices.product.service.dto.ProductForm;
 import com.microservices.product.service.dto.ProductInfoResponse;
 import com.microservices.product.service.entity.Product;
 import com.microservices.product.service.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -58,8 +58,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductInfoResponse getProducInfo(long productId) {
-		return dao.getProductInfo(productId);
+	public Optional<ProductInfoResponse> getProducInfo(long productId) {
+		return Optional.ofNullable(dao.getProductInfo(productId));
 	}
 
 	@Override

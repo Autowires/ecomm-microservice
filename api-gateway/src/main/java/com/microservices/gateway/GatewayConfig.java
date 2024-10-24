@@ -10,7 +10,12 @@ public class GatewayConfig {
 
 	@Bean
 	RouteLocator routes(RouteLocatorBuilder builder) {
-		return builder.routes().route(t -> t.path("/admin/**").uri("lb://authentication"))
-				.route(r -> r.path("/auth/**").uri("lb://authentication")).build();
+		// @formatter:off
+		return builder.routes()
+				.route(t -> t.path("/admin/**").uri("lb://authentication"))
+				.route(r -> r.path("/auth/**").uri("lb://authentication"))
+				.route(r -> r.path("/customers/{id}/wishlist").uri("lb://wishlist-service"))
+				.build();
+		// @formatter:on
 	}
 }

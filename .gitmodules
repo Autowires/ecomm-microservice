@@ -10,3 +10,6 @@
 [submodule "eureka-server"]
 	path = eureka-server
 	url = https://github.com/Autowires/eureka-server.git
+[submodule "review-service"]
+	path = review-service
+	url = https://github.com/Autowires/review-service.git

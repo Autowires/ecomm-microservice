@@ -4,3 +4,6 @@
 [submodule "api-gateway"]
 	path = api-gateway
 	url = https://github.com/Autowires/api-gateway.git
+[submodule "microservice-app"]
+	path = microservice-app
+	url = https://github.com/Autowires/microservice-app.git

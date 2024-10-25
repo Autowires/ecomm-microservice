@@ -1,3 +1,6 @@
 [submodule "wishlist-service"]
 	path = wishlist-service
 	url = https://github.com/Autowires/wishlist-service.git
+[submodule "api-gateway"]
+	path = api-gateway
+	url = https://github.com/Autowires/api-gateway.git

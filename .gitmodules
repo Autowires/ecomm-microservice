@@ -1,0 +1,3 @@
+[submodule "wishlist-service"]
+	path = wishlist-service
+	url = https://github.com/Autowires/wishlist-service.git

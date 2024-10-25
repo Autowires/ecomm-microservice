@@ -7,3 +7,6 @@
 [submodule "microservice-app"]
 	path = microservice-app
 	url = https://github.com/Autowires/microservice-app.git
+[submodule "eureka-server"]
+	path = eureka-server
+	url = https://github.com/Autowires/eureka-server.git

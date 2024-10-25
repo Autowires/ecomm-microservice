@@ -13,3 +13,6 @@
 [submodule "review-service"]
 	path = review-service
 	url = https://github.com/Autowires/review-service.git
+[submodule "admin-client"]
+	path = admin-client
+	url = https://github.com/Autowires/admin-client.git
